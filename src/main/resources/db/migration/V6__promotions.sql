@@ -1,0 +1,133 @@
+-- ==============================================================================
+-- Migración V6: Tabla promotion y semillas oficiales de Figma (Corte 6)
+-- ==============================================================================
+
+CREATE TABLE IF NOT EXISTS promotion (
+    id BIGSERIAL PRIMARY KEY,
+    slug VARCHAR(120) UNIQUE NOT NULL,
+    title VARCHAR(200) NOT NULL,
+    destination VARCHAR(150) NOT NULL,
+    summary TEXT NOT NULL,
+    price_usd NUMERIC(10,2) NOT NULL,
+    price_pen NUMERIC(10,2),
+    duration_days INT NOT NULL,
+    duration_nights INT NOT NULL,
+    departure_city VARCHAR(100) NOT NULL DEFAULT 'Lima',
+    valid_from DATE NOT NULL DEFAULT CURRENT_DATE,
+    valid_until DATE NOT NULL DEFAULT (CURRENT_DATE + INTERVAL '180 days'),
+    featured_media_id BIGINT REFERENCES media_asset(id) ON DELETE SET NULL,
+    is_featured BOOLEAN NOT NULL DEFAULT true,
+    inclusions JSONB NOT NULL DEFAULT '[]'::jsonb,
+    exclusions JSONB NOT NULL DEFAULT '[]'::jsonb,
+    whatsapp_message_template VARCHAR(500),
+    display_order INT NOT NULL DEFAULT 0,
+    active BOOLEAN NOT NULL DEFAULT true,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_promotion_featured ON promotion(is_featured, active, display_order ASC);
+CREATE INDEX IF NOT EXISTS idx_promotion_slug ON promotion(slug);
+
+-- Semillas iniciales oficiales de Figma: 4 Paquetes y Promociones Destacadas
+INSERT INTO promotion (
+    slug,
+    title,
+    destination,
+    summary,
+    price_usd,
+    price_pen,
+    duration_days,
+    duration_nights,
+    departure_city,
+    valid_from,
+    valid_until,
+    featured_media_id,
+    is_featured,
+    inclusions,
+    exclusions,
+    whatsapp_message_template,
+    display_order,
+    active
+) VALUES
+(
+    'cartagena-donde-el-mar-te-espera',
+    'Cartagena: Donde el mar te espera',
+    'Cartagena de Indias, Colombia',
+    'Disfruta del encanto caribeño con playas de arena cálida, murallas históricas y atardeceres mágicos frente al mar.',
+    429.00,
+    1590.00,
+    4,
+    3,
+    'Lima',
+    CURRENT_DATE,
+    CURRENT_DATE + INTERVAL '180 days',
+    2,
+    true,
+    '["Vuelos ida y vuelta con equipaje", "Hotel 4 estrellas con desayuno buffet", "Traslados aeropuerto - hotel - aeropuerto", "Tour en lancha a Islas del Rosario"]'::jsonb,
+    '["Gastos no especificados", "Tarjeta de asistencia médica opcional"]'::jsonb,
+    'Hola Viajes Carolina, me interesa la promoción "Cartagena: Donde el mar te espera" desde USD 429. ¿Tienen fechas disponibles?',
+    1,
+    true
+),
+(
+    'cusco-magico-y-machu-picchu',
+    'Cusco Mágico & Machu Picchu',
+    'Cusco & Valle Sagrado, Perú',
+    'Una experiencia inolvidable recorriendo la capital del Imperio Incaico, templos sagrados y la maravilla de Machu Picchu.',
+    520.00,
+    1922.00,
+    5,
+    4,
+    'Lima',
+    CURRENT_DATE,
+    CURRENT_DATE + INTERVAL '180 days',
+    3,
+    true,
+    '["Vuelos Lima - Cusco - Lima", "Tren turístico Expedition a Machu Picchu", "Entrada y guía oficial en Machu Picchu", "Alojamiento boutique con desayunos"]'::jsonb,
+    '["Almuerzos libres en Aguas Calientes", "Gastos personales"]'::jsonb,
+    'Hola Viajes Carolina, deseo cotizar el paquete "Cusco Mágico & Machu Picchu" desde S/ 1,922. ¿Me podrían brindar detalles?',
+    2,
+    true
+),
+(
+    'punta-cana-all-inclusive-caribe',
+    'Punta Cana All-Inclusive Deluxe',
+    'Punta Cana, República Dominicana',
+    'Relax absoluto en resorts de primer nivel con comidas y bebidas ilimitadas, playas de arena blanca y actividades acuáticas.',
+    799.00,
+    2956.00,
+    5,
+    4,
+    'Lima',
+    CURRENT_DATE,
+    CURRENT_DATE + INTERVAL '180 days',
+    2,
+    true,
+    '["Vuelos internacionales ida y vuelta", "Resort 5 estrellas Todo Incluido 24h", "Bebidas y cenas temáticas ilimitadas", "Deportes acuáticos no motorizados"]'::jsonb,
+    '["Impuestos de entrada a República Dominicana", "Propinas voluntarias"]'::jsonb,
+    'Hola Viajes Carolina, quiero consultar sobre la oferta "Punta Cana All-Inclusive Deluxe". ¿Cuáles son las fechas disponibles?',
+    3,
+    true
+),
+(
+    'iquitos-selva-magica-amazonas',
+    'Iquitos & Selva Mágica Amazonas',
+    'Iquitos & Río Amazonas, Perú',
+    'Adéntrate en el pulmón del mundo con expediciones nocturnas, avistamiento de delfines rosados y conexión con la naturaleza.',
+    380.00,
+    1406.00,
+    4,
+    3,
+    'Lima',
+    CURRENT_DATE,
+    CURRENT_DATE + INTERVAL '180 days',
+    1,
+    true,
+    '["Vuelos Lima - Iquitos - Lima", "Lodge ecológico en la selva", "Todas las comidas incluidas (pensión completa)", "Excursiones guiadas por botánicos locales"]'::jsonb,
+    '["Bebidas alcohólicas", "Souvenirs"]'::jsonb,
+    'Hola Viajes Carolina, me encanta la opción "Iquitos & Selva Mágica Amazonas". ¿Me asesoran con las salidas?',
+    4,
+    true
+)
+ON CONFLICT (slug) DO NOTHING;
