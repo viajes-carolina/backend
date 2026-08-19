@@ -30,10 +30,11 @@ public class GetPublicHomeHeroUseCase {
     }
 
     public static HomeHeroDTO mapToDTO(HomeHero hero, MediaRepository mediaRepository) {
-        String bgUrl = null;
-        Double bgFocalX = 50.0;
-        Double bgFocalY = 50.0;
-        if (hero.getBackgroundMediaId() != null) {
+        String bgUrl = hero.getBackgroundMediaUrl();
+        Double bgFocalX = hero.getBackgroundFocalX() != null ? hero.getBackgroundFocalX() : 50.0;
+        Double bgFocalY = hero.getBackgroundFocalY() != null ? hero.getBackgroundFocalY() : 50.0;
+
+        if ((bgUrl == null || bgUrl.isBlank()) && hero.getBackgroundMediaId() != null) {
             Optional<MediaAsset> bgAsset = mediaRepository.findMediaById(hero.getBackgroundMediaId());
             if (bgAsset.isPresent()) {
                 bgUrl = bgAsset.get().getStoragePath();
@@ -46,12 +47,20 @@ public class GetPublicHomeHeroUseCase {
             }
         }
 
-        String cardMediaUrl = null;
-        if (hero.getFeaturedCardMediaId() != null) {
+        if (bgUrl == null || bgUrl.isBlank()) {
+            bgUrl = "/media/demo-cartagena-caribe.webp";
+        }
+
+        String cardMediaUrl = hero.getFeaturedCardMediaUrl();
+        if ((cardMediaUrl == null || cardMediaUrl.isBlank()) && hero.getFeaturedCardMediaId() != null) {
             Optional<MediaAsset> cardAsset = mediaRepository.findMediaById(hero.getFeaturedCardMediaId());
             if (cardAsset.isPresent()) {
                 cardMediaUrl = cardAsset.get().getStoragePath();
             }
+        }
+
+        if (cardMediaUrl == null || cardMediaUrl.isBlank()) {
+            cardMediaUrl = "/media/demo-cartagena-caribe.webp";
         }
 
         return new HomeHeroDTO(

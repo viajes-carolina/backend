@@ -55,6 +55,15 @@ public class HomeHeroPanacheEntity extends PanacheEntityBase {
     @Column(name = "background_media_id")
     public Long backgroundMediaId;
 
+    @Column(name = "background_media_url", length = 500)
+    public String backgroundMediaUrl;
+
+    @Column(name = "background_focal_x")
+    public Double backgroundFocalX = 50.0;
+
+    @Column(name = "background_focal_y")
+    public Double backgroundFocalY = 50.0;
+
     @Column(name = "featured_card_badge")
     public String featuredCardBadge;
 
@@ -72,6 +81,9 @@ public class HomeHeroPanacheEntity extends PanacheEntityBase {
 
     @Column(name = "featured_card_media_id")
     public Long featuredCardMediaId;
+
+    @Column(name = "featured_card_media_url", length = 500)
+    public String featuredCardMediaUrl;
 
     @Column(name = "revision", nullable = false)
     public Integer revision = 1;
@@ -103,12 +115,16 @@ public class HomeHeroPanacheEntity extends PanacheEntityBase {
                 secondaryCtaUrl,
                 list,
                 backgroundMediaId,
+                backgroundMediaUrl,
+                backgroundFocalX,
+                backgroundFocalY,
                 featuredCardBadge,
                 featuredCardTitle,
                 featuredCardSubtitle,
                 featuredCardPricePen,
                 featuredCardOrigin,
                 featuredCardMediaId,
+                featuredCardMediaUrl,
                 revision,
                 createdAt,
                 updatedAt
@@ -132,12 +148,16 @@ public class HomeHeroPanacheEntity extends PanacheEntityBase {
             entity.trustIndicators = "[]";
         }
         entity.backgroundMediaId = domain.getBackgroundMediaId();
+        entity.backgroundMediaUrl = domain.getBackgroundMediaUrl();
+        entity.backgroundFocalX = domain.getBackgroundFocalX();
+        entity.backgroundFocalY = domain.getBackgroundFocalY();
         entity.featuredCardBadge = domain.getFeaturedCardBadge();
         entity.featuredCardTitle = domain.getFeaturedCardTitle();
         entity.featuredCardSubtitle = domain.getFeaturedCardSubtitle();
         entity.featuredCardPricePen = domain.getFeaturedCardPricePen();
         entity.featuredCardOrigin = domain.getFeaturedCardOrigin();
         entity.featuredCardMediaId = domain.getFeaturedCardMediaId();
+        entity.featuredCardMediaUrl = domain.getFeaturedCardMediaUrl();
         entity.revision = domain.getRevision();
         entity.createdAt = domain.getCreatedAt();
         entity.updatedAt = domain.getUpdatedAt();

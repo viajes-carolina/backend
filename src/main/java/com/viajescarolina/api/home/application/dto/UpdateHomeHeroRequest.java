@@ -25,10 +25,14 @@ public record UpdateHomeHeroRequest(
         String secondaryCtaUrl,
         List<String> trustIndicators,
         Long backgroundMediaId,
+        String backgroundMediaUrl,
+        Double backgroundFocalX,
+        Double backgroundFocalY,
         String featuredCardBadge,
         String featuredCardTitle,
         String featuredCardSubtitle,
         BigDecimal featuredCardPricePen,
         String featuredCardOrigin,
-        Long featuredCardMediaId
+        Long featuredCardMediaId,
+        String featuredCardMediaUrl
 ) {}

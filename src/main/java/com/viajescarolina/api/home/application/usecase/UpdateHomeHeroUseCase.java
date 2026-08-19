@@ -27,6 +27,20 @@ public class UpdateHomeHeroUseCase {
         HomeHero hero = homeHeroRepository.findHero()
                 .orElseThrow(() -> new NotFoundException("Configuración de Home Hero no encontrada"));
 
+        Long validBgMediaId = null;
+        if (request.backgroundMediaId() != null && request.backgroundMediaId() > 0) {
+            if (mediaRepository.findMediaById(request.backgroundMediaId()).isPresent()) {
+                validBgMediaId = request.backgroundMediaId();
+            }
+        }
+
+        Long validCardMediaId = null;
+        if (request.featuredCardMediaId() != null && request.featuredCardMediaId() > 0) {
+            if (mediaRepository.findMediaById(request.featuredCardMediaId()).isPresent()) {
+                validCardMediaId = request.featuredCardMediaId();
+            }
+        }
+
         hero.update(
                 request.badgeText(),
                 request.titleHighlight(),
@@ -37,13 +51,17 @@ public class UpdateHomeHeroUseCase {
                 request.secondaryCtaText(),
                 request.secondaryCtaUrl(),
                 request.trustIndicators(),
-                request.backgroundMediaId(),
+                validBgMediaId,
+                request.backgroundMediaUrl(),
+                request.backgroundFocalX(),
+                request.backgroundFocalY(),
                 request.featuredCardBadge(),
                 request.featuredCardTitle(),
                 request.featuredCardSubtitle(),
                 request.featuredCardPricePen(),
                 request.featuredCardOrigin(),
-                request.featuredCardMediaId()
+                validCardMediaId,
+                request.featuredCardMediaUrl()
         );
 
         HomeHero saved = homeHeroRepository.save(hero);
