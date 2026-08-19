@@ -5,7 +5,7 @@
 
 -- 1. Tabla de Usuarios Administrativos con Roles RBAC
 CREATE TABLE IF NOT EXISTS admin_user (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     username VARCHAR(60) NOT NULL UNIQUE,
     email VARCHAR(150) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,

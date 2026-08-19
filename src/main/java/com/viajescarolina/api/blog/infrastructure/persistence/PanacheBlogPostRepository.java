@@ -9,6 +9,7 @@ import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import io.quarkus.panache.common.Parameters;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -182,11 +183,13 @@ public class PanacheBlogPostRepository implements BlogPostRepository, PanacheRep
     }
 
     @Override
+    @Transactional
     public void incrementViewCount(Long id) {
         update("viewCount = viewCount + 1, updatedAt = ?1 where id = ?2", Instant.now(), id);
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         BlogPostPanacheEntity entity = findById(id);
         if (entity != null) {

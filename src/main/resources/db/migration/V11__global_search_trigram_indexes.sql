@@ -68,9 +68,9 @@ SELECT
     'Experiencia de Viaje' AS metadata_info,
     COALESCE(m.storage_path, '/media/demo-cartagena-caribe.webp') AS image_url,
     '/#intenciones' AS target_url,
-    i.active AS is_active,
+    i.is_active AS is_active,
     CAST(i.display_order AS numeric) AS numeric_badge,
     i.icon_name AS badge_text
 FROM travel_intention i
 LEFT JOIN media_asset m ON i.cover_media_id = m.id
-WHERE i.active = TRUE;
+WHERE i.is_active = TRUE;

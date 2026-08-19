@@ -24,6 +24,9 @@ public class GlobalSearchRepositoryImpl implements GlobalSearchRepository {
             return getInitialSuggestions(type, limit);
         }
 
+        boolean isAll = type == null || type == SearchResultType.ALL;
+        String filterSql = isAll ? "" : " AND entity_type = :filterType ";
+
         String sql = """
             SELECT 
                 entity_type,
@@ -38,7 +41,8 @@ public class GlobalSearchRepositoryImpl implements GlobalSearchRepository {
                 (similarity(COALESCE(title, ''), :query) * 2.0 + similarity(COALESCE(subtitle, ''), :query) + similarity(COALESCE(metadata_info, ''), :query)) AS score
             FROM v_global_search_index
             WHERE 
-                (:filterType = 'ALL' OR entity_type = :filterType)
+                1=1
+        """ + filterSql + """
                 AND (
                     title ILIKE :likeQuery 
                     OR subtitle ILIKE :likeQuery 
@@ -53,7 +57,9 @@ public class GlobalSearchRepositoryImpl implements GlobalSearchRepository {
         Query q = em.createNativeQuery(sql);
         q.setParameter("query", query);
         q.setParameter("likeQuery", "%" + query + "%");
-        q.setParameter("filterType", type == SearchResultType.ALL ? "ALL" : type.name());
+        if (!isAll) {
+            q.setParameter("filterType", type.name());
+        }
         q.setParameter("limit", limit);
 
         List<Object[]> rows = q.getResultList();
@@ -82,6 +88,9 @@ public class GlobalSearchRepositoryImpl implements GlobalSearchRepository {
 
     @SuppressWarnings("unchecked")
     private List<SearchResultItem> getInitialSuggestions(SearchResultType type, int limit) {
+        boolean isAll = type == null || type == SearchResultType.ALL;
+        String filterSql = isAll ? "" : " WHERE entity_type = :filterType ";
+
         String sql = """
             SELECT 
                 entity_type,
@@ -95,12 +104,14 @@ public class GlobalSearchRepositoryImpl implements GlobalSearchRepository {
                 badge_text,
                 1.0 AS score
             FROM v_global_search_index
-            WHERE (:filterType = 'ALL' OR entity_type = :filterType)
+        """ + filterSql + """
             LIMIT :limit
         """;
 
         Query q = em.createNativeQuery(sql);
-        q.setParameter("filterType", type == SearchResultType.ALL ? "ALL" : type.name());
+        if (!isAll) {
+            q.setParameter("filterType", type.name());
+        }
         q.setParameter("limit", limit);
 
         List<Object[]> rows = q.getResultList();
