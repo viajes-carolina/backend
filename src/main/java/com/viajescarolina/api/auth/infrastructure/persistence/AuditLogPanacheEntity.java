@@ -31,6 +31,7 @@ public class AuditLogPanacheEntity extends PanacheEntityBase {
     public String ipHash;
 
     @Column(name = "details_json", columnDefinition = "jsonb")
+    @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.JSON)
     public String detailsJson;
 
     @Column(name = "created_at", nullable = false, updatable = false)

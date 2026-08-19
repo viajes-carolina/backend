@@ -41,6 +41,7 @@ public class BlogPostPanacheEntity extends PanacheEntityBase {
     public Integer readingTimeMinutes = 5;
 
     @Column(name = "tags_json", columnDefinition = "JSONB")
+    @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.JSON)
     public String tagsJson = "[]";
 
     @Column(nullable = false, length = 30)
