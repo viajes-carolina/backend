@@ -27,8 +27,13 @@ public class GlobalSearchRepositoryImpl implements GlobalSearchRepository {
         boolean isAll = type == null || type == SearchResultType.ALL;
         String filterSql = isAll ? "" : " AND entity_type = :filterType ";
 
+        // set_limit ajusta el umbral que usa el operador '%' (sargable, sí usa el índice GIN
+        // gin_trgm_ops) para igualar el umbral 0.08 que antes solo se aplicaba vía la función
+        // similarity(...) en el WHERE, la cual Postgres no puede resolver con el índice (DB-006).
+        em.createNativeQuery("SELECT set_limit(0.08)").getSingleResult();
+
         String sql = """
-            SELECT 
+            SELECT
                 entity_type,
                 entity_id,
                 entity_slug,
@@ -40,15 +45,15 @@ public class GlobalSearchRepositoryImpl implements GlobalSearchRepository {
                 badge_text,
                 (similarity(COALESCE(title, ''), :query) * 2.0 + similarity(COALESCE(subtitle, ''), :query) + similarity(COALESCE(metadata_info, ''), :query)) AS score
             FROM v_global_search_index
-            WHERE 
+            WHERE
                 1=1
         """ + filterSql + """
                 AND (
-                    title ILIKE :likeQuery 
-                    OR subtitle ILIKE :likeQuery 
+                    title ILIKE :likeQuery
+                    OR subtitle ILIKE :likeQuery
                     OR metadata_info ILIKE :likeQuery
-                    OR similarity(COALESCE(title, ''), :query) > 0.08
-                    OR similarity(COALESCE(subtitle, ''), :query) > 0.08
+                    OR title % :query
+                    OR subtitle % :query
                 )
             ORDER BY score DESC, title ASC
             LIMIT :limit

@@ -5,6 +5,7 @@ import com.viajescarolina.api.intentions.application.dto.TravelIntentionDTO;
 import com.viajescarolina.api.intentions.domain.TravelIntention;
 import com.viajescarolina.api.intentions.domain.TravelIntentionRepository;
 import com.viajescarolina.api.media.domain.MediaRepository;
+import com.viajescarolina.api.common.audit.Audited;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -24,6 +25,7 @@ public class CreateTravelIntentionUseCase {
         this.mediaRepository = mediaRepository;
     }
 
+    @Audited(action = "CREATE_TRAVEL_INTENTION", entityType = "TRAVEL_INTENTION")
     @Transactional
     public TravelIntentionDTO execute(CreateOrUpdateTravelIntentionRequest request) {
         if (intentionRepository.findBySlug(request.slug()).isPresent()) {

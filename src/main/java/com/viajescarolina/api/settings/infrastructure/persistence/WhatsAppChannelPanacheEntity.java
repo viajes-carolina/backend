@@ -12,13 +12,22 @@ import java.time.Instant;
 public class WhatsAppChannelPanacheEntity extends PanacheEntityBase {
 
     @Id
-    public Integer id = 1;
+    public Integer id;
+
+    @Column(name = "label", nullable = false, length = 60)
+    public String label;
 
     @Column(name = "e164_number", nullable = false, length = 20)
     public String e164Number;
 
     @Column(name = "display_number", nullable = false, length = 30)
     public String displayNumber;
+
+    @Column(name = "default_message", columnDefinition = "TEXT")
+    public String defaultMessage;
+
+    @Column(name = "is_primary", nullable = false)
+    public boolean isPrimary = true;
 
     @Column(name = "is_active", nullable = false)
     public boolean active = true;

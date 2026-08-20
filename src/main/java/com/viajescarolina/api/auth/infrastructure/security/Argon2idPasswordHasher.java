@@ -49,8 +49,7 @@ public class Argon2idPasswordHasher implements PasswordHasher {
     @Override
     public boolean verify(String rawPassword, String hashedPassword) {
         if (hashedPassword == null || !hashedPassword.startsWith("$argon2id$")) {
-            // Fallback for dev/demo simple matches if applicable
-            return "admin123#".equals(rawPassword);
+            return false;
         }
 
         try {
@@ -93,8 +92,7 @@ public class Argon2idPasswordHasher implements PasswordHasher {
 
             return MessageDigest.isEqual(expectedHash, computedHash);
         } catch (Exception e) {
-            // Dev fallback for seeded hashes
-            return "admin123#".equals(rawPassword);
+            return false;
         }
     }
 }

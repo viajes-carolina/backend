@@ -41,13 +41,14 @@ CREATE INDEX IF NOT EXISTS idx_audit_log_entity_type ON audit_log (entity_type);
 CREATE INDEX IF NOT EXISTS idx_audit_log_user_id ON audit_log (user_id);
 
 -- 3. Inserción de Semillas Iniciales (Usuarios RBAC & Bitácora)
--- Contraseña de prueba hasheada con Argon2id para 'admin123#':
--- $argon2id$v=19$m=65536,t=3,p=4$2j00BkJc3oM3hL3lA$e4h9k3...
+-- Cada usuario tiene un hash Argon2id ÚNICO (no compartido). Las contraseñas en texto plano
+-- se generaron una sola vez de forma aleatoria y se entregaron fuera de este repositorio;
+-- deben rotarse en el primer login y nunca reutilizarse entre entornos.
 INSERT INTO admin_user (id, username, email, password_hash, full_name, role, active)
-VALUES 
-    (1, 'admin', 'admin@viajescarolina.com', '$argon2id$v=19$m=65536,t=3,p=4$2j00BkJc3oM3hL3lA$hDkW+Ue4O9N52yJmF3R2K7a/3A7t1L4s9x8c5b2v1m0=', 'Administrador General', 'SUPER_ADMIN', TRUE),
-    (2, 'editor', 'editor@viajescarolina.com', '$argon2id$v=19$m=65536,t=3,p=4$2j00BkJc3oM3hL3lA$hDkW+Ue4O9N52yJmF3R2K7a/3A7t1L4s9x8c5b2v1m0=', 'Editor de Contenidos', 'CONTENT_EDITOR', TRUE),
-    (3, 'carolina', 'carolina@viajescarolina.com', '$argon2id$v=19$m=65536,t=3,p=4$2j00BkJc3oM3hL3lA$hDkW+Ue4O9N52yJmF3R2K7a/3A7t1L4s9x8c5b2v1m0=', 'Carolina Zúñiga', 'ADVISOR', TRUE)
+VALUES
+    (1, 'admin', 'admin@viajescarolina.com', '$argon2id$v=19$m=65536,t=3,p=4$mXKJ4vxZotLESwhVKiKS+A$6bS2ZEIbJWuHRlBoCjW0Y0ow6VD6rlY6Cf+314nPlo4', 'Administrador General', 'SUPER_ADMIN', TRUE),
+    (2, 'editor', 'editor@viajescarolina.com', '$argon2id$v=19$m=65536,t=3,p=4$An430GDL3eJ3rL6tE2tW8A$93pk8uE/AuID/+foSXiWfT5CxXCJx1SUsOPCWGGEE5M', 'Editor de Contenidos', 'CONTENT_EDITOR', TRUE),
+    (3, 'carolina', 'carolina@viajescarolina.com', '$argon2id$v=19$m=65536,t=3,p=4$7MLzg5pOtVyTGHODblqnWA$oTk3ffspYzubto6HmKTHGSGZ4MwHTrSEkUYlDcZ8nqs', 'Carolina Zúñiga', 'ADVISOR', TRUE)
 ON CONFLICT (id) DO NOTHING;
 
 SELECT setval('admin_user_id_seq', (SELECT COALESCE(MAX(id), 1) FROM admin_user));

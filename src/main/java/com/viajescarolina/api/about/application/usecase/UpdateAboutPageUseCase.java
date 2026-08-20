@@ -4,6 +4,7 @@ import com.viajescarolina.api.about.application.dto.AboutPageDTO;
 import com.viajescarolina.api.about.application.dto.UpdateAboutPageRequest;
 import com.viajescarolina.api.about.domain.AboutPage;
 import com.viajescarolina.api.about.domain.AboutPageRepository;
+import com.viajescarolina.api.common.audit.Audited;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import java.time.Instant;
@@ -18,6 +19,7 @@ public class UpdateAboutPageUseCase {
         this.getPublicAboutUseCase = getPublicAboutUseCase;
     }
 
+    @Audited(action = "UPDATE_ABOUT_PAGE", entityType = "ABOUT_PAGE")
     @Transactional
     public AboutPageDTO execute(UpdateAboutPageRequest req) {
         AboutPage page = aboutPageRepository.findSingleton()

@@ -65,7 +65,7 @@ public class LoginAdminUseCase {
 
         recordAudit(user.getId(), user.getUsername(), "LOGIN_SUCCESS", "SUCCESS", ipAddress);
 
-        long expiresInSeconds = 86400; // 24 horas
+        long expiresInSeconds = 3600; // 1 hora
 
         String token;
         try {
@@ -78,8 +78,8 @@ public class LoginAdminUseCase {
                     .expiresIn(Duration.ofSeconds(expiresInSeconds))
                     .sign();
         } catch (Exception e) {
-            // Fallback lightweight token for dev/test without RSA keypair
-            token = "jwt-mock-" + user.getUsername() + "-" + Instant.now().toEpochMilli();
+            recordAudit(user.getId(), user.getUsername(), "LOGIN_FAILED", "JWT_SIGNING_ERROR", ipAddress);
+            throw new WebApplicationException("No se pudo generar la sesión.", Response.Status.INTERNAL_SERVER_ERROR);
         }
 
         AdminUserDTO dto = new AdminUserDTO(

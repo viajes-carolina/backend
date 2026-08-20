@@ -23,9 +23,6 @@ public class SiteSettingsPanacheEntity extends PanacheEntityBase {
     @Column(name = "contact_email", nullable = false, length = 150)
     public String contactEmail;
 
-    @Column(name = "primary_phone", nullable = false, length = 30)
-    public String primaryPhone;
-
     @Column(name = "logo_media_id")
     public Integer logoMediaId;
 
@@ -40,6 +37,12 @@ public class SiteSettingsPanacheEntity extends PanacheEntityBase {
 
     @Column(name = "tiktok_url", length = 255)
     public String tiktokUrl;
+
+    @Column(name = "legal_company_name", length = 200)
+    public String legalCompanyName;
+
+    @Column(name = "tax_id", length = 20)
+    public String taxId;
 
     @Column(name = "revision", nullable = false)
     public int revision = 1;

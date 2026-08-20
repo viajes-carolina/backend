@@ -18,12 +18,16 @@ public class GetWhatsAppChannelUseCase {
 
     public WhatsAppChannelDTO execute() {
         WhatsAppChannel channel = whatsAppRepository.findChannel()
-                .orElseGet(() -> new WhatsAppChannel(1, "+51987654321", "+51 987 654 321", true, 1, null, null));
+                .orElseGet(() -> new WhatsAppChannel(null, "Línea Principal", "+51987654321", "+51 987 654 321",
+                        "Hola Viajes Carolina, deseo asesoría personalizada para mi próximo viaje.", true, true, 1, null, null));
 
         return new WhatsAppChannelDTO(
                 channel.getId(),
+                channel.getLabel(),
                 channel.getE164Number(),
                 channel.getDisplayNumber(),
+                channel.getDefaultMessage(),
+                channel.isPrimary(),
                 channel.isActive(),
                 channel.getRevision(),
                 channel.getUpdatedAt()

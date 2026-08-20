@@ -4,6 +4,7 @@ import com.viajescarolina.api.contact.application.dto.ContactPageDTO;
 import com.viajescarolina.api.contact.application.dto.UpdateContactPageRequest;
 import com.viajescarolina.api.contact.domain.ContactPage;
 import com.viajescarolina.api.contact.domain.ContactPageRepository;
+import com.viajescarolina.api.common.audit.Audited;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import java.time.Instant;
@@ -19,6 +20,7 @@ public class UpdateContactPageUseCase {
         this.getPublicContactUseCase = getPublicContactUseCase;
     }
 
+    @Audited(action = "UPDATE_CONTACT_PAGE", entityType = "CONTACT_PAGE")
     @Transactional
     public ContactPageDTO execute(UpdateContactPageRequest req) {
         ContactPage page = contactPageRepository.findSingleton()

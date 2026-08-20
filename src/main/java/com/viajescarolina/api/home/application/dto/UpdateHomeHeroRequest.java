@@ -34,5 +34,22 @@ public record UpdateHomeHeroRequest(
         BigDecimal featuredCardPricePen,
         String featuredCardOrigin,
         Long featuredCardMediaId,
-        String featuredCardMediaUrl
+        String featuredCardMediaUrl,
+        Long secondaryMedia1Id,
+        String secondaryMedia1Url,
+        Double secondaryMedia1FocalX,
+        Double secondaryMedia1FocalY,
+        Long secondaryMedia2Id,
+        String secondaryMedia2Url,
+        Double secondaryMedia2FocalX,
+        Double secondaryMedia2FocalY,
+        Long secondaryMedia3Id,
+        String secondaryMedia3Url,
+        Double secondaryMedia3FocalX,
+        Double secondaryMedia3FocalY,
+        Long secondaryMedia4Id,
+        String secondaryMedia4Url,
+        Double secondaryMedia4FocalX,
+        Double secondaryMedia4FocalY,
+        String trustStatText
 ) {}

@@ -4,6 +4,7 @@ import com.viajescarolina.api.about.application.dto.CreateOrUpdateAdvisorRequest
 import com.viajescarolina.api.about.application.dto.TravelAdvisorDTO;
 import com.viajescarolina.api.about.domain.TravelAdvisor;
 import com.viajescarolina.api.about.domain.TravelAdvisorRepository;
+import com.viajescarolina.api.common.audit.Audited;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import java.time.Instant;
@@ -18,6 +19,7 @@ public class CreateAdvisorUseCase {
         this.getPublicAboutUseCase = getPublicAboutUseCase;
     }
 
+    @Audited(action = "CREATE_ADVISOR", entityType = "ADVISOR")
     @Transactional
     public TravelAdvisorDTO execute(CreateOrUpdateAdvisorRequest req) {
         TravelAdvisor advisor = new TravelAdvisor();

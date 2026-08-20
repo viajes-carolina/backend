@@ -4,6 +4,7 @@ import com.viajescarolina.api.media.application.dto.MediaAssetDTO;
 import com.viajescarolina.api.media.application.dto.UpdateMediaFocalPointRequest;
 import com.viajescarolina.api.media.domain.MediaAsset;
 import com.viajescarolina.api.media.domain.MediaRepository;
+import com.viajescarolina.api.common.audit.Audited;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -19,6 +20,7 @@ public class UpdateMediaFocalPointUseCase {
         this.mediaRepository = mediaRepository;
     }
 
+    @Audited(action = "UPDATE_MEDIA_FOCAL_POINT", entityType = "MEDIA_ASSET")
     @Transactional
     public MediaAssetDTO execute(Long id, UpdateMediaFocalPointRequest request) {
         MediaAsset asset = mediaRepository.findMediaById(id)

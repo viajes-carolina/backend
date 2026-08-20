@@ -6,6 +6,7 @@ import com.viajescarolina.api.promotions.application.usecase.CreatePromotionUseC
 import com.viajescarolina.api.promotions.application.usecase.DeletePromotionUseCase;
 import com.viajescarolina.api.promotions.application.usecase.ListAdminPromotionsUseCase;
 import com.viajescarolina.api.promotions.application.usecase.UpdatePromotionUseCase;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
@@ -18,6 +19,7 @@ import java.util.List;
 @Path("/api/admin/v1/promotions")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@RolesAllowed({"SUPER_ADMIN", "CONTENT_EDITOR", "ADVISOR"})
 @Tag(name = "Admin Promotions", description = "Gestión centralizada de paquetes turísticos y promociones")
 public class AdminPromotionResource {
 

@@ -59,10 +59,16 @@ public class PanacheMediaRepository implements MediaRepository, PanacheRepositor
 
     @Override
     public long count(String mimeTypeFilter) {
+        // OJO: llamar aquí a count(String) sin más argumentos colisiona con la firma de
+        // este propio método (mismo tipo de parámetro) y Java resuelve la llamada como
+        // recursiva en vez de despachar al count(String, Object...) heredado de Panache
+        // — por eso se pasa explícitamente un array vacío, que fuerza la aridad de 2
+        // argumentos y desambigua sin romper la instrumentación de bytecode de Panache
+        // (usar PanacheRepositoryBase.super.count(...) rompe esa instrumentación con un 500).
         if (mimeTypeFilter != null && !mimeTypeFilter.isBlank()) {
             return count("isActive = true and mimeType like ?1", "%" + mimeTypeFilter + "%");
         }
-        return count("isActive = true");
+        return count("isActive = true", new Object[0]);
     }
 
     @Override

@@ -26,12 +26,12 @@ public class SubmitClaimUseCase {
 
     @Transactional
     public ClaimRecordDTO execute(SubmitClaimRequest request, String clientIp) {
-        // Validate Turnstile
-        if (request.turnstileToken() != null && !request.turnstileToken().isBlank()) {
-            boolean valid = turnstileService.verifyToken(request.turnstileToken(), clientIp);
-            if (!valid) {
-                throw new IllegalArgumentException("Verificación de seguridad anti-bot inválida. Por favor intenta nuevamente.");
-            }
+        // Validar Turnstile: el token es obligatorio, no se acepta su ausencia como válida.
+        boolean valid = request.turnstileToken() != null
+                && !request.turnstileToken().isBlank()
+                && turnstileService.verifyToken(request.turnstileToken(), clientIp);
+        if (!valid) {
+            throw new IllegalArgumentException("Verificación de seguridad anti-bot inválida. Por favor intenta nuevamente.");
         }
 
         String claimCode = claimRepository.generateNextClaimCode();

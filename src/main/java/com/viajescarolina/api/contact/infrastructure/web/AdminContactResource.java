@@ -5,6 +5,7 @@ import com.viajescarolina.api.contact.application.dto.UpdateContactPageRequest;
 import com.viajescarolina.api.contact.application.usecase.GetPublicContactUseCase;
 import com.viajescarolina.api.contact.application.usecase.UpdateContactPageUseCase;
 import com.viajescarolina.api.contact.domain.ContactPageRepository;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -14,6 +15,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 @Path("/api/admin/v1/contact")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@RolesAllowed({"SUPER_ADMIN", "CONTENT_EDITOR", "ADVISOR"})
 @Tag(name = "Admin Contact", description = "Endpoints administrativos para gestionar la página de Contacto")
 public class AdminContactResource {
 

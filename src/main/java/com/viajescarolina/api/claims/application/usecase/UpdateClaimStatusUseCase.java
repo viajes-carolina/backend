@@ -4,6 +4,7 @@ import com.viajescarolina.api.claims.application.dto.ClaimRecordDTO;
 import com.viajescarolina.api.claims.application.dto.UpdateClaimStatusRequest;
 import com.viajescarolina.api.claims.domain.ClaimRecord;
 import com.viajescarolina.api.claims.domain.ClaimRepository;
+import com.viajescarolina.api.common.audit.Audited;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -20,6 +21,7 @@ public class UpdateClaimStatusUseCase {
         this.claimRepository = claimRepository;
     }
 
+    @Audited(action = "UPDATE_CLAIM_STATUS", entityType = "CLAIM")
     @Transactional
     public Optional<ClaimRecordDTO> execute(Long id, UpdateClaimStatusRequest request) {
         Optional<ClaimRecord> existingOpt = claimRepository.findClaimById(id);

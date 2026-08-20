@@ -6,6 +6,7 @@ import com.viajescarolina.api.blog.domain.BlogCategory;
 import com.viajescarolina.api.blog.domain.BlogCategoryRepository;
 import com.viajescarolina.api.blog.domain.BlogPost;
 import com.viajescarolina.api.blog.domain.BlogPostRepository;
+import com.viajescarolina.api.common.audit.Audited;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -22,6 +23,7 @@ public class UpdateBlogPostUseCase {
     @Inject
     BlogCategoryRepository categoryRepository;
 
+    @Audited(action = "UPDATE_BLOG_POST", entityType = "BLOG_POST")
     @Transactional
     public BlogPostDTO execute(Long id, CreateOrUpdateBlogPostRequest req) {
         BlogPost post = postRepository.findPostById(id)

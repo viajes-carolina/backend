@@ -3,6 +3,7 @@ package com.viajescarolina.api.home.application.usecase;
 import com.viajescarolina.api.home.application.dto.HomeBlogInspirationDTO;
 import com.viajescarolina.api.home.domain.HomeBlogInspiration;
 import com.viajescarolina.api.home.domain.HomeBlogInspirationRepository;
+import com.viajescarolina.api.common.audit.Audited;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -13,6 +14,7 @@ public class UpdateHomeBlogInspirationUseCase {
     @Inject
     HomeBlogInspirationRepository inspirationRepository;
 
+    @Audited(action = "UPDATE_HOME_BLOG_INSPIRATION", entityType = "HOME_BLOG_INSPIRATION")
     @Transactional
     public HomeBlogInspirationDTO execute(HomeBlogInspirationDTO dto) {
         HomeBlogInspiration entity = inspirationRepository.get().orElseGet(() -> new HomeBlogInspiration(

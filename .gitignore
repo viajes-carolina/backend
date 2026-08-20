@@ -39,3 +39,6 @@ nb-configuration.xml
 /.quarkus/cli/plugins/
 # TLS Certificates
 .certs/
+
+# JWT signing key (secret material, generated locally — never commit)
+src/main/resources/privateKey.pem

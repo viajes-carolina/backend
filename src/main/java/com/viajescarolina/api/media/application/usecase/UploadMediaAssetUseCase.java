@@ -7,15 +7,25 @@ import com.viajescarolina.api.media.domain.MediaStorageService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.Locale;
+import java.util.Set;
 
 @ApplicationScoped
 public class UploadMediaAssetUseCase {
 
+    private static final Set<String> ALLOWED_MIME_TYPES = Set.of("image/png", "image/jpeg", "image/webp", "image/gif");
+
     private final MediaRepository mediaRepository;
     private final MediaStorageService storageService;
+
+    @ConfigProperty(name = "viajescarolina.media.max-file-size", defaultValue = "10485760")
+    long maxFileSizeBytes;
 
     @Inject
     public UploadMediaAssetUseCase(MediaRepository mediaRepository, MediaStorageService storageService) {
@@ -25,6 +35,17 @@ public class UploadMediaAssetUseCase {
 
     @Transactional
     public MediaAssetDTO execute(String originalFilename, String mimeType, InputStream inputStream, long sizeBytes, String altText, String caption) {
+        if (mimeType == null || !ALLOWED_MIME_TYPES.contains(mimeType.toLowerCase(Locale.ROOT))) {
+            throw new WebApplicationException(
+                    "Tipo de archivo no permitido. Solo se aceptan imágenes PNG, JPEG, WEBP o GIF.",
+                    Response.Status.BAD_REQUEST);
+        }
+        if (sizeBytes > maxFileSizeBytes) {
+            throw new WebApplicationException(
+                    "El archivo excede el tamaño máximo permitido (" + (maxFileSizeBytes / 1024 / 1024) + " MB).",
+                    Response.Status.BAD_REQUEST);
+        }
+
         MediaStorageService.StoredFileInfo stored = storageService.store(originalFilename, mimeType, inputStream, sizeBytes);
 
         MediaAsset asset = new MediaAsset(

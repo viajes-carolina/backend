@@ -2,6 +2,7 @@ package com.viajescarolina.api.auth.infrastructure.web;
 
 import com.viajescarolina.api.auth.application.dto.AuditLogDTO;
 import com.viajescarolina.api.auth.application.usecase.ListAuditLogsUseCase;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -12,6 +13,7 @@ import java.util.List;
 @Path("/api/admin/v1/audit-logs")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@RolesAllowed("SUPER_ADMIN")
 @Tag(name = "Admin Governance & Audit", description = "Trazabilidad y registro de auditoría de acciones administrativas")
 public class AdminAuditResource {
 

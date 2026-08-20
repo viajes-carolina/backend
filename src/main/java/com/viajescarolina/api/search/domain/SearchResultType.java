@@ -4,6 +4,5 @@ public enum SearchResultType {
     ALL,
     PROMOTION,
     BLOG_POST,
-    INTENTION,
-    DESTINATION
+    INTENTION
 }

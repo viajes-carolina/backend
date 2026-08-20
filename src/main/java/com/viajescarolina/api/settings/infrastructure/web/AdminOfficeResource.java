@@ -5,6 +5,8 @@ import com.viajescarolina.api.settings.application.dto.UpdateOfficeLocationReque
 import com.viajescarolina.api.settings.application.usecase.UpdateOfficeLocationUseCase;
 import com.viajescarolina.api.settings.domain.OfficeLocation;
 import com.viajescarolina.api.settings.domain.OfficeRepository;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
@@ -22,6 +24,7 @@ import java.math.BigDecimal;
 @Path("/api/admin/v1/office")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@RolesAllowed({"SUPER_ADMIN", "CONTENT_EDITOR", "ADVISOR"})
 @Tag(name = "Admin Office", description = "Endpoints administrativos para la gestión de oficina física")
 public class AdminOfficeResource {
 
@@ -35,7 +38,8 @@ public class AdminOfficeResource {
     }
 
     @GET
-    @Operation(summary = "Obtener detalles de oficina", description = "Retorna todos los campos de configuración de la oficina física")
+    @PermitAll
+    @Operation(summary = "Obtener detalles de oficina", description = "Retorna todos los campos de configuración de la oficina física; lectura pública porque la web pública consume este mismo endpoint (footer, contacto, reclamaciones)")
     public Response getOffice() {
         OfficeLocation office = officeRepository.findOffice()
                 .orElseGet(() -> new OfficeLocation(

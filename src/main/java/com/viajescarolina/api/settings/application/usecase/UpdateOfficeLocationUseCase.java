@@ -4,6 +4,7 @@ import com.viajescarolina.api.settings.application.dto.OfficeLocationDTO;
 import com.viajescarolina.api.settings.application.dto.UpdateOfficeLocationRequest;
 import com.viajescarolina.api.settings.domain.OfficeLocation;
 import com.viajescarolina.api.settings.domain.OfficeRepository;
+import com.viajescarolina.api.common.audit.Audited;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -18,6 +19,7 @@ public class UpdateOfficeLocationUseCase {
         this.officeRepository = officeRepository;
     }
 
+    @Audited(action = "UPDATE_OFFICE_LOCATION", entityType = "OFFICE_LOCATION")
     @Transactional
     public OfficeLocationDTO execute(UpdateOfficeLocationRequest request) {
         OfficeLocation office = officeRepository.findOffice()

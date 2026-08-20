@@ -6,6 +6,7 @@ import com.viajescarolina.api.about.application.usecase.CreateAdvisorUseCase;
 import com.viajescarolina.api.about.application.usecase.DeleteAdvisorUseCase;
 import com.viajescarolina.api.about.application.usecase.ListAdminAdvisorsUseCase;
 import com.viajescarolina.api.about.application.usecase.UpdateAdvisorUseCase;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -17,6 +18,7 @@ import java.util.List;
 @Path("/api/admin/v1/advisors")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@RolesAllowed({"SUPER_ADMIN", "CONTENT_EDITOR", "ADVISOR"})
 @Tag(name = "Admin Advisors", description = "Endpoints administrativos para gestionar asesoras de viaje")
 public class AdminAdvisorResource {
 

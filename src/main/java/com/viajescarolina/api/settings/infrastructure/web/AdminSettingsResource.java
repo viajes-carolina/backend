@@ -9,6 +9,10 @@ import com.viajescarolina.api.settings.application.usecase.UpdateSiteSettingsUse
 import com.viajescarolina.api.settings.application.usecase.UpdateWhatsAppChannelUseCase;
 import com.viajescarolina.api.settings.domain.SettingsRepository;
 import com.viajescarolina.api.settings.domain.SiteSettings;
+import com.viajescarolina.api.settings.domain.WhatsAppChannel;
+import com.viajescarolina.api.settings.domain.WhatsAppRepository;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
@@ -24,10 +28,12 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 @Path("/api/admin/v1")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@RolesAllowed({"SUPER_ADMIN", "CONTENT_EDITOR", "ADVISOR"})
 @Tag(name = "Admin Settings", description = "Endpoints administrativos para configuración del sitio y canal WhatsApp")
 public class AdminSettingsResource {
 
     private final SettingsRepository settingsRepository;
+    private final WhatsAppRepository whatsAppRepository;
     private final UpdateSiteSettingsUseCase updateSiteSettingsUseCase;
     private final GetWhatsAppChannelUseCase getWhatsAppChannelUseCase;
     private final UpdateWhatsAppChannelUseCase updateWhatsAppChannelUseCase;
@@ -35,10 +41,12 @@ public class AdminSettingsResource {
     @Inject
     public AdminSettingsResource(
             SettingsRepository settingsRepository,
+            WhatsAppRepository whatsAppRepository,
             UpdateSiteSettingsUseCase updateSiteSettingsUseCase,
             GetWhatsAppChannelUseCase getWhatsAppChannelUseCase,
             UpdateWhatsAppChannelUseCase updateWhatsAppChannelUseCase) {
         this.settingsRepository = settingsRepository;
+        this.whatsAppRepository = whatsAppRepository;
         this.updateSiteSettingsUseCase = updateSiteSettingsUseCase;
         this.getWhatsAppChannelUseCase = getWhatsAppChannelUseCase;
         this.updateWhatsAppChannelUseCase = updateWhatsAppChannelUseCase;
@@ -46,22 +54,32 @@ public class AdminSettingsResource {
 
     @GET
     @Path("/settings")
-    @Operation(summary = "Obtener configuración completa del sitio", description = "Retorna todos los campos de configuración para el panel admin")
+    @PermitAll
+    @Operation(summary = "Obtener configuración completa del sitio", description = "Retorna todos los campos de configuración; lectura pública porque la web pública consume este mismo endpoint (identidad, contacto, redes, RUC/razón social, WhatsApp)")
     public Response getSettings() {
         SiteSettings settings = settingsRepository.findSiteSettings()
-                .orElseGet(() -> new SiteSettings(1, "Viajes Carolina", "El viaje comienza aquí", "contacto@viajescarolina.com", "+51 987 654 321", null, null, null, null, null, 1, null, null));
+                .orElseGet(() -> new SiteSettings(1, "Viajes Carolina", "El viaje comienza aquí", "contacto@viajescarolina.com", null, null, null, null, null, "VIAJES CAROLINA S.A.C.", "20601234567", 1, null, null));
+
+        WhatsAppChannel channel = whatsAppRepository.findChannel()
+                .orElseGet(() -> new WhatsAppChannel(null, "Línea Principal", "+51987654321", "+51 987 654 321",
+                        "Hola Viajes Carolina, deseo asesoría personalizada para mi próximo viaje.", true, true, 1, null, null));
 
         SiteSettingsDTO dto = new SiteSettingsDTO(
                 settings.getId(),
                 settings.getSiteName(),
                 settings.getBrandTagline(),
                 settings.getContactEmail(),
-                settings.getPrimaryPhone(),
                 settings.getLogoMediaId(),
                 settings.getFaviconMediaId(),
                 settings.getFacebookUrl(),
                 settings.getInstagramUrl(),
                 settings.getTiktokUrl(),
+                settings.getLegalCompanyName(),
+                settings.getTaxId(),
+                channel.getDisplayNumber(),
+                channel.getE164Number(),
+                channel.getDisplayNumber(),
+                channel.getDefaultMessage(),
                 settings.getRevision(),
                 settings.getUpdatedAt()
         );

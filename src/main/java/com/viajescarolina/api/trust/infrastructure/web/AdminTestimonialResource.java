@@ -6,6 +6,7 @@ import com.viajescarolina.api.trust.application.usecase.CreateTestimonialUseCase
 import com.viajescarolina.api.trust.application.usecase.DeleteTestimonialUseCase;
 import com.viajescarolina.api.trust.application.usecase.ListAdminTestimonialsUseCase;
 import com.viajescarolina.api.trust.application.usecase.UpdateTestimonialUseCase;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
@@ -18,6 +19,7 @@ import java.util.List;
 @Path("/api/admin/v1/testimonials")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@RolesAllowed({"SUPER_ADMIN", "CONTENT_EDITOR", "ADVISOR"})
 @Tag(name = "Admin Testimonials", description = "Gestión administrativa de testimonios y opiniones de viajeros")
 public class AdminTestimonialResource {
 

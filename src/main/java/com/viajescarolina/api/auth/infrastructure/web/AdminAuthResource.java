@@ -3,8 +3,11 @@ package com.viajescarolina.api.auth.infrastructure.web;
 import com.viajescarolina.api.auth.application.dto.AdminUserDTO;
 import com.viajescarolina.api.auth.application.dto.LoginRequest;
 import com.viajescarolina.api.auth.application.dto.LoginResponse;
-import com.viajescarolina.api.auth.application.usecase.ListAdminUsersUseCase;
 import com.viajescarolina.api.auth.application.usecase.LoginAdminUseCase;
+import com.viajescarolina.api.auth.domain.AdminUser;
+import com.viajescarolina.api.auth.domain.AdminUserRepository;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
@@ -12,10 +15,12 @@ import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.NewCookie;
 import jakarta.ws.rs.core.Response;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
-import java.util.List;
+import jakarta.inject.Inject;
 
 @Path("/api/admin/v1/auth")
 @Produces(MediaType.APPLICATION_JSON)
@@ -24,15 +29,22 @@ import java.util.List;
 public class AdminAuthResource {
 
     private final LoginAdminUseCase loginAdminUseCase;
-    private final ListAdminUsersUseCase listAdminUsersUseCase;
+    private final AdminUserRepository adminUserRepository;
 
-    public AdminAuthResource(LoginAdminUseCase loginAdminUseCase, ListAdminUsersUseCase listAdminUsersUseCase) {
+    @Inject
+    JsonWebToken jwt;
+
+    @ConfigProperty(name = "viajescarolina.security.cookie-secure", defaultValue = "true")
+    boolean cookieSecure;
+
+    public AdminAuthResource(LoginAdminUseCase loginAdminUseCase, AdminUserRepository adminUserRepository) {
         this.loginAdminUseCase = loginAdminUseCase;
-        this.listAdminUsersUseCase = listAdminUsersUseCase;
+        this.adminUserRepository = adminUserRepository;
     }
 
     @POST
     @Path("/login")
+    @PermitAll
     @Operation(summary = "Inicio de sesión administrativo", description = "Valida credenciales con Argon2id, genera JWT y cookie HttpOnly")
     public Response login(@Valid LoginRequest req, @HeaderParam("X-Forwarded-For") String forwardedFor) {
         String clientIp = forwardedFor != null ? forwardedFor.split(",")[0].trim() : "127.0.0.1";
@@ -42,7 +54,7 @@ public class AdminAuthResource {
                 .value(result.token())
                 .path("/")
                 .maxAge((int) result.expiresInSeconds())
-                .secure(false) // Permitir en dev local
+                .secure(cookieSecure)
                 .httpOnly(true)
                 .sameSite(NewCookie.SameSite.STRICT)
                 .build();
@@ -52,12 +64,14 @@ public class AdminAuthResource {
 
     @POST
     @Path("/logout")
+    @RolesAllowed({"SUPER_ADMIN", "CONTENT_EDITOR", "ADVISOR"})
     @Operation(summary = "Cierre de sesión", description = "Invalida la cookie de sesión administrativa")
     public Response logout() {
         NewCookie expiredCookie = new NewCookie.Builder("vc_admin_jwt")
                 .value("")
                 .path("/")
                 .maxAge(0)
+                .secure(cookieSecure)
                 .httpOnly(true)
                 .sameSite(NewCookie.SameSite.STRICT)
                 .build();
@@ -67,12 +81,33 @@ public class AdminAuthResource {
 
     @GET
     @Path("/me")
+    @RolesAllowed({"SUPER_ADMIN", "CONTENT_EDITOR", "ADVISOR"})
     @Operation(summary = "Obtener perfil del usuario autenticado")
-    public Response getCurrentUser(@HeaderParam("Authorization") String authHeader) {
-        List<AdminUserDTO> users = listAdminUsersUseCase.execute();
-        if (!users.isEmpty()) {
-            return Response.ok(users.get(0)).build();
+    public Response getCurrentUser() {
+        Long userId;
+        try {
+            userId = Long.valueOf(jwt.getSubject());
+        } catch (NumberFormatException e) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
         }
-        return Response.status(Response.Status.UNAUTHORIZED).build();
+
+        return adminUserRepository.findUserById(userId)
+                .map(AdminAuthResource::toDTO)
+                .map(dto -> Response.ok(dto).build())
+                .orElseGet(() -> Response.status(Response.Status.UNAUTHORIZED).build());
+    }
+
+    private static AdminUserDTO toDTO(AdminUser user) {
+        return new AdminUserDTO(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getFullName(),
+                user.getRole(),
+                user.isActive(),
+                user.getLastLoginAt(),
+                user.getCreatedAt(),
+                user.getUpdatedAt()
+        );
     }
 }

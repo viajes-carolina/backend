@@ -23,10 +23,10 @@ public class TriggerPublishUseCase {
 
     private final AuditLogRepository auditLogRepository;
 
-    @ConfigProperty(name = "publishing.revalidation.url", defaultValue = "http://127.0.0.1:3000/api/revalidate")
+    @ConfigProperty(name = "viajescarolina.publishing.revalidation-url")
     String revalidationUrl;
 
-    @ConfigProperty(name = "publishing.revalidation.secret", defaultValue = "vc-secret-isr-key-2026")
+    @ConfigProperty(name = "viajescarolina.publishing.revalidation-secret")
     String revalidationSecret;
 
     public TriggerPublishUseCase(AuditLogRepository auditLogRepository) {
@@ -74,9 +74,18 @@ public class TriggerPublishUseCase {
             }
         }
 
-        // Emitir webhook HTTP al Frontend Next.js para Revalidación On-Demand ISR
+        // Emitir webhook HTTP al Frontend Next.js para Revalidación On-Demand ISR.
+        // Se espera la respuesta real (antes era sendAsync sin await ni chequeo de status,
+        // así que el endpoint SIEMPRE reportaba "SUCCESS" aunque el webhook fallara con 401
+        // o el frontend estuviera caído — ver hallazgo de Fase B Ciclo 14).
+        boolean webhookSucceeded;
+        String webhookDetail;
         try {
+            // HTTP_1_1 explícito: el servidor de desarrollo de Next.js solo habla HTTP/1.1 y la
+            // negociación automática de HTTP/2 del HttpClient del JDK falla intermitentemente
+            // contra él con "header parser received no bytes".
             HttpClient client = HttpClient.newBuilder()
+                    .version(HttpClient.Version.HTTP_1_1)
                     .connectTimeout(Duration.ofSeconds(3))
                     .build();
 
@@ -92,9 +101,12 @@ public class TriggerPublishUseCase {
                     .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
                     .build();
 
-            client.sendAsync(request, HttpResponse.BodyHandlers.ofString());
-        } catch (Exception ignored) {
-            // Revalidación tolerante en dev/offline
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            webhookSucceeded = response.statusCode() >= 200 && response.statusCode() < 300;
+            webhookDetail = "HTTP " + response.statusCode();
+        } catch (Exception e) {
+            webhookSucceeded = false;
+            webhookDetail = e.getClass().getSimpleName() + ": " + e.getMessage();
         }
 
         String operator = adminUsername != null && !adminUsername.isBlank() ? adminUsername : "admin";
@@ -109,21 +121,31 @@ public class TriggerPublishUseCase {
                     "PUBLISHING",
                     target,
                     null,
-                    String.format("{\"target\": \"%s\", \"tags\": %s, \"reason\": \"%s\"}",
+                    String.format("{\"target\": \"%s\", \"tags\": %s, \"reason\": \"%s\", \"webhookSucceeded\": %b, \"webhookDetail\": \"%s\"}",
                             target,
                             "[\"" + String.join("\",\"", tagsToRevalidate) + "\"]",
-                            req != null && req.reason() != null ? req.reason() : "Actualización de contenidos"),
+                            req != null && req.reason() != null ? req.reason() : "Actualización de contenidos",
+                            webhookSucceeded,
+                            webhookDetail.replace("\"", "'")),
                     Instant.now()
             );
             auditLogRepository.save(log);
         } catch (Exception ignored) {}
 
-        return new PublishResponse(
-                "SUCCESS",
-                tagsToRevalidate,
-                Instant.now(),
-                operator,
-                String.format("Publicación completada exitosamente. Se revalidaron %d tags/rutas en Next.js ISR.", tagsToRevalidate.size())
-        );
+        return webhookSucceeded
+                ? new PublishResponse(
+                        "SUCCESS",
+                        tagsToRevalidate,
+                        Instant.now(),
+                        operator,
+                        String.format("Publicación completada exitosamente. Se revalidaron %d tags/rutas en Next.js ISR (%s).", tagsToRevalidate.size(), webhookDetail)
+                )
+                : new PublishResponse(
+                        "FAILED",
+                        tagsToRevalidate,
+                        Instant.now(),
+                        operator,
+                        "El webhook de revalidación no respondió correctamente (" + webhookDetail + "). Los cambios NO se reflejaron vía ISR."
+                );
     }
 }

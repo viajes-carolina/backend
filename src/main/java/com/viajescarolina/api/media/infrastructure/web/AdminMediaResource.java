@@ -7,6 +7,7 @@ import com.viajescarolina.api.media.application.usecase.GetMediaAssetUseCase;
 import com.viajescarolina.api.media.application.usecase.ListMediaAssetsUseCase;
 import com.viajescarolina.api.media.application.usecase.UpdateMediaFocalPointUseCase;
 import com.viajescarolina.api.media.application.usecase.UploadMediaAssetUseCase;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
@@ -30,6 +31,7 @@ import java.io.InputStream;
 
 @Path("/api/admin/v1/media")
 @Produces(MediaType.APPLICATION_JSON)
+@RolesAllowed({"SUPER_ADMIN", "CONTENT_EDITOR", "ADVISOR"})
 @Tag(name = "Admin Media", description = "Gestión centralizada de activos multimedia, biblioteca de imágenes y puntos focales")
 public class AdminMediaResource {
 
@@ -74,7 +76,7 @@ public class AdminMediaResource {
     @POST
     @Path("/upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Operation(summary = "Subir activo multimedia", description = "Recibe un archivo multipart, calcula dimensiones y almacena en WebP")
+    @Operation(summary = "Subir activo multimedia", description = "Recibe un archivo multipart, valida que sea una imagen real, la redimensiona/recomprime si corresponde y calcula sus dimensiones finales")
     public Response uploadMedia(
             @RestForm("file") FileUpload file,
             @RestForm("altText") String altText,
@@ -90,6 +92,10 @@ public class AdminMediaResource {
 
             MediaAssetDTO saved = uploadUseCase.execute(originalName, contentType, is, size, altText, caption);
             return Response.status(Response.Status.CREATED).entity(saved).build();
+        } catch (jakarta.ws.rs.WebApplicationException e) {
+            throw e;
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error al procesar archivo: " + e.getMessage()).build();
         }

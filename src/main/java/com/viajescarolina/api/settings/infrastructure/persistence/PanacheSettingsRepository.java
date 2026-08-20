@@ -28,12 +28,13 @@ public class PanacheSettingsRepository implements SettingsRepository {
         entity.siteName = settings.getSiteName();
         entity.brandTagline = settings.getBrandTagline();
         entity.contactEmail = settings.getContactEmail();
-        entity.primaryPhone = settings.getPrimaryPhone();
         entity.logoMediaId = settings.getLogoMediaId();
         entity.faviconMediaId = settings.getFaviconMediaId();
         entity.facebookUrl = settings.getFacebookUrl();
         entity.instagramUrl = settings.getInstagramUrl();
         entity.tiktokUrl = settings.getTiktokUrl();
+        entity.legalCompanyName = settings.getLegalCompanyName();
+        entity.taxId = settings.getTaxId();
         entity.revision = settings.getRevision();
         entity.updatedAt = settings.getUpdatedAt();
 
@@ -47,12 +48,13 @@ public class PanacheSettingsRepository implements SettingsRepository {
                 entity.siteName,
                 entity.brandTagline,
                 entity.contactEmail,
-                entity.primaryPhone,
                 entity.logoMediaId,
                 entity.faviconMediaId,
                 entity.facebookUrl,
                 entity.instagramUrl,
                 entity.tiktokUrl,
+                entity.legalCompanyName,
+                entity.taxId,
                 entity.revision,
                 entity.createdAt,
                 entity.updatedAt

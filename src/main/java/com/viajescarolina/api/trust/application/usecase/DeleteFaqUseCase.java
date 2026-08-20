@@ -2,6 +2,7 @@ package com.viajescarolina.api.trust.application.usecase;
 
 import com.viajescarolina.api.trust.domain.FaqItem;
 import com.viajescarolina.api.trust.domain.FaqRepository;
+import com.viajescarolina.api.common.audit.Audited;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -17,6 +18,7 @@ public class DeleteFaqUseCase {
         this.faqRepository = faqRepository;
     }
 
+    @Audited(action = "DEACTIVATE_FAQ", entityType = "FAQ")
     @Transactional
     public void execute(Long id) {
         FaqItem item = faqRepository.findFaqById(id)

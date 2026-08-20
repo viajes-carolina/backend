@@ -5,6 +5,7 @@ import com.viajescarolina.api.about.application.dto.UpdateAboutPageRequest;
 import com.viajescarolina.api.about.application.usecase.GetPublicAboutUseCase;
 import com.viajescarolina.api.about.application.usecase.UpdateAboutPageUseCase;
 import com.viajescarolina.api.about.domain.AboutPageRepository;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -14,6 +15,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 @Path("/api/admin/v1/about")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@RolesAllowed({"SUPER_ADMIN", "CONTENT_EDITOR", "ADVISOR"})
 @Tag(name = "Admin About", description = "Endpoints administrativos para gestionar la información de Nosotros")
 public class AdminAboutResource {
 

@@ -6,6 +6,7 @@ import com.viajescarolina.api.blog.domain.BlogCategory;
 import com.viajescarolina.api.blog.domain.BlogCategoryRepository;
 import com.viajescarolina.api.blog.domain.BlogPost;
 import com.viajescarolina.api.blog.domain.BlogPostRepository;
+import com.viajescarolina.api.common.audit.Audited;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -24,6 +25,7 @@ public class CreateBlogPostUseCase {
     @Inject
     BlogCategoryRepository categoryRepository;
 
+    @Audited(action = "CREATE_BLOG_POST", entityType = "BLOG_POST")
     @Transactional
     public BlogPostDTO execute(CreateOrUpdateBlogPostRequest req) {
         if (req.slug() == null || req.slug().isBlank()) {

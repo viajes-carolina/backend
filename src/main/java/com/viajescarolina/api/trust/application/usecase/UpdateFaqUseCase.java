@@ -4,6 +4,7 @@ import com.viajescarolina.api.trust.application.dto.CreateOrUpdateFaqRequest;
 import com.viajescarolina.api.trust.application.dto.FaqItemDTO;
 import com.viajescarolina.api.trust.domain.FaqItem;
 import com.viajescarolina.api.trust.domain.FaqRepository;
+import com.viajescarolina.api.common.audit.Audited;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -19,6 +20,7 @@ public class UpdateFaqUseCase {
         this.faqRepository = faqRepository;
     }
 
+    @Audited(action = "UPDATE_FAQ", entityType = "FAQ")
     @Transactional
     public FaqItemDTO execute(Long id, CreateOrUpdateFaqRequest request) {
         FaqItem item = faqRepository.findFaqById(id)

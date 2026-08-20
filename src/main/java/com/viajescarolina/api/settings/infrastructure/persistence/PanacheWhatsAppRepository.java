@@ -14,7 +14,7 @@ public class PanacheWhatsAppRepository implements WhatsAppRepository {
 
     @Override
     public Optional<WhatsAppChannel> findChannel() {
-        WhatsAppChannelPanacheEntity entity = WhatsAppChannelPanacheEntity.findById(1);
+        WhatsAppChannelPanacheEntity entity = WhatsAppChannelPanacheEntity.find("isPrimary", true).firstResult();
         if (entity == null) {
             return Optional.empty();
         }
@@ -23,14 +23,18 @@ public class PanacheWhatsAppRepository implements WhatsAppRepository {
 
     @Override
     public WhatsAppChannel saveChannel(WhatsAppChannel channel) {
-        WhatsAppChannelPanacheEntity entity = WhatsAppChannelPanacheEntity.findById(1);
+        WhatsAppChannelPanacheEntity entity = channel.getId() != null
+                ? WhatsAppChannelPanacheEntity.findById(channel.getId())
+                : null;
         if (entity == null) {
             entity = new WhatsAppChannelPanacheEntity();
-            entity.id = 1;
+            entity.isPrimary = channel.isPrimary();
         }
 
+        entity.label = channel.getLabel();
         entity.e164Number = channel.getE164Number();
         entity.displayNumber = channel.getDisplayNumber();
+        entity.defaultMessage = channel.getDefaultMessage();
         entity.active = channel.isActive();
         entity.revision = channel.getRevision();
         entity.updatedAt = channel.getUpdatedAt();
@@ -81,8 +85,11 @@ public class PanacheWhatsAppRepository implements WhatsAppRepository {
     private WhatsAppChannel toDomain(WhatsAppChannelPanacheEntity entity) {
         return new WhatsAppChannel(
                 entity.id,
+                entity.label,
                 entity.e164Number,
                 entity.displayNumber,
+                entity.defaultMessage,
+                entity.isPrimary,
                 entity.active,
                 entity.revision,
                 entity.createdAt,

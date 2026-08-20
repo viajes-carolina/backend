@@ -4,6 +4,7 @@ import com.viajescarolina.api.home.application.dto.HomeBlogInspirationDTO;
 import com.viajescarolina.api.home.application.dto.PublicHomeBlogInspirationResponse;
 import com.viajescarolina.api.home.application.usecase.GetPublicHomeBlogInspirationUseCase;
 import com.viajescarolina.api.home.application.usecase.UpdateHomeBlogInspirationUseCase;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -18,6 +19,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 @Path("/api/admin/v1/home/blog-inspiration")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@RolesAllowed({"SUPER_ADMIN", "CONTENT_EDITOR", "ADVISOR"})
 @Tag(name = "Admin Home", description = "Endpoints de administración de la portada")
 public class AdminHomeBlogInspirationResource {
 

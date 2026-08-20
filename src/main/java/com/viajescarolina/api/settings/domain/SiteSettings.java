@@ -7,12 +7,13 @@ public class SiteSettings {
     private String siteName;
     private String brandTagline;
     private String contactEmail;
-    private String primaryPhone;
     private Integer logoMediaId;
     private Integer faviconMediaId;
     private String facebookUrl;
     private String instagramUrl;
     private String tiktokUrl;
+    private String legalCompanyName;
+    private String taxId;
     private int revision;
     private final Instant createdAt;
     private Instant updatedAt;
@@ -22,12 +23,13 @@ public class SiteSettings {
             String siteName,
             String brandTagline,
             String contactEmail,
-            String primaryPhone,
             Integer logoMediaId,
             Integer faviconMediaId,
             String facebookUrl,
             String instagramUrl,
             String tiktokUrl,
+            String legalCompanyName,
+            String taxId,
             int revision,
             Instant createdAt,
             Instant updatedAt) {
@@ -35,12 +37,13 @@ public class SiteSettings {
         this.siteName = siteName;
         this.brandTagline = brandTagline;
         this.contactEmail = contactEmail;
-        this.primaryPhone = primaryPhone;
         this.logoMediaId = logoMediaId;
         this.faviconMediaId = faviconMediaId;
         this.facebookUrl = facebookUrl;
         this.instagramUrl = instagramUrl;
         this.tiktokUrl = tiktokUrl;
+        this.legalCompanyName = legalCompanyName;
+        this.taxId = taxId;
         this.revision = revision;
         this.createdAt = createdAt != null ? createdAt : Instant.now();
         this.updatedAt = updatedAt != null ? updatedAt : Instant.now();
@@ -50,21 +53,23 @@ public class SiteSettings {
             String siteName,
             String brandTagline,
             String contactEmail,
-            String primaryPhone,
             Integer logoMediaId,
             Integer faviconMediaId,
             String facebookUrl,
             String instagramUrl,
-            String tiktokUrl) {
+            String tiktokUrl,
+            String legalCompanyName,
+            String taxId) {
         this.siteName = siteName;
         this.brandTagline = brandTagline;
         this.contactEmail = contactEmail;
-        this.primaryPhone = primaryPhone;
         this.logoMediaId = logoMediaId;
         this.faviconMediaId = faviconMediaId;
         this.facebookUrl = facebookUrl;
         this.instagramUrl = instagramUrl;
         this.tiktokUrl = tiktokUrl;
+        this.legalCompanyName = legalCompanyName;
+        this.taxId = taxId;
         this.revision++;
         this.updatedAt = Instant.now();
     }
@@ -73,12 +78,13 @@ public class SiteSettings {
     public String getSiteName() { return siteName; }
     public String getBrandTagline() { return brandTagline; }
     public String getContactEmail() { return contactEmail; }
-    public String getPrimaryPhone() { return primaryPhone; }
     public Integer getLogoMediaId() { return logoMediaId; }
     public Integer getFaviconMediaId() { return faviconMediaId; }
     public String getFacebookUrl() { return facebookUrl; }
     public String getInstagramUrl() { return instagramUrl; }
     public String getTiktokUrl() { return tiktokUrl; }
+    public String getLegalCompanyName() { return legalCompanyName; }
+    public String getTaxId() { return taxId; }
     public int getRevision() { return revision; }
     public Instant getCreatedAt() { return createdAt; }
     public Instant getUpdatedAt() { return updatedAt; }

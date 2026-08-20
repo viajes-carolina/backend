@@ -3,6 +3,7 @@ package com.viajescarolina.api.contact.application.usecase;
 import com.viajescarolina.api.contact.application.dto.ContactInquiryDTO;
 import com.viajescarolina.api.contact.domain.ContactInquiry;
 import com.viajescarolina.api.contact.domain.ContactInquiryRepository;
+import com.viajescarolina.api.common.audit.Audited;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
@@ -19,6 +20,7 @@ public class UpdateInquiryStatusUseCase {
         this.submitContactInquiryUseCase = submitContactInquiryUseCase;
     }
 
+    @Audited(action = "UPDATE_INQUIRY_STATUS", entityType = "INQUIRY")
     @Transactional
     public ContactInquiryDTO execute(Long id, String newStatus) {
         ContactInquiry inquiry = inquiryRepository.findInquiryById(id)

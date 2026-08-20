@@ -2,6 +2,7 @@ package com.viajescarolina.api.trust.application.usecase;
 
 import com.viajescarolina.api.trust.domain.Testimonial;
 import com.viajescarolina.api.trust.domain.TestimonialRepository;
+import com.viajescarolina.api.common.audit.Audited;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -17,6 +18,7 @@ public class DeleteTestimonialUseCase {
         this.testimonialRepository = testimonialRepository;
     }
 
+    @Audited(action = "DEACTIVATE_TESTIMONIAL", entityType = "TESTIMONIAL")
     @Transactional
     public void execute(Long id) {
         Testimonial testimonial = testimonialRepository.findTestimonialById(id)

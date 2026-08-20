@@ -2,6 +2,7 @@ package com.viajescarolina.api.promotions.application.usecase;
 
 import com.viajescarolina.api.promotions.domain.Promotion;
 import com.viajescarolina.api.promotions.domain.PromotionRepository;
+import com.viajescarolina.api.common.audit.Audited;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -17,6 +18,7 @@ public class DeletePromotionUseCase {
         this.promotionRepository = promotionRepository;
     }
 
+    @Audited(action = "DEACTIVATE_PROMOTION", entityType = "PROMOTION")
     @Transactional
     public void execute(Long id) {
         Promotion promotion = promotionRepository.findPromotionById(id)

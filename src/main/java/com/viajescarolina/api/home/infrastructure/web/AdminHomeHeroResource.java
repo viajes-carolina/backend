@@ -4,6 +4,7 @@ import com.viajescarolina.api.home.application.dto.HomeHeroDTO;
 import com.viajescarolina.api.home.application.dto.UpdateHomeHeroRequest;
 import com.viajescarolina.api.home.application.usecase.GetPublicHomeHeroUseCase;
 import com.viajescarolina.api.home.application.usecase.UpdateHomeHeroUseCase;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
@@ -19,6 +20,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 @Path("/api/admin/v1/home/hero")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@RolesAllowed({"SUPER_ADMIN", "CONTENT_EDITOR", "ADVISOR"})
 @Tag(name = "Admin Home Hero", description = "Gestión centralizada de la sección Hero de la página de inicio")
 public class AdminHomeHeroResource {
 

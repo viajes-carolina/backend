@@ -4,6 +4,7 @@ import com.viajescarolina.api.claims.application.dto.ClaimRecordDTO;
 import com.viajescarolina.api.claims.application.dto.UpdateClaimStatusRequest;
 import com.viajescarolina.api.claims.application.usecase.ListAdminClaimsUseCase;
 import com.viajescarolina.api.claims.application.usecase.UpdateClaimStatusUseCase;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
@@ -16,6 +17,7 @@ import java.util.List;
 @Path("/api/admin/v1/claims")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@RolesAllowed({"SUPER_ADMIN", "CONTENT_EDITOR", "ADVISOR"})
 @Tag(name = "Admin Claims", description = "Gestión administrativa del Libro de Reclamaciones")
 public class AdminClaimsResource {
 

@@ -5,6 +5,7 @@ import com.viajescarolina.api.promotions.application.dto.CreateOrUpdatePromotion
 import com.viajescarolina.api.promotions.application.dto.PromotionDTO;
 import com.viajescarolina.api.promotions.domain.Promotion;
 import com.viajescarolina.api.promotions.domain.PromotionRepository;
+import com.viajescarolina.api.common.audit.Audited;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -24,6 +25,7 @@ public class UpdatePromotionUseCase {
         this.mediaRepository = mediaRepository;
     }
 
+    @Audited(action = "UPDATE_PROMOTION", entityType = "PROMOTION")
     @Transactional
     public PromotionDTO execute(Long id, CreateOrUpdatePromotionRequest request) {
         Promotion promotion = promotionRepository.findPromotionById(id)

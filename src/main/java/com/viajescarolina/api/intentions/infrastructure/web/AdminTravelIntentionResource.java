@@ -6,6 +6,7 @@ import com.viajescarolina.api.intentions.application.usecase.CreateTravelIntenti
 import com.viajescarolina.api.intentions.application.usecase.DeleteTravelIntentionUseCase;
 import com.viajescarolina.api.intentions.application.usecase.ListAdminTravelIntentionsUseCase;
 import com.viajescarolina.api.intentions.application.usecase.UpdateTravelIntentionUseCase;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
@@ -18,6 +19,7 @@ import java.util.List;
 @Path("/api/admin/v1/intentions")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@RolesAllowed({"SUPER_ADMIN", "CONTENT_EDITOR", "ADVISOR"})
 @Tag(name = "Admin Travel Intentions", description = "Gestión centralizada de intenciones de viaje")
 public class AdminTravelIntentionResource {
 

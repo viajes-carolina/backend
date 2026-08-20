@@ -14,5 +14,7 @@ public record PublicSiteResponse(
     String tiktokUrl,
     Integer logoMediaId,
     Integer faviconMediaId,
+    String legalCompanyName,
+    String taxId,
     Map<String, String> actions
 ) {}

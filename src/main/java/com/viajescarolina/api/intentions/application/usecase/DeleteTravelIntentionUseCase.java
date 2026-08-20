@@ -2,6 +2,7 @@ package com.viajescarolina.api.intentions.application.usecase;
 
 import com.viajescarolina.api.intentions.domain.TravelIntention;
 import com.viajescarolina.api.intentions.domain.TravelIntentionRepository;
+import com.viajescarolina.api.common.audit.Audited;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -17,6 +18,7 @@ public class DeleteTravelIntentionUseCase {
         this.intentionRepository = intentionRepository;
     }
 
+    @Audited(action = "DEACTIVATE_TRAVEL_INTENTION", entityType = "TRAVEL_INTENTION")
     @Transactional
     public void execute(Long id) {
         TravelIntention intention = intentionRepository.findIntentionById(id)

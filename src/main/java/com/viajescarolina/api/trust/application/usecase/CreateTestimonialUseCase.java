@@ -5,6 +5,7 @@ import com.viajescarolina.api.trust.application.dto.CreateOrUpdateTestimonialReq
 import com.viajescarolina.api.trust.application.dto.TestimonialDTO;
 import com.viajescarolina.api.trust.domain.Testimonial;
 import com.viajescarolina.api.trust.domain.TestimonialRepository;
+import com.viajescarolina.api.common.audit.Audited;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -23,6 +24,7 @@ public class CreateTestimonialUseCase {
         this.mediaRepository = mediaRepository;
     }
 
+    @Audited(action = "CREATE_TESTIMONIAL", entityType = "TESTIMONIAL")
     @Transactional
     public TestimonialDTO execute(CreateOrUpdateTestimonialRequest request) {
         Testimonial testimonial = Testimonial.create(

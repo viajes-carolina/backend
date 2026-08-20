@@ -2,6 +2,7 @@ package com.viajescarolina.api.blog.infrastructure.web;
 
 import com.viajescarolina.api.blog.application.dto.*;
 import com.viajescarolina.api.blog.application.usecase.*;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -14,6 +15,7 @@ import java.util.List;
 @Path("/api/admin/v1/blog")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@RolesAllowed({"SUPER_ADMIN", "CONTENT_EDITOR", "ADVISOR"})
 @Tag(name = "Admin Blog CMS", description = "Endpoints administrativos para la gestión de artículos y categorías del blog")
 public class AdminBlogResource {
 

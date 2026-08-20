@@ -4,6 +4,7 @@ import com.viajescarolina.api.about.application.dto.CreateOrUpdateAdvisorRequest
 import com.viajescarolina.api.about.application.dto.TravelAdvisorDTO;
 import com.viajescarolina.api.about.domain.TravelAdvisor;
 import com.viajescarolina.api.about.domain.TravelAdvisorRepository;
+import com.viajescarolina.api.common.audit.Audited;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
@@ -19,6 +20,7 @@ public class UpdateAdvisorUseCase {
         this.getPublicAboutUseCase = getPublicAboutUseCase;
     }
 
+    @Audited(action = "UPDATE_ADVISOR", entityType = "ADVISOR")
     @Transactional
     public TravelAdvisorDTO execute(Long id, CreateOrUpdateAdvisorRequest req) {
         TravelAdvisor advisor = advisorRepository.findAdvisorById(id)

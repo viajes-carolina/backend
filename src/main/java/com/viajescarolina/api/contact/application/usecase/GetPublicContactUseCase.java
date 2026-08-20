@@ -37,7 +37,7 @@ public class GetPublicContactUseCase {
         WhatsAppChannel waChannel = whatsAppRepository.findChannel().orElse(null);
         OfficeLocation office = officeRepository.findOffice().orElse(null);
 
-        String primaryPhone = settings != null ? settings.getPrimaryPhone() : "+51 987 654 321";
+        String primaryPhone = waChannel != null && waChannel.getDisplayNumber() != null ? waChannel.getDisplayNumber() : "+51 987 654 321";
         String whatsappPhone = waChannel != null && waChannel.getE164Number() != null ? waChannel.getE164Number() : "+51987654321";
         String contactEmail = settings != null ? settings.getContactEmail() : "contacto@viajescarolina.com";
         String officeAddress = office != null ? office.getAddressLine() + ", " + office.getDistrict() + ", " + office.getCity() : "Av. Larco 101, Oficina 502, Miraflores, Lima";

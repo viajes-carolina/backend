@@ -26,10 +26,11 @@ public class GetPublicSiteSettingsUseCase {
 
     public PublicSiteResponse execute() {
         SiteSettings settings = settingsRepository.findSiteSettings()
-                .orElseGet(() -> new SiteSettings(1, "Viajes Carolina", "El viaje comienza aquí", "contacto@viajescarolina.com", "+51 987 654 321", null, null, null, null, null, 1, null, null));
+                .orElseGet(() -> new SiteSettings(1, "Viajes Carolina", "El viaje comienza aquí", "contacto@viajescarolina.com", null, null, null, null, null, "VIAJES CAROLINA S.A.C.", "20601234567", 1, null, null));
 
         WhatsAppChannel channel = whatsAppRepository.findChannel()
-                .orElseGet(() -> new WhatsAppChannel(1, "+51987654321", "+51 987 654 321", true, 1, null, null));
+                .orElseGet(() -> new WhatsAppChannel(null, "Línea Principal", "+51987654321", "+51 987 654 321",
+                        "Hola Viajes Carolina, deseo asesoría personalizada para mi próximo viaje.", true, true, 1, null, null));
 
         Map<String, String> actionTemplates = whatsAppRepository.findAllActions().stream()
                 .collect(Collectors.toMap(WhatsAppAction::getActionKey, WhatsAppAction::getMessageTemplate));
@@ -38,7 +39,7 @@ public class GetPublicSiteSettingsUseCase {
                 settings.getSiteName(),
                 settings.getBrandTagline(),
                 settings.getContactEmail(),
-                settings.getPrimaryPhone(),
+                channel.isActive() ? channel.getDisplayNumber() : "",
                 channel.isActive() ? channel.getE164Number() : "",
                 channel.isActive() ? channel.getDisplayNumber() : "",
                 settings.getFacebookUrl(),
@@ -46,6 +47,8 @@ public class GetPublicSiteSettingsUseCase {
                 settings.getTiktokUrl(),
                 settings.getLogoMediaId(),
                 settings.getFaviconMediaId(),
+                settings.getLegalCompanyName(),
+                settings.getTaxId(),
                 actionTemplates
         );
     }

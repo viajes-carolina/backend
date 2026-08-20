@@ -3,6 +3,7 @@ package com.viajescarolina.api.media.application.usecase;
 import com.viajescarolina.api.media.domain.MediaAsset;
 import com.viajescarolina.api.media.domain.MediaRepository;
 import com.viajescarolina.api.media.domain.MediaStorageService;
+import com.viajescarolina.api.common.audit.Audited;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -20,6 +21,7 @@ public class DeleteMediaAssetUseCase {
         this.storageService = storageService;
     }
 
+    @Audited(action = "DELETE_MEDIA_ASSET", entityType = "MEDIA_ASSET")
     @Transactional
     public void execute(Long id) {
         MediaAsset asset = mediaRepository.findMediaById(id)

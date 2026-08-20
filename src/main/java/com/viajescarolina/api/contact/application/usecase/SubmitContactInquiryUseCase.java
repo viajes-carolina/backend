@@ -7,6 +7,8 @@ import com.viajescarolina.api.contact.domain.ContactInquiryRepository;
 import com.viajescarolina.api.contact.domain.TurnstileVerificationService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
 import java.security.MessageDigest;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
@@ -26,6 +28,9 @@ public class SubmitContactInquiryUseCase {
     @Transactional
     public ContactInquiryDTO execute(SubmitContactInquiryRequest req, String remoteIp) {
         boolean verified = turnstileService.verifyToken(req.turnstileToken(), remoteIp);
+        if (!verified) {
+            throw new WebApplicationException("Verificación anti-bot fallida.", Response.Status.FORBIDDEN);
+        }
 
         String ipHash = null;
         if (remoteIp != null && !remoteIp.isBlank()) {
