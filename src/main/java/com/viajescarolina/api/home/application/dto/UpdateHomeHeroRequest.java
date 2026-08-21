@@ -5,7 +5,9 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public record UpdateHomeHeroRequest(
-        @NotBlank(message = "El texto de la insignia es obligatorio")
+        // Sin @NotBlank: badgeText no se renderiza en ningún lugar de la web
+        // pública hoy (campo heredado, ver auditoría UX) — exigirlo bloquearía
+        // guardados del admin sin motivo.
         String badgeText,
 
         @NotBlank(message = "El título principal es obligatorio")
@@ -51,5 +53,6 @@ public record UpdateHomeHeroRequest(
         String secondaryMedia4Url,
         Double secondaryMedia4FocalX,
         Double secondaryMedia4FocalY,
-        String trustStatText
+        String trustStatText,
+        String eyebrowText
 ) {}

@@ -43,6 +43,7 @@ public record HomeHeroDTO(
         Double secondaryMedia4FocalX,
         Double secondaryMedia4FocalY,
         String trustStatText,
+        String eyebrowText,
         Integer revision,
         Instant updatedAt
 ) {}

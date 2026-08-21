@@ -108,7 +108,8 @@ public class UpdateHomeHeroUseCase {
                 request.secondaryMedia4Url(),
                 request.secondaryMedia4FocalX(),
                 request.secondaryMedia4FocalY(),
-                request.trustStatText()
+                request.trustStatText(),
+                request.eyebrowText()
         );
 
         HomeHero saved = homeHeroRepository.save(hero);

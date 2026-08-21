@@ -168,6 +168,7 @@ public class GetPublicHomeHeroUseCase {
                 secondary4FocalX,
                 secondary4FocalY,
                 hero.getTrustStatText(),
+                hero.getEyebrowText(),
                 hero.getRevision(),
                 hero.getUpdatedAt()
         );

@@ -136,6 +136,9 @@ public class HomeHeroPanacheEntity extends PanacheEntityBase {
     @Column(name = "trust_stat_text")
     public String trustStatText;
 
+    @Column(name = "eyebrow_text")
+    public String eyebrowText;
+
     @Column(name = "revision", nullable = false)
     public Integer revision = 1;
 
@@ -193,6 +196,7 @@ public class HomeHeroPanacheEntity extends PanacheEntityBase {
                 secondaryMedia4FocalX,
                 secondaryMedia4FocalY,
                 trustStatText,
+                eyebrowText,
                 revision,
                 createdAt,
                 updatedAt
@@ -243,6 +247,7 @@ public class HomeHeroPanacheEntity extends PanacheEntityBase {
         entity.secondaryMedia4FocalX = domain.getSecondaryMedia4FocalX();
         entity.secondaryMedia4FocalY = domain.getSecondaryMedia4FocalY();
         entity.trustStatText = domain.getTrustStatText();
+        entity.eyebrowText = domain.getEyebrowText();
         entity.revision = domain.getRevision();
         entity.createdAt = domain.getCreatedAt();
         entity.updatedAt = domain.getUpdatedAt();

@@ -44,6 +44,7 @@ public class HomeHero {
     private Double secondaryMedia4FocalX;
     private Double secondaryMedia4FocalY;
     private String trustStatText;
+    private String eyebrowText;
     private Integer revision;
     private Instant createdAt;
     private Instant updatedAt;
@@ -87,6 +88,7 @@ public class HomeHero {
             Double secondaryMedia4FocalX,
             Double secondaryMedia4FocalY,
             String trustStatText,
+            String eyebrowText,
             Integer revision,
             Instant createdAt,
             Instant updatedAt) {
@@ -128,6 +130,7 @@ public class HomeHero {
         this.secondaryMedia4FocalX = secondaryMedia4FocalX != null ? secondaryMedia4FocalX : 50.0;
         this.secondaryMedia4FocalY = secondaryMedia4FocalY != null ? secondaryMedia4FocalY : 50.0;
         this.trustStatText = trustStatText;
+        this.eyebrowText = eyebrowText;
         this.revision = revision != null ? revision : 1;
         this.createdAt = createdAt != null ? createdAt : Instant.now();
         this.updatedAt = updatedAt != null ? updatedAt : Instant.now();
@@ -170,7 +173,8 @@ public class HomeHero {
             String secondaryMedia4Url,
             Double secondaryMedia4FocalX,
             Double secondaryMedia4FocalY,
-            String trustStatText) {
+            String trustStatText,
+            String eyebrowText) {
         this.badgeText = badgeText;
         this.titleHighlight = titleHighlight;
         this.titleAccent = titleAccent;
@@ -208,6 +212,7 @@ public class HomeHero {
         if (secondaryMedia4FocalX != null) this.secondaryMedia4FocalX = secondaryMedia4FocalX;
         if (secondaryMedia4FocalY != null) this.secondaryMedia4FocalY = secondaryMedia4FocalY;
         this.trustStatText = trustStatText;
+        this.eyebrowText = eyebrowText;
         this.revision = (this.revision != null ? this.revision : 1) + 1;
         this.updatedAt = Instant.now();
     }
@@ -250,6 +255,7 @@ public class HomeHero {
     public Double getSecondaryMedia4FocalX() { return secondaryMedia4FocalX; }
     public Double getSecondaryMedia4FocalY() { return secondaryMedia4FocalY; }
     public String getTrustStatText() { return trustStatText; }
+    public String getEyebrowText() { return eyebrowText; }
     public Integer getRevision() { return revision; }
     public Instant getCreatedAt() { return createdAt; }
     public Instant getUpdatedAt() { return updatedAt; }
