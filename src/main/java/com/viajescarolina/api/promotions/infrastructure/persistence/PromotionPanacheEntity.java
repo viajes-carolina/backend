@@ -85,6 +85,15 @@ public class PromotionPanacheEntity extends PanacheEntityBase {
     @Column(name = "updated_at", nullable = false)
     public Instant updatedAt;
 
+    @Column(name = "source", nullable = false, length = 20)
+    public String source = "MANUAL";
+
+    @Column(name = "facebook_post_id", length = 64, unique = true)
+    public String facebookPostId;
+
+    @Column(name = "facebook_permalink_url", length = 500)
+    public String facebookPermalinkUrl;
+
     public Promotion toDomain() {
         List<String> incList = new ArrayList<>();
         List<String> excList = new ArrayList<>();
@@ -123,7 +132,10 @@ public class PromotionPanacheEntity extends PanacheEntityBase {
                 displayOrder,
                 active,
                 createdAt,
-                updatedAt
+                updatedAt,
+                source,
+                facebookPostId,
+                facebookPermalinkUrl
         );
     }
 
@@ -158,6 +170,9 @@ public class PromotionPanacheEntity extends PanacheEntityBase {
         entity.active = domain.isActive();
         entity.createdAt = domain.getCreatedAt();
         entity.updatedAt = domain.getUpdatedAt();
+        entity.source = domain.getSource();
+        entity.facebookPostId = domain.getFacebookPostId();
+        entity.facebookPermalinkUrl = domain.getFacebookPermalinkUrl();
         return entity;
     }
 }

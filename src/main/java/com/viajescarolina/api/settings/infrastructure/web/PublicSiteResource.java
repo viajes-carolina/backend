@@ -24,7 +24,7 @@ public class PublicSiteResource {
     }
 
     @GET
-    @Operation(summary = "Obtener configuración pública del sitio", description = "Retorna el nombre del sitio, número de WhatsApp activo, plantillas de acción y redes sociales")
+    @Operation(summary = "Obtener configuración pública del sitio", description = "Retorna el nombre del sitio, número de WhatsApp activo y redes sociales")
     public Response getPublicSiteSettings() {
         PublicSiteResponse response = getPublicSiteSettingsUseCase.execute();
         return Response.ok(response).build();

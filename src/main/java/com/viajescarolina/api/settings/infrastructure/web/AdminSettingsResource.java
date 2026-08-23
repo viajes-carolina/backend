@@ -2,11 +2,7 @@ package com.viajescarolina.api.settings.infrastructure.web;
 
 import com.viajescarolina.api.settings.application.dto.SiteSettingsDTO;
 import com.viajescarolina.api.settings.application.dto.UpdateSiteSettingsRequest;
-import com.viajescarolina.api.settings.application.dto.UpdateWhatsAppChannelRequest;
-import com.viajescarolina.api.settings.application.dto.WhatsAppChannelDTO;
-import com.viajescarolina.api.settings.application.usecase.GetWhatsAppChannelUseCase;
 import com.viajescarolina.api.settings.application.usecase.UpdateSiteSettingsUseCase;
-import com.viajescarolina.api.settings.application.usecase.UpdateWhatsAppChannelUseCase;
 import com.viajescarolina.api.settings.domain.SettingsRepository;
 import com.viajescarolina.api.settings.domain.SiteSettings;
 import com.viajescarolina.api.settings.domain.WhatsAppChannel;
@@ -35,21 +31,15 @@ public class AdminSettingsResource {
     private final SettingsRepository settingsRepository;
     private final WhatsAppRepository whatsAppRepository;
     private final UpdateSiteSettingsUseCase updateSiteSettingsUseCase;
-    private final GetWhatsAppChannelUseCase getWhatsAppChannelUseCase;
-    private final UpdateWhatsAppChannelUseCase updateWhatsAppChannelUseCase;
 
     @Inject
     public AdminSettingsResource(
             SettingsRepository settingsRepository,
             WhatsAppRepository whatsAppRepository,
-            UpdateSiteSettingsUseCase updateSiteSettingsUseCase,
-            GetWhatsAppChannelUseCase getWhatsAppChannelUseCase,
-            UpdateWhatsAppChannelUseCase updateWhatsAppChannelUseCase) {
+            UpdateSiteSettingsUseCase updateSiteSettingsUseCase) {
         this.settingsRepository = settingsRepository;
         this.whatsAppRepository = whatsAppRepository;
         this.updateSiteSettingsUseCase = updateSiteSettingsUseCase;
-        this.getWhatsAppChannelUseCase = getWhatsAppChannelUseCase;
-        this.updateWhatsAppChannelUseCase = updateWhatsAppChannelUseCase;
     }
 
     @GET
@@ -92,22 +82,6 @@ public class AdminSettingsResource {
     @Operation(summary = "Actualizar configuración del sitio", description = "Actualiza los datos de identidad y contacto del sitio")
     public Response updateSettings(@Valid UpdateSiteSettingsRequest request) {
         SiteSettingsDTO updated = updateSiteSettingsUseCase.execute(request);
-        return Response.ok(updated).build();
-    }
-
-    @GET
-    @Path("/whatsapp")
-    @Operation(summary = "Obtener canal WhatsApp", description = "Retorna el número de WhatsApp actual y su estado")
-    public Response getWhatsAppChannel() {
-        WhatsAppChannelDTO dto = getWhatsAppChannelUseCase.execute();
-        return Response.ok(dto).build();
-    }
-
-    @PUT
-    @Path("/whatsapp")
-    @Operation(summary = "Actualizar canal WhatsApp", description = "Actualiza el número de WhatsApp centralizado")
-    public Response updateWhatsAppChannel(@Valid UpdateWhatsAppChannelRequest request) {
-        WhatsAppChannelDTO updated = updateWhatsAppChannelUseCase.execute(request);
         return Response.ok(updated).build();
     }
 }

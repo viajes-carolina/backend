@@ -15,7 +15,13 @@ public interface PromotionRepository {
 
     Optional<Promotion> findBySlug(String slug);
 
+    Optional<Promotion> findByFacebookPostId(String facebookPostId);
+
     Promotion save(Promotion promotion);
 
     void delete(Long id);
+
+    List<Long> findGalleryMediaIds(Long promotionId);
+
+    void replaceGalleryMedia(Long promotionId, List<Long> mediaAssetIds);
 }

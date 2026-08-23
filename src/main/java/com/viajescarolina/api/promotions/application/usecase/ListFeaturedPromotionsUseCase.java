@@ -3,10 +3,12 @@ package com.viajescarolina.api.promotions.application.usecase;
 import com.viajescarolina.api.media.domain.MediaAsset;
 import com.viajescarolina.api.media.domain.MediaRepository;
 import com.viajescarolina.api.promotions.application.dto.PromotionDTO;
+import com.viajescarolina.api.promotions.application.dto.PromotionGalleryItemDTO;
 import com.viajescarolina.api.promotions.domain.Promotion;
 import com.viajescarolina.api.promotions.domain.PromotionRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,11 +28,11 @@ public class ListFeaturedPromotionsUseCase {
 
     public List<PromotionDTO> execute() {
         return promotionRepository.findFeatured().stream()
-                .map(p -> mapToDTO(p, mediaRepository))
+                .map(p -> mapToDTO(p, mediaRepository, promotionRepository.findGalleryMediaIds(p.getId())))
                 .toList();
     }
 
-    public static PromotionDTO mapToDTO(Promotion promotion, MediaRepository mediaRepository) {
+    public static PromotionDTO mapToDTO(Promotion promotion, MediaRepository mediaRepository, List<Long> galleryMediaIds) {
         String mediaUrl = null;
         Double focalX = 50.0;
         Double focalY = 50.0;
@@ -44,6 +46,22 @@ public class ListFeaturedPromotionsUseCase {
                 }
                 if (asset.get().getFocalY() != null) {
                     focalY = asset.get().getFocalY().doubleValue();
+                }
+            }
+        }
+
+        List<PromotionGalleryItemDTO> gallery = new ArrayList<>();
+        if (galleryMediaIds != null) {
+            for (Long mediaId : galleryMediaIds) {
+                Optional<MediaAsset> asset = mediaRepository.findMediaById(mediaId);
+                if (asset.isPresent()) {
+                    MediaAsset mediaAsset = asset.get();
+                    gallery.add(new PromotionGalleryItemDTO(
+                            mediaAsset.getId(),
+                            mediaAsset.getStoragePath(),
+                            mediaAsset.getFocalX() != null ? mediaAsset.getFocalX().doubleValue() : 50.0,
+                            mediaAsset.getFocalY() != null ? mediaAsset.getFocalY().doubleValue() : 50.0
+                    ));
                 }
             }
         }
@@ -72,7 +90,11 @@ public class ListFeaturedPromotionsUseCase {
                 promotion.getDisplayOrder(),
                 promotion.isActive(),
                 promotion.getCreatedAt(),
-                promotion.getUpdatedAt()
+                promotion.getUpdatedAt(),
+                gallery,
+                promotion.getSource(),
+                promotion.getFacebookPostId(),
+                promotion.getFacebookPermalinkUrl()
         );
     }
 }

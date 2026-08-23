@@ -1,6 +1,5 @@
 package com.viajescarolina.api.home.application.dto;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
@@ -19,13 +18,6 @@ public record HomeHeroDTO(
         String backgroundMediaUrl,
         Double backgroundFocalX,
         Double backgroundFocalY,
-        String featuredCardBadge,
-        String featuredCardTitle,
-        String featuredCardSubtitle,
-        BigDecimal featuredCardPricePen,
-        String featuredCardOrigin,
-        Long featuredCardMediaId,
-        String featuredCardMediaUrl,
         Long secondaryMedia1Id,
         String secondaryMedia1Url,
         Double secondaryMedia1FocalX,
@@ -38,10 +30,6 @@ public record HomeHeroDTO(
         String secondaryMedia3Url,
         Double secondaryMedia3FocalX,
         Double secondaryMedia3FocalY,
-        Long secondaryMedia4Id,
-        String secondaryMedia4Url,
-        Double secondaryMedia4FocalX,
-        Double secondaryMedia4FocalY,
         String trustStatText,
         String eyebrowText,
         Integer revision,

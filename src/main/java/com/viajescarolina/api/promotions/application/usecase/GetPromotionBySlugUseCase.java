@@ -7,6 +7,7 @@ import com.viajescarolina.api.promotions.domain.PromotionRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.NotFoundException;
+import java.util.List;
 
 @ApplicationScoped
 public class GetPromotionBySlugUseCase {
@@ -26,6 +27,7 @@ public class GetPromotionBySlugUseCase {
         Promotion promotion = promotionRepository.findBySlug(slug)
                 .orElseThrow(() -> new NotFoundException("Promoción no encontrada con slug: " + slug));
 
-        return ListFeaturedPromotionsUseCase.mapToDTO(promotion, mediaRepository);
+        List<Long> galleryIds = promotionRepository.findGalleryMediaIds(promotion.getId());
+        return ListFeaturedPromotionsUseCase.mapToDTO(promotion, mediaRepository, galleryIds);
     }
 }

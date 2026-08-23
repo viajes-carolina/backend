@@ -1,7 +1,6 @@
 package com.viajescarolina.api.home.application.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import java.math.BigDecimal;
 import java.util.List;
 
 public record UpdateHomeHeroRequest(
@@ -30,13 +29,6 @@ public record UpdateHomeHeroRequest(
         String backgroundMediaUrl,
         Double backgroundFocalX,
         Double backgroundFocalY,
-        String featuredCardBadge,
-        String featuredCardTitle,
-        String featuredCardSubtitle,
-        BigDecimal featuredCardPricePen,
-        String featuredCardOrigin,
-        Long featuredCardMediaId,
-        String featuredCardMediaUrl,
         Long secondaryMedia1Id,
         String secondaryMedia1Url,
         Double secondaryMedia1FocalX,
@@ -49,10 +41,6 @@ public record UpdateHomeHeroRequest(
         String secondaryMedia3Url,
         Double secondaryMedia3FocalX,
         Double secondaryMedia3FocalY,
-        Long secondaryMedia4Id,
-        String secondaryMedia4Url,
-        Double secondaryMedia4FocalX,
-        Double secondaryMedia4FocalY,
         String trustStatText,
         String eyebrowText
 ) {}

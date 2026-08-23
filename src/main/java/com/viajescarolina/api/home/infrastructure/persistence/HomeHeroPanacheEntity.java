@@ -10,7 +10,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,27 +63,6 @@ public class HomeHeroPanacheEntity extends PanacheEntityBase {
     @Column(name = "background_focal_y")
     public Double backgroundFocalY = 50.0;
 
-    @Column(name = "featured_card_badge")
-    public String featuredCardBadge;
-
-    @Column(name = "featured_card_title")
-    public String featuredCardTitle;
-
-    @Column(name = "featured_card_subtitle")
-    public String featuredCardSubtitle;
-
-    @Column(name = "featured_card_price_pen")
-    public BigDecimal featuredCardPricePen;
-
-    @Column(name = "featured_card_origin")
-    public String featuredCardOrigin;
-
-    @Column(name = "featured_card_media_id")
-    public Long featuredCardMediaId;
-
-    @Column(name = "featured_card_media_url", length = 500)
-    public String featuredCardMediaUrl;
-
     @Column(name = "secondary_media_1_id")
     public Long secondaryMedia1Id;
 
@@ -120,18 +98,6 @@ public class HomeHeroPanacheEntity extends PanacheEntityBase {
 
     @Column(name = "secondary_media_3_focal_y")
     public Double secondaryMedia3FocalY = 50.0;
-
-    @Column(name = "secondary_media_4_id")
-    public Long secondaryMedia4Id;
-
-    @Column(name = "secondary_media_4_url", length = 500)
-    public String secondaryMedia4Url;
-
-    @Column(name = "secondary_media_4_focal_x")
-    public Double secondaryMedia4FocalX = 50.0;
-
-    @Column(name = "secondary_media_4_focal_y")
-    public Double secondaryMedia4FocalY = 50.0;
 
     @Column(name = "trust_stat_text")
     public String trustStatText;
@@ -172,13 +138,6 @@ public class HomeHeroPanacheEntity extends PanacheEntityBase {
                 backgroundMediaUrl,
                 backgroundFocalX,
                 backgroundFocalY,
-                featuredCardBadge,
-                featuredCardTitle,
-                featuredCardSubtitle,
-                featuredCardPricePen,
-                featuredCardOrigin,
-                featuredCardMediaId,
-                featuredCardMediaUrl,
                 secondaryMedia1Id,
                 secondaryMedia1Url,
                 secondaryMedia1FocalX,
@@ -191,10 +150,6 @@ public class HomeHeroPanacheEntity extends PanacheEntityBase {
                 secondaryMedia3Url,
                 secondaryMedia3FocalX,
                 secondaryMedia3FocalY,
-                secondaryMedia4Id,
-                secondaryMedia4Url,
-                secondaryMedia4FocalX,
-                secondaryMedia4FocalY,
                 trustStatText,
                 eyebrowText,
                 revision,
@@ -223,13 +178,6 @@ public class HomeHeroPanacheEntity extends PanacheEntityBase {
         entity.backgroundMediaUrl = domain.getBackgroundMediaUrl();
         entity.backgroundFocalX = domain.getBackgroundFocalX();
         entity.backgroundFocalY = domain.getBackgroundFocalY();
-        entity.featuredCardBadge = domain.getFeaturedCardBadge();
-        entity.featuredCardTitle = domain.getFeaturedCardTitle();
-        entity.featuredCardSubtitle = domain.getFeaturedCardSubtitle();
-        entity.featuredCardPricePen = domain.getFeaturedCardPricePen();
-        entity.featuredCardOrigin = domain.getFeaturedCardOrigin();
-        entity.featuredCardMediaId = domain.getFeaturedCardMediaId();
-        entity.featuredCardMediaUrl = domain.getFeaturedCardMediaUrl();
         entity.secondaryMedia1Id = domain.getSecondaryMedia1Id();
         entity.secondaryMedia1Url = domain.getSecondaryMedia1Url();
         entity.secondaryMedia1FocalX = domain.getSecondaryMedia1FocalX();
@@ -242,10 +190,6 @@ public class HomeHeroPanacheEntity extends PanacheEntityBase {
         entity.secondaryMedia3Url = domain.getSecondaryMedia3Url();
         entity.secondaryMedia3FocalX = domain.getSecondaryMedia3FocalX();
         entity.secondaryMedia3FocalY = domain.getSecondaryMedia3FocalY();
-        entity.secondaryMedia4Id = domain.getSecondaryMedia4Id();
-        entity.secondaryMedia4Url = domain.getSecondaryMedia4Url();
-        entity.secondaryMedia4FocalX = domain.getSecondaryMedia4FocalX();
-        entity.secondaryMedia4FocalY = domain.getSecondaryMedia4FocalY();
         entity.trustStatText = domain.getTrustStatText();
         entity.eyebrowText = domain.getEyebrowText();
         entity.revision = domain.getRevision();

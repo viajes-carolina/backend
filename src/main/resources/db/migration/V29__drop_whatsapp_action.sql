@@ -1,0 +1,23 @@
+-- ==============================================================================
+-- Migración V29: baja de la tabla huérfana whatsapp_action
+--
+-- whatsapp_action (sembrada en V1__init_security_and_settings.sql) almacenaba
+-- plantillas de mensaje para la funcionalidad de "Intenciones de Viaje", que
+-- ya fue dada de baja por completo en V23__drop_travel_intentions.sql. El
+-- frontend público no lee esta tabla (verificado por grep) y no existe UI de
+-- administración para ella.
+--
+-- ADVERTENCIA (DBA): esta tabla NO está huérfana a nivel del backend Java.
+-- WhatsAppActionPanacheEntity (@Table(name = "whatsapp_action")),
+-- PanacheWhatsAppRepository#findAllActions() y
+-- GetPublicSiteSettingsUseCase#execute() siguen leyéndola activamente para
+-- construir el mapa `actionTemplates` de PublicSiteResponse, expuesto por
+-- PublicSiteResource — un endpoint público que golpea toda la Home. Con
+-- quarkus.flyway.migrate-at-start=true, aplicar esta migración ANTES de
+-- eliminar esas referencias Java romperá ese endpoint en tiempo de ejecución
+-- ("relation whatsapp_action does not exist"). Aplicar solo después de (o en
+-- el mismo despliegue que) retirar ese código Java. NO ejecutar contra una
+-- base con datos reales sin confirmación explícita.
+-- ==============================================================================
+
+DROP TABLE IF EXISTS whatsapp_action;

@@ -1,0 +1,25 @@
+-- ==============================================================================
+-- Migración V30: baja definitiva de la tabla whatsapp_action
+--
+-- V29__drop_whatsapp_action.sql ya fue registrada como aplicada en
+-- flyway_schema_history de la base de datos compartida de desarrollo, pero la
+-- tabla whatsapp_action existe nuevamente en esa misma base porque fue
+-- recreada manualmente (con sus 12 filas semilla originales, incluidas las
+-- filas huérfanas INTENT_REST/INTENT_ADVENTURE/INTENT_CULTURE de la
+-- funcionalidad de "Intenciones de Viaje" ya retirada) tras un incidente en
+-- el que reinsertar V29 en el directorio observado por un proceso
+-- quarkusDev con live reload causó que se re-ejecutara y eliminara la tabla
+-- de verdad. Flyway omitirá V29 nuevamente porque ya está marcada como
+-- aplicada, por lo que esta migración nueva y correctamente numerada es
+-- necesaria para eliminar la tabla de forma efectiva.
+--
+-- A diferencia del momento en que se creó V29, todas las referencias Java a
+-- whatsapp_action (WhatsAppActionPanacheEntity, PanacheWhatsAppRepository
+-- #findAllActions()/#findActionByKey()/#saveAction(), el mapa
+-- `actionTemplates` de GetPublicSiteSettingsUseCase y el campo `actions` de
+-- PublicSiteResponse) ya fueron retiradas y el compilado + endpoint público
+-- GET /api/public/v1/site fueron verificados en verde antes de aplicar esta
+-- migración. Es seguro e idempotente ejecutarla.
+-- ==============================================================================
+
+DROP TABLE IF EXISTS whatsapp_action;

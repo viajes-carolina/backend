@@ -23,7 +23,7 @@ public class ListPublicPromotionsUseCase {
 
     public List<PromotionDTO> execute() {
         return promotionRepository.findAllActive().stream()
-                .map(p -> ListFeaturedPromotionsUseCase.mapToDTO(p, mediaRepository))
+                .map(p -> ListFeaturedPromotionsUseCase.mapToDTO(p, mediaRepository, promotionRepository.findGalleryMediaIds(p.getId())))
                 .toList();
     }
 }

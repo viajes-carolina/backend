@@ -1,8 +1,11 @@
 package com.viajescarolina.api.auth.infrastructure.web;
 
 import com.viajescarolina.api.auth.application.dto.AdminUserDTO;
+import com.viajescarolina.api.auth.application.dto.ChangeOwnPasswordRequest;
+import com.viajescarolina.api.auth.application.dto.ChangeOwnPasswordResponse;
 import com.viajescarolina.api.auth.application.dto.LoginRequest;
 import com.viajescarolina.api.auth.application.dto.LoginResponse;
+import com.viajescarolina.api.auth.application.usecase.ChangeOwnPasswordUseCase;
 import com.viajescarolina.api.auth.application.usecase.LoginAdminUseCase;
 import com.viajescarolina.api.auth.domain.AdminUser;
 import com.viajescarolina.api.auth.domain.AdminUserRepository;
@@ -30,6 +33,7 @@ public class AdminAuthResource {
 
     private final LoginAdminUseCase loginAdminUseCase;
     private final AdminUserRepository adminUserRepository;
+    private final ChangeOwnPasswordUseCase changeOwnPasswordUseCase;
 
     @Inject
     JsonWebToken jwt;
@@ -37,9 +41,10 @@ public class AdminAuthResource {
     @ConfigProperty(name = "viajescarolina.security.cookie-secure", defaultValue = "true")
     boolean cookieSecure;
 
-    public AdminAuthResource(LoginAdminUseCase loginAdminUseCase, AdminUserRepository adminUserRepository) {
+    public AdminAuthResource(LoginAdminUseCase loginAdminUseCase, AdminUserRepository adminUserRepository, ChangeOwnPasswordUseCase changeOwnPasswordUseCase) {
         this.loginAdminUseCase = loginAdminUseCase;
         this.adminUserRepository = adminUserRepository;
+        this.changeOwnPasswordUseCase = changeOwnPasswordUseCase;
     }
 
     @POST
@@ -77,6 +82,22 @@ public class AdminAuthResource {
                 .build();
 
         return Response.ok().entity("{\"status\": \"LOGGED_OUT\"}").cookie(expiredCookie).build();
+    }
+
+    @PUT
+    @Path("/password")
+    @RolesAllowed({"SUPER_ADMIN", "CONTENT_EDITOR", "ADVISOR"})
+    @Operation(summary = "Cambiar contraseña propia", description = "Permite al usuario autenticado rotar su propia contraseña, verificando la actual")
+    public Response changePassword(@Valid ChangeOwnPasswordRequest req) {
+        Long callerId;
+        try {
+            callerId = Long.valueOf(jwt.getSubject());
+        } catch (NumberFormatException e) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+
+        ChangeOwnPasswordResponse result = changeOwnPasswordUseCase.execute(callerId, req, jwt.getClaim("upn"));
+        return Response.ok(result).build();
     }
 
     @GET

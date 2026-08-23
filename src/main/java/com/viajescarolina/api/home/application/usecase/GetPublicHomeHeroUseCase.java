@@ -51,18 +51,6 @@ public class GetPublicHomeHeroUseCase {
             bgUrl = "/media/demo-cartagena-caribe.webp";
         }
 
-        String cardMediaUrl = hero.getFeaturedCardMediaUrl();
-        if ((cardMediaUrl == null || cardMediaUrl.isBlank()) && hero.getFeaturedCardMediaId() != null) {
-            Optional<MediaAsset> cardAsset = mediaRepository.findMediaById(hero.getFeaturedCardMediaId());
-            if (cardAsset.isPresent()) {
-                cardMediaUrl = cardAsset.get().getStoragePath();
-            }
-        }
-
-        if (cardMediaUrl == null || cardMediaUrl.isBlank()) {
-            cardMediaUrl = "/media/demo-cartagena-caribe.webp";
-        }
-
         String secondary1Url = hero.getSecondaryMedia1Url();
         Double secondary1FocalX = hero.getSecondaryMedia1FocalX() != null ? hero.getSecondaryMedia1FocalX() : 50.0;
         Double secondary1FocalY = hero.getSecondaryMedia1FocalY() != null ? hero.getSecondaryMedia1FocalY() : 50.0;
@@ -113,22 +101,6 @@ public class GetPublicHomeHeroUseCase {
             }
         }
 
-        String secondary4Url = hero.getSecondaryMedia4Url();
-        Double secondary4FocalX = hero.getSecondaryMedia4FocalX() != null ? hero.getSecondaryMedia4FocalX() : 50.0;
-        Double secondary4FocalY = hero.getSecondaryMedia4FocalY() != null ? hero.getSecondaryMedia4FocalY() : 50.0;
-        if ((secondary4Url == null || secondary4Url.isBlank()) && hero.getSecondaryMedia4Id() != null) {
-            Optional<MediaAsset> secondary4Asset = mediaRepository.findMediaById(hero.getSecondaryMedia4Id());
-            if (secondary4Asset.isPresent()) {
-                secondary4Url = secondary4Asset.get().getStoragePath();
-                if (secondary4Asset.get().getFocalX() != null) {
-                    secondary4FocalX = secondary4Asset.get().getFocalX().doubleValue();
-                }
-                if (secondary4Asset.get().getFocalY() != null) {
-                    secondary4FocalY = secondary4Asset.get().getFocalY().doubleValue();
-                }
-            }
-        }
-
         return new HomeHeroDTO(
                 hero.getId(),
                 hero.getBadgeText(),
@@ -144,13 +116,6 @@ public class GetPublicHomeHeroUseCase {
                 bgUrl,
                 bgFocalX,
                 bgFocalY,
-                hero.getFeaturedCardBadge(),
-                hero.getFeaturedCardTitle(),
-                hero.getFeaturedCardSubtitle(),
-                hero.getFeaturedCardPricePen(),
-                hero.getFeaturedCardOrigin(),
-                hero.getFeaturedCardMediaId(),
-                cardMediaUrl,
                 hero.getSecondaryMedia1Id(),
                 secondary1Url,
                 secondary1FocalX,
@@ -163,10 +128,6 @@ public class GetPublicHomeHeroUseCase {
                 secondary3Url,
                 secondary3FocalX,
                 secondary3FocalY,
-                hero.getSecondaryMedia4Id(),
-                secondary4Url,
-                secondary4FocalX,
-                secondary4FocalY,
                 hero.getTrustStatText(),
                 hero.getEyebrowText(),
                 hero.getRevision(),

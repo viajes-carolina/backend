@@ -29,6 +29,9 @@ public class Promotion {
     private boolean active;
     private Instant createdAt;
     private Instant updatedAt;
+    private String source;
+    private String facebookPostId;
+    private String facebookPermalinkUrl;
 
     public Promotion(
             Long id,
@@ -51,7 +54,10 @@ public class Promotion {
             Integer displayOrder,
             boolean active,
             Instant createdAt,
-            Instant updatedAt) {
+            Instant updatedAt,
+            String source,
+            String facebookPostId,
+            String facebookPermalinkUrl) {
         this.id = id;
         this.slug = slug;
         this.title = title;
@@ -73,6 +79,9 @@ public class Promotion {
         this.active = active;
         this.createdAt = createdAt != null ? createdAt : Instant.now();
         this.updatedAt = updatedAt != null ? updatedAt : Instant.now();
+        this.source = source != null ? source : "MANUAL";
+        this.facebookPostId = facebookPostId;
+        this.facebookPermalinkUrl = facebookPermalinkUrl;
     }
 
     public static Promotion create(
@@ -114,7 +123,10 @@ public class Promotion {
                 displayOrder,
                 true,
                 Instant.now(),
-                Instant.now()
+                Instant.now(),
+                "MANUAL",
+                null,
+                null
         );
     }
 
@@ -184,4 +196,7 @@ public class Promotion {
     public boolean isActive() { return active; }
     public Instant getCreatedAt() { return createdAt; }
     public Instant getUpdatedAt() { return updatedAt; }
+    public String getSource() { return source; }
+    public String getFacebookPostId() { return facebookPostId; }
+    public String getFacebookPermalinkUrl() { return facebookPermalinkUrl; }
 }

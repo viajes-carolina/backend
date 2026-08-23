@@ -23,7 +23,7 @@ public class ListAdminPromotionsUseCase {
 
     public List<PromotionDTO> execute() {
         return promotionRepository.findAllPromotions().stream()
-                .map(p -> ListFeaturedPromotionsUseCase.mapToDTO(p, mediaRepository))
+                .map(p -> ListFeaturedPromotionsUseCase.mapToDTO(p, mediaRepository, promotionRepository.findGalleryMediaIds(p.getId())))
                 .toList();
     }
 }

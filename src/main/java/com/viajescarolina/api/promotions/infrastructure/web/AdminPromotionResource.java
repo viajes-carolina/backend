@@ -5,6 +5,7 @@ import com.viajescarolina.api.promotions.application.dto.PromotionDTO;
 import com.viajescarolina.api.promotions.application.usecase.CreatePromotionUseCase;
 import com.viajescarolina.api.promotions.application.usecase.DeletePromotionUseCase;
 import com.viajescarolina.api.promotions.application.usecase.ListAdminPromotionsUseCase;
+import com.viajescarolina.api.promotions.application.usecase.SyncFacebookPromotionsUseCase;
 import com.viajescarolina.api.promotions.application.usecase.UpdatePromotionUseCase;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
@@ -15,6 +16,7 @@ import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import java.util.List;
+import java.util.Map;
 
 @Path("/api/admin/v1/promotions")
 @Produces(MediaType.APPLICATION_JSON)
@@ -27,17 +29,20 @@ public class AdminPromotionResource {
     private final CreatePromotionUseCase createUseCase;
     private final UpdatePromotionUseCase updateUseCase;
     private final DeletePromotionUseCase deleteUseCase;
+    private final SyncFacebookPromotionsUseCase syncFacebookPromotionsUseCase;
 
     @Inject
     public AdminPromotionResource(
             ListAdminPromotionsUseCase listUseCase,
             CreatePromotionUseCase createUseCase,
             UpdatePromotionUseCase updateUseCase,
-            DeletePromotionUseCase deleteUseCase) {
+            DeletePromotionUseCase deleteUseCase,
+            SyncFacebookPromotionsUseCase syncFacebookPromotionsUseCase) {
         this.listUseCase = listUseCase;
         this.createUseCase = createUseCase;
         this.updateUseCase = updateUseCase;
         this.deleteUseCase = deleteUseCase;
+        this.syncFacebookPromotionsUseCase = syncFacebookPromotionsUseCase;
     }
 
     @GET
@@ -68,5 +73,13 @@ public class AdminPromotionResource {
     public Response delete(@PathParam("id") Long id) {
         deleteUseCase.execute(id);
         return Response.noContent().build();
+    }
+
+    @POST
+    @Path("/sync-facebook")
+    @Operation(summary = "Sincronizar posts de Facebook", description = "Descarga los posts nuevos del feed de la Página de Facebook y crea una promoción inactiva por cada uno (con foto) para que el staff la complete y active")
+    public Response syncFacebook() {
+        int created = syncFacebookPromotionsUseCase.execute();
+        return Response.ok(Map.of("created", created)).build();
     }
 }

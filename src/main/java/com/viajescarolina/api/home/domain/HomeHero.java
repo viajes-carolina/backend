@@ -1,6 +1,5 @@
 package com.viajescarolina.api.home.domain;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
@@ -20,13 +19,6 @@ public class HomeHero {
     private String backgroundMediaUrl;
     private Double backgroundFocalX;
     private Double backgroundFocalY;
-    private String featuredCardBadge;
-    private String featuredCardTitle;
-    private String featuredCardSubtitle;
-    private BigDecimal featuredCardPricePen;
-    private String featuredCardOrigin;
-    private Long featuredCardMediaId;
-    private String featuredCardMediaUrl;
     private Long secondaryMedia1Id;
     private String secondaryMedia1Url;
     private Double secondaryMedia1FocalX;
@@ -39,10 +31,6 @@ public class HomeHero {
     private String secondaryMedia3Url;
     private Double secondaryMedia3FocalX;
     private Double secondaryMedia3FocalY;
-    private Long secondaryMedia4Id;
-    private String secondaryMedia4Url;
-    private Double secondaryMedia4FocalX;
-    private Double secondaryMedia4FocalY;
     private String trustStatText;
     private String eyebrowText;
     private Integer revision;
@@ -64,13 +52,6 @@ public class HomeHero {
             String backgroundMediaUrl,
             Double backgroundFocalX,
             Double backgroundFocalY,
-            String featuredCardBadge,
-            String featuredCardTitle,
-            String featuredCardSubtitle,
-            BigDecimal featuredCardPricePen,
-            String featuredCardOrigin,
-            Long featuredCardMediaId,
-            String featuredCardMediaUrl,
             Long secondaryMedia1Id,
             String secondaryMedia1Url,
             Double secondaryMedia1FocalX,
@@ -83,10 +64,6 @@ public class HomeHero {
             String secondaryMedia3Url,
             Double secondaryMedia3FocalX,
             Double secondaryMedia3FocalY,
-            Long secondaryMedia4Id,
-            String secondaryMedia4Url,
-            Double secondaryMedia4FocalX,
-            Double secondaryMedia4FocalY,
             String trustStatText,
             String eyebrowText,
             Integer revision,
@@ -106,13 +83,6 @@ public class HomeHero {
         this.backgroundMediaUrl = backgroundMediaUrl;
         this.backgroundFocalX = backgroundFocalX != null ? backgroundFocalX : 50.0;
         this.backgroundFocalY = backgroundFocalY != null ? backgroundFocalY : 50.0;
-        this.featuredCardBadge = featuredCardBadge;
-        this.featuredCardTitle = featuredCardTitle;
-        this.featuredCardSubtitle = featuredCardSubtitle;
-        this.featuredCardPricePen = featuredCardPricePen;
-        this.featuredCardOrigin = featuredCardOrigin;
-        this.featuredCardMediaId = featuredCardMediaId;
-        this.featuredCardMediaUrl = featuredCardMediaUrl;
         this.secondaryMedia1Id = secondaryMedia1Id;
         this.secondaryMedia1Url = secondaryMedia1Url;
         this.secondaryMedia1FocalX = secondaryMedia1FocalX != null ? secondaryMedia1FocalX : 50.0;
@@ -125,10 +95,6 @@ public class HomeHero {
         this.secondaryMedia3Url = secondaryMedia3Url;
         this.secondaryMedia3FocalX = secondaryMedia3FocalX != null ? secondaryMedia3FocalX : 50.0;
         this.secondaryMedia3FocalY = secondaryMedia3FocalY != null ? secondaryMedia3FocalY : 50.0;
-        this.secondaryMedia4Id = secondaryMedia4Id;
-        this.secondaryMedia4Url = secondaryMedia4Url;
-        this.secondaryMedia4FocalX = secondaryMedia4FocalX != null ? secondaryMedia4FocalX : 50.0;
-        this.secondaryMedia4FocalY = secondaryMedia4FocalY != null ? secondaryMedia4FocalY : 50.0;
         this.trustStatText = trustStatText;
         this.eyebrowText = eyebrowText;
         this.revision = revision != null ? revision : 1;
@@ -150,13 +116,6 @@ public class HomeHero {
             String backgroundMediaUrl,
             Double backgroundFocalX,
             Double backgroundFocalY,
-            String featuredCardBadge,
-            String featuredCardTitle,
-            String featuredCardSubtitle,
-            BigDecimal featuredCardPricePen,
-            String featuredCardOrigin,
-            Long featuredCardMediaId,
-            String featuredCardMediaUrl,
             Long secondaryMedia1Id,
             String secondaryMedia1Url,
             Double secondaryMedia1FocalX,
@@ -169,10 +128,6 @@ public class HomeHero {
             String secondaryMedia3Url,
             Double secondaryMedia3FocalX,
             Double secondaryMedia3FocalY,
-            Long secondaryMedia4Id,
-            String secondaryMedia4Url,
-            Double secondaryMedia4FocalX,
-            Double secondaryMedia4FocalY,
             String trustStatText,
             String eyebrowText) {
         this.badgeText = badgeText;
@@ -188,13 +143,6 @@ public class HomeHero {
         if (backgroundMediaUrl != null && !backgroundMediaUrl.isBlank()) this.backgroundMediaUrl = backgroundMediaUrl;
         if (backgroundFocalX != null) this.backgroundFocalX = backgroundFocalX;
         if (backgroundFocalY != null) this.backgroundFocalY = backgroundFocalY;
-        this.featuredCardBadge = featuredCardBadge;
-        this.featuredCardTitle = featuredCardTitle;
-        this.featuredCardSubtitle = featuredCardSubtitle;
-        this.featuredCardPricePen = featuredCardPricePen;
-        this.featuredCardOrigin = featuredCardOrigin;
-        this.featuredCardMediaId = featuredCardMediaId;
-        if (featuredCardMediaUrl != null && !featuredCardMediaUrl.isBlank()) this.featuredCardMediaUrl = featuredCardMediaUrl;
         this.secondaryMedia1Id = secondaryMedia1Id;
         if (secondaryMedia1Url != null && !secondaryMedia1Url.isBlank()) this.secondaryMedia1Url = secondaryMedia1Url;
         if (secondaryMedia1FocalX != null) this.secondaryMedia1FocalX = secondaryMedia1FocalX;
@@ -207,10 +155,6 @@ public class HomeHero {
         if (secondaryMedia3Url != null && !secondaryMedia3Url.isBlank()) this.secondaryMedia3Url = secondaryMedia3Url;
         if (secondaryMedia3FocalX != null) this.secondaryMedia3FocalX = secondaryMedia3FocalX;
         if (secondaryMedia3FocalY != null) this.secondaryMedia3FocalY = secondaryMedia3FocalY;
-        this.secondaryMedia4Id = secondaryMedia4Id;
-        if (secondaryMedia4Url != null && !secondaryMedia4Url.isBlank()) this.secondaryMedia4Url = secondaryMedia4Url;
-        if (secondaryMedia4FocalX != null) this.secondaryMedia4FocalX = secondaryMedia4FocalX;
-        if (secondaryMedia4FocalY != null) this.secondaryMedia4FocalY = secondaryMedia4FocalY;
         this.trustStatText = trustStatText;
         this.eyebrowText = eyebrowText;
         this.revision = (this.revision != null ? this.revision : 1) + 1;
@@ -231,13 +175,6 @@ public class HomeHero {
     public String getBackgroundMediaUrl() { return backgroundMediaUrl; }
     public Double getBackgroundFocalX() { return backgroundFocalX; }
     public Double getBackgroundFocalY() { return backgroundFocalY; }
-    public String getFeaturedCardBadge() { return featuredCardBadge; }
-    public String getFeaturedCardTitle() { return featuredCardTitle; }
-    public String getFeaturedCardSubtitle() { return featuredCardSubtitle; }
-    public BigDecimal getFeaturedCardPricePen() { return featuredCardPricePen; }
-    public String getFeaturedCardOrigin() { return featuredCardOrigin; }
-    public Long getFeaturedCardMediaId() { return featuredCardMediaId; }
-    public String getFeaturedCardMediaUrl() { return featuredCardMediaUrl; }
     public Long getSecondaryMedia1Id() { return secondaryMedia1Id; }
     public String getSecondaryMedia1Url() { return secondaryMedia1Url; }
     public Double getSecondaryMedia1FocalX() { return secondaryMedia1FocalX; }
@@ -250,10 +187,6 @@ public class HomeHero {
     public String getSecondaryMedia3Url() { return secondaryMedia3Url; }
     public Double getSecondaryMedia3FocalX() { return secondaryMedia3FocalX; }
     public Double getSecondaryMedia3FocalY() { return secondaryMedia3FocalY; }
-    public Long getSecondaryMedia4Id() { return secondaryMedia4Id; }
-    public String getSecondaryMedia4Url() { return secondaryMedia4Url; }
-    public Double getSecondaryMedia4FocalX() { return secondaryMedia4FocalX; }
-    public Double getSecondaryMedia4FocalY() { return secondaryMedia4FocalY; }
     public String getTrustStatText() { return trustStatText; }
     public String getEyebrowText() { return eyebrowText; }
     public Integer getRevision() { return revision; }

@@ -36,13 +36,6 @@ public class UpdateHomeHeroUseCase {
             }
         }
 
-        Long validCardMediaId = null;
-        if (request.featuredCardMediaId() != null && request.featuredCardMediaId() > 0) {
-            if (mediaRepository.findMediaById(request.featuredCardMediaId()).isPresent()) {
-                validCardMediaId = request.featuredCardMediaId();
-            }
-        }
-
         Long validSecondary1MediaId = null;
         if (request.secondaryMedia1Id() != null && request.secondaryMedia1Id() > 0) {
             if (mediaRepository.findMediaById(request.secondaryMedia1Id()).isPresent()) {
@@ -64,13 +57,6 @@ public class UpdateHomeHeroUseCase {
             }
         }
 
-        Long validSecondary4MediaId = null;
-        if (request.secondaryMedia4Id() != null && request.secondaryMedia4Id() > 0) {
-            if (mediaRepository.findMediaById(request.secondaryMedia4Id()).isPresent()) {
-                validSecondary4MediaId = request.secondaryMedia4Id();
-            }
-        }
-
         hero.update(
                 request.badgeText(),
                 request.titleHighlight(),
@@ -85,13 +71,6 @@ public class UpdateHomeHeroUseCase {
                 request.backgroundMediaUrl(),
                 request.backgroundFocalX(),
                 request.backgroundFocalY(),
-                request.featuredCardBadge(),
-                request.featuredCardTitle(),
-                request.featuredCardSubtitle(),
-                request.featuredCardPricePen(),
-                request.featuredCardOrigin(),
-                validCardMediaId,
-                request.featuredCardMediaUrl(),
                 validSecondary1MediaId,
                 request.secondaryMedia1Url(),
                 request.secondaryMedia1FocalX(),
@@ -104,10 +83,6 @@ public class UpdateHomeHeroUseCase {
                 request.secondaryMedia3Url(),
                 request.secondaryMedia3FocalX(),
                 request.secondaryMedia3FocalY(),
-                validSecondary4MediaId,
-                request.secondaryMedia4Url(),
-                request.secondaryMedia4FocalX(),
-                request.secondaryMedia4FocalY(),
                 request.trustStatText(),
                 request.eyebrowText()
         );

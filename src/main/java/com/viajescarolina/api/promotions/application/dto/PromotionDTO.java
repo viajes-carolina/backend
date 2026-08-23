@@ -29,5 +29,9 @@ public record PromotionDTO(
         Integer displayOrder,
         boolean active,
         Instant createdAt,
-        Instant updatedAt
+        Instant updatedAt,
+        List<PromotionGalleryItemDTO> gallery,
+        String source,
+        String facebookPostId,
+        String facebookPermalinkUrl
 ) {}

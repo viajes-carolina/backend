@@ -10,6 +10,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.BadRequestException;
+import java.util.List;
 
 @ApplicationScoped
 public class CreatePromotionUseCase {
@@ -53,6 +54,8 @@ public class CreatePromotionUseCase {
         );
 
         Promotion saved = promotionRepository.save(promotion);
-        return ListFeaturedPromotionsUseCase.mapToDTO(saved, mediaRepository);
+        promotionRepository.replaceGalleryMedia(saved.getId(), request.galleryMediaIds());
+        List<Long> galleryIds = promotionRepository.findGalleryMediaIds(saved.getId());
+        return ListFeaturedPromotionsUseCase.mapToDTO(saved, mediaRepository, galleryIds);
     }
 }

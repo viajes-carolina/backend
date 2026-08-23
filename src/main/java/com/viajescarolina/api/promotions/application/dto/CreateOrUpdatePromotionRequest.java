@@ -39,5 +39,6 @@ public record CreateOrUpdatePromotionRequest(
         List<String> exclusions,
         String whatsappMessageTemplate,
         Integer displayOrder,
-        Boolean active
+        Boolean active,
+        List<Long> galleryMediaIds
 ) {}

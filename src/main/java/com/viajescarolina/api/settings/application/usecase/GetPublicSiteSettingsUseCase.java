@@ -3,14 +3,10 @@ package com.viajescarolina.api.settings.application.usecase;
 import com.viajescarolina.api.settings.application.dto.PublicSiteResponse;
 import com.viajescarolina.api.settings.domain.SettingsRepository;
 import com.viajescarolina.api.settings.domain.SiteSettings;
-import com.viajescarolina.api.settings.domain.WhatsAppAction;
 import com.viajescarolina.api.settings.domain.WhatsAppChannel;
 import com.viajescarolina.api.settings.domain.WhatsAppRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class GetPublicSiteSettingsUseCase {
@@ -32,9 +28,6 @@ public class GetPublicSiteSettingsUseCase {
                 .orElseGet(() -> new WhatsAppChannel(null, "Línea Principal", "+51987654321", "+51 987 654 321",
                         "Hola Viajes Carolina, deseo asesoría personalizada para mi próximo viaje.", true, true, 1, null, null));
 
-        Map<String, String> actionTemplates = whatsAppRepository.findAllActions().stream()
-                .collect(Collectors.toMap(WhatsAppAction::getActionKey, WhatsAppAction::getMessageTemplate));
-
         return new PublicSiteResponse(
                 settings.getSiteName(),
                 settings.getBrandTagline(),
@@ -48,8 +41,7 @@ public class GetPublicSiteSettingsUseCase {
                 settings.getLogoMediaId(),
                 settings.getFaviconMediaId(),
                 settings.getLegalCompanyName(),
-                settings.getTaxId(),
-                actionTemplates
+                settings.getTaxId()
         );
     }
 }

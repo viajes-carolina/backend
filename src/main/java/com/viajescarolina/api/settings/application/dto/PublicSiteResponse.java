@@ -1,7 +1,5 @@
 package com.viajescarolina.api.settings.application.dto;
 
-import java.util.Map;
-
 public record PublicSiteResponse(
     String siteName,
     String brandTagline,
@@ -15,6 +13,5 @@ public record PublicSiteResponse(
     Integer logoMediaId,
     Integer faviconMediaId,
     String legalCompanyName,
-    String taxId,
-    Map<String, String> actions
+    String taxId
 ) {}
