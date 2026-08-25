@@ -22,7 +22,7 @@ public class GetPublicSiteSettingsUseCase {
 
     public PublicSiteResponse execute() {
         SiteSettings settings = settingsRepository.findSiteSettings()
-                .orElseGet(() -> new SiteSettings(1, "Viajes Carolina", "El viaje comienza aquí", "contacto@viajescarolina.com", null, null, null, null, null, "VIAJES CAROLINA S.A.C.", "20601234567", 1, null, null));
+                .orElseGet(() -> new SiteSettings(1, "Viajes Carolina", "El viaje comienza aquí", "contacto@viajescarolina.com", null, null, null, null, null, "VIAJES CAROLINA S.A.C.", "20601234567", null, 1, null, null));
 
         WhatsAppChannel channel = whatsAppRepository.findChannel()
                 .orElseGet(() -> new WhatsAppChannel(null, "Línea Principal", "+51987654321", "+51 987 654 321",

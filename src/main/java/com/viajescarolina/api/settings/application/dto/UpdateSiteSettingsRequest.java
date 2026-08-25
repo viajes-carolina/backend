@@ -31,6 +31,9 @@ public record UpdateSiteSettingsRequest(
     @Size(max = 20, message = "El RUC no puede exceder 20 caracteres")
     String taxId,
 
+    @Size(max = 500, message = "El enlace no puede exceder 500 caracteres")
+    String minceturCertificateUrl,
+
     // El único número de contacto del sitio (llamadas + WhatsApp), guardado en
     // whatsapp_channel — se edita desde este mismo formulario/endpoint por
     // conveniencia, pero vive en su propia tabla (ver DB-normalización: antes

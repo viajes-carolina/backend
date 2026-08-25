@@ -14,6 +14,7 @@ public class SiteSettings {
     private String tiktokUrl;
     private String legalCompanyName;
     private String taxId;
+    private String minceturCertificateUrl;
     private int revision;
     private final Instant createdAt;
     private Instant updatedAt;
@@ -30,6 +31,7 @@ public class SiteSettings {
             String tiktokUrl,
             String legalCompanyName,
             String taxId,
+            String minceturCertificateUrl,
             int revision,
             Instant createdAt,
             Instant updatedAt) {
@@ -44,6 +46,7 @@ public class SiteSettings {
         this.tiktokUrl = tiktokUrl;
         this.legalCompanyName = legalCompanyName;
         this.taxId = taxId;
+        this.minceturCertificateUrl = minceturCertificateUrl;
         this.revision = revision;
         this.createdAt = createdAt != null ? createdAt : Instant.now();
         this.updatedAt = updatedAt != null ? updatedAt : Instant.now();
@@ -59,7 +62,8 @@ public class SiteSettings {
             String instagramUrl,
             String tiktokUrl,
             String legalCompanyName,
-            String taxId) {
+            String taxId,
+            String minceturCertificateUrl) {
         this.siteName = siteName;
         this.brandTagline = brandTagline;
         this.contactEmail = contactEmail;
@@ -70,6 +74,7 @@ public class SiteSettings {
         this.tiktokUrl = tiktokUrl;
         this.legalCompanyName = legalCompanyName;
         this.taxId = taxId;
+        this.minceturCertificateUrl = minceturCertificateUrl;
         this.revision++;
         this.updatedAt = Instant.now();
     }
@@ -85,6 +90,7 @@ public class SiteSettings {
     public String getTiktokUrl() { return tiktokUrl; }
     public String getLegalCompanyName() { return legalCompanyName; }
     public String getTaxId() { return taxId; }
+    public String getMinceturCertificateUrl() { return minceturCertificateUrl; }
     public int getRevision() { return revision; }
     public Instant getCreatedAt() { return createdAt; }
     public Instant getUpdatedAt() { return updatedAt; }

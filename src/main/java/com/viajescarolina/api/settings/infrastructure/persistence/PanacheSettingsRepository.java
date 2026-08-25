@@ -35,6 +35,7 @@ public class PanacheSettingsRepository implements SettingsRepository {
         entity.tiktokUrl = settings.getTiktokUrl();
         entity.legalCompanyName = settings.getLegalCompanyName();
         entity.taxId = settings.getTaxId();
+        entity.minceturCertificateUrl = settings.getMinceturCertificateUrl();
         entity.revision = settings.getRevision();
         entity.updatedAt = settings.getUpdatedAt();
 
@@ -55,6 +56,7 @@ public class PanacheSettingsRepository implements SettingsRepository {
                 entity.tiktokUrl,
                 entity.legalCompanyName,
                 entity.taxId,
+                entity.minceturCertificateUrl,
                 entity.revision,
                 entity.createdAt,
                 entity.updatedAt
