@@ -8,6 +8,7 @@ public class TravelAdvisor {
     private String roleTitle;
     private String specialty;
     private String bio;
+    private String quote;
     private Long photoMediaId;
     private String photoMediaUrl;
     private String whatsappPhone;
@@ -19,7 +20,7 @@ public class TravelAdvisor {
 
     public TravelAdvisor() {}
 
-    public TravelAdvisor(Long id, String fullName, String roleTitle, String specialty, String bio,
+    public TravelAdvisor(Long id, String fullName, String roleTitle, String specialty, String bio, String quote,
                          Long photoMediaId, String photoMediaUrl, String whatsappPhone,
                          String whatsappMessageTemplate, int displayOrder, boolean active,
                          Instant createdAt, Instant updatedAt) {
@@ -28,6 +29,7 @@ public class TravelAdvisor {
         this.roleTitle = roleTitle;
         this.specialty = specialty;
         this.bio = bio;
+        this.quote = quote;
         this.photoMediaId = photoMediaId;
         this.photoMediaUrl = photoMediaUrl;
         this.whatsappPhone = whatsappPhone;
@@ -52,6 +54,9 @@ public class TravelAdvisor {
 
     public String getBio() { return bio; }
     public void setBio(String bio) { this.bio = bio; }
+
+    public String getQuote() { return quote; }
+    public void setQuote(String quote) { this.quote = quote; }
 
     public Long getPhotoMediaId() { return photoMediaId; }
     public void setPhotoMediaId(Long photoMediaId) { this.photoMediaId = photoMediaId; }

@@ -7,6 +7,7 @@ public record CreateOrUpdateAdvisorRequest(
     @NotBlank String roleTitle,
     @NotBlank String specialty,
     @NotBlank String bio,
+    String quote,
     Long photoMediaId,
     String whatsappPhone,
     String whatsappMessageTemplate,

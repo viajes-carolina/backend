@@ -1,6 +1,9 @@
 package com.viajescarolina.api.about.application.usecase;
 
 import com.viajescarolina.api.about.application.dto.AboutPageDTO;
+import com.viajescarolina.api.about.application.dto.AccompanyStepDTO;
+import com.viajescarolina.api.about.application.dto.JourneyStepDTO;
+import com.viajescarolina.api.about.application.dto.MomentDTO;
 import com.viajescarolina.api.about.application.dto.PublicAboutResponse;
 import com.viajescarolina.api.about.application.dto.TravelAdvisorDTO;
 import com.viajescarolina.api.about.domain.AboutPage;
@@ -39,19 +42,40 @@ public class GetPublicAboutUseCase {
             p.getHeroSubtitle(),
             p.getHeroMediaId(),
             p.getHeroMediaUrl(),
+            p.getHeroFocalX(),
+            p.getHeroFocalY(),
+            p.getHeroCardBadge(),
+            p.getHeroCardTitle(),
+            p.getHeroNoteText(),
             p.getStoryTitle(),
             p.getStoryBody(),
             p.getStoryMediaId(),
             p.getStoryMediaUrl(),
+            p.getStoryFocalX(),
+            p.getStoryFocalY(),
             p.getMissionTitle(),
             p.getMissionBody(),
-            p.getVisionTitle(),
-            p.getVisionBody(),
+            p.getMissionQuote(),
+            toJourneyStepDTOs(p.getJourneySteps()),
             p.getValues(),
-            p.getExperienceYears(),
-            p.getHappyTravelers(),
-            p.getDestinationsCount(),
-            p.getSatisfactionRatePercent(),
+            p.getAccompanyBadge(),
+            p.getAccompanyTitle(),
+            p.getAccompanySubtitle(),
+            toAccompanyStepDTOs(p.getAccompanySteps()),
+            p.getAccompanyQuote(),
+            p.getAccompanyQuoteAttribution(),
+            p.getMomentsBadge(),
+            p.getMomentsTitle(),
+            p.getMomentsSubtitle(),
+            p.getMomentsMediaId(),
+            p.getMomentsMediaUrl(),
+            p.getMomentsFocalX(),
+            p.getMomentsFocalY(),
+            toMomentDTOs(p.getMoments()),
+            p.getHumanBadge(),
+            p.getHumanTitle(),
+            p.getHumanSubtitle(),
+            p.getHumanTagline(),
             p.getRevision(),
             p.getUpdatedAt()
         );
@@ -64,6 +88,7 @@ public class GetPublicAboutUseCase {
             a.getRoleTitle(),
             a.getSpecialty(),
             a.getBio(),
+            a.getQuote(),
             a.getPhotoMediaId(),
             a.getPhotoMediaUrl(),
             a.getWhatsappPhone(),
@@ -73,5 +98,20 @@ public class GetPublicAboutUseCase {
             a.getCreatedAt(),
             a.getUpdatedAt()
         );
+    }
+
+    private static List<JourneyStepDTO> toJourneyStepDTOs(List<AboutPage.JourneyStep> steps) {
+        if (steps == null) return List.of();
+        return steps.stream().map(s -> new JourneyStepDTO(s.label())).toList();
+    }
+
+    private static List<AccompanyStepDTO> toAccompanyStepDTOs(List<AboutPage.AccompanyStep> steps) {
+        if (steps == null) return List.of();
+        return steps.stream().map(s -> new AccompanyStepDTO(s.title(), s.body())).toList();
+    }
+
+    private static List<MomentDTO> toMomentDTOs(List<AboutPage.Moment> moments) {
+        if (moments == null) return List.of();
+        return moments.stream().map(m -> new MomentDTO(m.title(), m.body())).toList();
     }
 }

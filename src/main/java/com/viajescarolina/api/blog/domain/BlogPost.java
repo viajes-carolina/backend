@@ -13,8 +13,12 @@ public class BlogPost {
     private String categoryName;
     private String categorySlug;
     private Long coverMediaId;
-    private String coverMediaUrl;
+    private Double coverFocalX;
+    private Double coverFocalY;
     private String authorName;
+    private Long authorAvatarMediaId;
+    private Double authorAvatarFocalX;
+    private Double authorAvatarFocalY;
     private Integer readingTimeMinutes;
     private List<String> tags;
     private String status; // DRAFT, PUBLISHED, ARCHIVED
@@ -38,8 +42,12 @@ public class BlogPost {
             String categoryName,
             String categorySlug,
             Long coverMediaId,
-            String coverMediaUrl,
+            Double coverFocalX,
+            Double coverFocalY,
             String authorName,
+            Long authorAvatarMediaId,
+            Double authorAvatarFocalX,
+            Double authorAvatarFocalY,
             Integer readingTimeMinutes,
             List<String> tags,
             String status,
@@ -58,8 +66,12 @@ public class BlogPost {
         this.categoryName = categoryName;
         this.categorySlug = categorySlug;
         this.coverMediaId = coverMediaId;
-        this.coverMediaUrl = coverMediaUrl;
+        this.coverFocalX = coverFocalX;
+        this.coverFocalY = coverFocalY;
         this.authorName = authorName;
+        this.authorAvatarMediaId = authorAvatarMediaId;
+        this.authorAvatarFocalX = authorAvatarFocalX;
+        this.authorAvatarFocalY = authorAvatarFocalY;
         this.readingTimeMinutes = readingTimeMinutes;
         this.tags = tags;
         this.status = status;
@@ -143,12 +155,20 @@ public class BlogPost {
         this.coverMediaId = coverMediaId;
     }
 
-    public String getCoverMediaUrl() {
-        return coverMediaUrl;
+    public Double getCoverFocalX() {
+        return coverFocalX;
     }
 
-    public void setCoverMediaUrl(String coverMediaUrl) {
-        this.coverMediaUrl = coverMediaUrl;
+    public void setCoverFocalX(Double coverFocalX) {
+        this.coverFocalX = coverFocalX;
+    }
+
+    public Double getCoverFocalY() {
+        return coverFocalY;
+    }
+
+    public void setCoverFocalY(Double coverFocalY) {
+        this.coverFocalY = coverFocalY;
     }
 
     public String getAuthorName() {
@@ -157,6 +177,30 @@ public class BlogPost {
 
     public void setAuthorName(String authorName) {
         this.authorName = authorName;
+    }
+
+    public Long getAuthorAvatarMediaId() {
+        return authorAvatarMediaId;
+    }
+
+    public void setAuthorAvatarMediaId(Long authorAvatarMediaId) {
+        this.authorAvatarMediaId = authorAvatarMediaId;
+    }
+
+    public Double getAuthorAvatarFocalX() {
+        return authorAvatarFocalX;
+    }
+
+    public void setAuthorAvatarFocalX(Double authorAvatarFocalX) {
+        this.authorAvatarFocalX = authorAvatarFocalX;
+    }
+
+    public Double getAuthorAvatarFocalY() {
+        return authorAvatarFocalY;
+    }
+
+    public void setAuthorAvatarFocalY(Double authorAvatarFocalY) {
+        this.authorAvatarFocalY = authorAvatarFocalY;
     }
 
     public Integer getReadingTimeMinutes() {

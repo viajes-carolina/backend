@@ -7,6 +7,7 @@ import com.viajescarolina.api.blog.domain.BlogCategoryRepository;
 import com.viajescarolina.api.blog.domain.BlogPost;
 import com.viajescarolina.api.blog.domain.BlogPostRepository;
 import com.viajescarolina.api.common.audit.Audited;
+import com.viajescarolina.api.media.domain.MediaRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -22,6 +23,9 @@ public class UpdateBlogPostUseCase {
 
     @Inject
     BlogCategoryRepository categoryRepository;
+
+    @Inject
+    MediaRepository mediaRepository;
 
     @Audited(action = "UPDATE_BLOG_POST", entityType = "BLOG_POST")
     @Transactional
@@ -41,8 +45,25 @@ public class UpdateBlogPostUseCase {
         if (req.title() != null && !req.title().isBlank()) post.setTitle(req.title().trim());
         if (req.summary() != null) post.setSummary(req.summary().trim());
         if (req.contentMarkdown() != null) post.setContentMarkdown(req.contentMarkdown());
-        if (req.coverMediaId() != null) post.setCoverMediaId(req.coverMediaId());
+
+        if (req.coverMediaId() != null) {
+            Long coverMediaId = mediaRepository.findMediaById(req.coverMediaId()).isPresent()
+                    ? req.coverMediaId() : null;
+            post.setCoverMediaId(coverMediaId);
+        }
+        if (req.coverFocalX() != null) post.setCoverFocalX(req.coverFocalX());
+        if (req.coverFocalY() != null) post.setCoverFocalY(req.coverFocalY());
+
         if (req.authorName() != null) post.setAuthorName(req.authorName().trim());
+
+        if (req.authorAvatarMediaId() != null) {
+            Long authorAvatarMediaId = mediaRepository.findMediaById(req.authorAvatarMediaId()).isPresent()
+                    ? req.authorAvatarMediaId() : null;
+            post.setAuthorAvatarMediaId(authorAvatarMediaId);
+        }
+        if (req.authorAvatarFocalX() != null) post.setAuthorAvatarFocalX(req.authorAvatarFocalX());
+        if (req.authorAvatarFocalY() != null) post.setAuthorAvatarFocalY(req.authorAvatarFocalY());
+
         if (req.readingTimeMinutes() != null) post.setReadingTimeMinutes(req.readingTimeMinutes());
         if (req.tags() != null) post.setTags(req.tags());
         if (req.status() != null) {
@@ -56,31 +77,6 @@ public class UpdateBlogPostUseCase {
         post.setUpdatedAt(Instant.now());
 
         BlogPost saved = postRepository.save(post);
-        return toDTO(saved);
-    }
-
-    private BlogPostDTO toDTO(BlogPost p) {
-        return new BlogPostDTO(
-                p.getId(),
-                p.getSlug(),
-                p.getTitle(),
-                p.getSummary(),
-                p.getContentMarkdown(),
-                p.getCategoryId(),
-                p.getCategoryName(),
-                p.getCategorySlug(),
-                p.getCoverMediaId(),
-                p.getCoverMediaUrl(),
-                p.getAuthorName(),
-                p.getReadingTimeMinutes(),
-                p.getTags(),
-                p.getStatus(),
-                p.getPublishedAt(),
-                p.getViewCount(),
-                p.getIsFeatured(),
-                p.getActive(),
-                p.getCreatedAt(),
-                p.getUpdatedAt()
-        );
+        return ListPublicBlogPostsUseCase.mapToDTO(saved, mediaRepository);
     }
 }

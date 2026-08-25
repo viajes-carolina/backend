@@ -4,6 +4,7 @@ import com.viajescarolina.api.blog.application.dto.*;
 import com.viajescarolina.api.blog.application.usecase.*;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -60,7 +61,7 @@ public class AdminBlogResource {
     @POST
     @Path("/posts")
     @Operation(summary = "Crear un nuevo artículo en el CMS")
-    public Response createPost(CreateOrUpdateBlogPostRequest req) {
+    public Response createPost(@Valid CreateOrUpdateBlogPostRequest req) {
         BlogPostDTO created = createBlogPostUseCase.execute(req);
         return Response.status(Response.Status.CREATED).entity(created).build();
     }
@@ -68,7 +69,7 @@ public class AdminBlogResource {
     @PUT
     @Path("/posts/{id}")
     @Operation(summary = "Actualizar un artículo existente")
-    public Response updatePost(@PathParam("id") Long id, CreateOrUpdateBlogPostRequest req) {
+    public Response updatePost(@PathParam("id") Long id, @Valid CreateOrUpdateBlogPostRequest req) {
         BlogPostDTO updated = updateBlogPostUseCase.execute(id, req);
         return Response.ok(updated).build();
     }
@@ -94,7 +95,7 @@ public class AdminBlogResource {
     @POST
     @Path("/categories")
     @Operation(summary = "Crear una nueva categoría del blog")
-    public Response createCategory(CreateOrUpdateBlogCategoryRequest req) {
+    public Response createCategory(@Valid CreateOrUpdateBlogCategoryRequest req) {
         BlogCategoryDTO created = createBlogCategoryUseCase.execute(req);
         return Response.status(Response.Status.CREATED).entity(created).build();
     }
@@ -102,7 +103,7 @@ public class AdminBlogResource {
     @PUT
     @Path("/categories/{id}")
     @Operation(summary = "Actualizar una categoría del blog")
-    public Response updateCategory(@PathParam("id") Long id, CreateOrUpdateBlogCategoryRequest req) {
+    public Response updateCategory(@PathParam("id") Long id, @Valid CreateOrUpdateBlogCategoryRequest req) {
         BlogCategoryDTO updated = updateBlogCategoryUseCase.execute(id, req);
         return Response.ok(updated).build();
     }

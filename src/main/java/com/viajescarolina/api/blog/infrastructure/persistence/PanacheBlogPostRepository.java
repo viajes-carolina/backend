@@ -158,8 +158,12 @@ public class PanacheBlogPostRepository implements BlogPostRepository, PanacheRep
         }
 
         entity.coverMediaId = domain.getCoverMediaId();
-        entity.coverMediaUrl = domain.getCoverMediaUrl();
+        entity.coverFocalX = domain.getCoverFocalX() != null ? domain.getCoverFocalX() : 50.0;
+        entity.coverFocalY = domain.getCoverFocalY() != null ? domain.getCoverFocalY() : 50.0;
         entity.authorName = domain.getAuthorName() != null ? domain.getAuthorName() : "Equipo Viajes Carolina";
+        entity.authorAvatarMediaId = domain.getAuthorAvatarMediaId();
+        entity.authorAvatarFocalX = domain.getAuthorAvatarFocalX() != null ? domain.getAuthorAvatarFocalX() : 50.0;
+        entity.authorAvatarFocalY = domain.getAuthorAvatarFocalY() != null ? domain.getAuthorAvatarFocalY() : 50.0;
         entity.readingTimeMinutes = domain.getReadingTimeMinutes() != null ? domain.getReadingTimeMinutes() : 5;
 
         try {
@@ -221,8 +225,12 @@ public class PanacheBlogPostRepository implements BlogPostRepository, PanacheRep
                 catName,
                 catSlug,
                 e.coverMediaId,
-                e.coverMediaUrl,
+                e.coverFocalX,
+                e.coverFocalY,
                 e.authorName,
+                e.authorAvatarMediaId,
+                e.authorAvatarFocalX,
+                e.authorAvatarFocalY,
                 e.readingTimeMinutes,
                 tags,
                 e.status,

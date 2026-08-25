@@ -27,6 +27,7 @@ public class CreateAdvisorUseCase {
         advisor.setRoleTitle(req.roleTitle());
         advisor.setSpecialty(req.specialty());
         advisor.setBio(req.bio());
+        advisor.setQuote(req.quote());
         advisor.setPhotoMediaId(req.photoMediaId());
         advisor.setWhatsappPhone(req.whatsappPhone());
         advisor.setWhatsappMessageTemplate(req.whatsappMessageTemplate());

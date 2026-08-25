@@ -1,6 +1,8 @@
 package com.viajescarolina.api.promotions.application.usecase;
 
 import com.viajescarolina.api.common.audit.Audited;
+import com.viajescarolina.api.media.domain.MediaRepository;
+import com.viajescarolina.api.promotions.application.dto.PromotionDTO;
 import com.viajescarolina.api.promotions.domain.Promotion;
 import com.viajescarolina.api.promotions.domain.PromotionRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -11,29 +13,33 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 
 @ApplicationScoped
-public class DeletePromotionUseCase {
+public class SetPromotionActiveUseCase {
 
     private static final int MIN_ACTIVE_POOL = 3;
 
     private final PromotionRepository promotionRepository;
+    private final MediaRepository mediaRepository;
 
     @Inject
-    public DeletePromotionUseCase(PromotionRepository promotionRepository) {
+    public SetPromotionActiveUseCase(PromotionRepository promotionRepository, MediaRepository mediaRepository) {
         this.promotionRepository = promotionRepository;
+        this.mediaRepository = mediaRepository;
     }
 
-    @Audited(action = "DELETE_PROMOTION", entityType = "PROMOTION")
+    @Audited(action = "SET_PROMOTION_ACTIVE", entityType = "PROMOTION")
     @Transactional
-    public void execute(Long id) {
+    public PromotionDTO execute(Long id, boolean active) {
         Promotion promotion = promotionRepository.findPromotionById(id)
                 .orElseThrow(() -> new NotFoundException("Promoción no encontrada con ID: " + id));
 
-        if (promotion.isActive() && promotionRepository.countActive() <= MIN_ACTIVE_POOL) {
+        if (!active && promotion.isActive() && promotionRepository.countActive() <= MIN_ACTIVE_POOL) {
             throw new WebApplicationException(
-                    "No se puede borrar esta promoción: quedarían menos de 3 promociones activas para mostrar en Inicio. Ocúltala primero, o activa otra antes de borrarla.",
+                    "No se puede ocultar esta promoción: quedarían menos de 3 promociones activas para mostrar en Inicio.",
                     Response.Status.CONFLICT);
         }
 
-        promotionRepository.delete(id);
+        promotion.setActive(active);
+        Promotion saved = promotionRepository.save(promotion);
+        return ListFeaturedPromotionsUseCase.mapToDTO(saved, mediaRepository);
     }
 }

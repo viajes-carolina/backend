@@ -25,6 +25,9 @@ public class TravelAdvisorPanacheEntity extends PanacheEntityBase {
     @Column(name = "bio", nullable = false, columnDefinition = "TEXT")
     public String bio;
 
+    @Column(name = "quote", columnDefinition = "TEXT")
+    public String quote;
+
     @Column(name = "photo_media_id")
     public Long photoMediaId;
 
@@ -53,6 +56,7 @@ public class TravelAdvisorPanacheEntity extends PanacheEntityBase {
             roleTitle,
             specialty,
             bio,
+            quote,
             photoMediaId,
             photoMediaUrl,
             whatsappPhone,
@@ -71,6 +75,7 @@ public class TravelAdvisorPanacheEntity extends PanacheEntityBase {
         entity.roleTitle = domain.getRoleTitle();
         entity.specialty = domain.getSpecialty();
         entity.bio = domain.getBio();
+        entity.quote = domain.getQuote();
         entity.photoMediaId = domain.getPhotoMediaId();
         entity.whatsappPhone = domain.getWhatsappPhone();
         entity.whatsappMessageTemplate = domain.getWhatsappMessageTemplate();

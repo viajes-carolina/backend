@@ -22,49 +22,23 @@ public class PanacheAboutPageRepository implements PanacheRepositoryBase<AboutPa
             entity = AboutPagePanacheEntity.fromDomain(aboutPage);
             persist(entity);
         } else {
-            entity.heroBadge = aboutPage.getHeroBadge();
-            entity.heroTitle = aboutPage.getHeroTitle();
-            entity.heroSubtitle = aboutPage.getHeroSubtitle();
-            entity.heroMediaId = aboutPage.getHeroMediaId();
-            entity.storyTitle = aboutPage.getStoryTitle();
-            entity.storyBody = aboutPage.getStoryBody();
-            entity.storyMediaId = aboutPage.getStoryMediaId();
-            entity.missionTitle = aboutPage.getMissionTitle();
-            entity.missionBody = aboutPage.getMissionBody();
-            entity.visionTitle = aboutPage.getVisionTitle();
-            entity.visionBody = aboutPage.getVisionBody();
-            entity.experienceYears = aboutPage.getExperienceYears();
-            entity.happyTravelers = aboutPage.getHappyTravelers();
-            entity.destinationsCount = aboutPage.getDestinationsCount();
-            entity.satisfactionRatePercent = aboutPage.getSatisfactionRatePercent();
-            entity.revision = aboutPage.getRevision();
-            entity.updatedAt = aboutPage.getUpdatedAt();
-            try {
-                entity.valuesJson = new com.fasterxml.jackson.databind.ObjectMapper().writeValueAsString(aboutPage.getValues());
-            } catch (Exception e) {
-                entity.valuesJson = "[]";
-            }
+            entity.copyFrom(aboutPage);
         }
         return enrichWithMediaUrls(entity);
     }
 
     private AboutPage enrichWithMediaUrls(AboutPagePanacheEntity entity) {
-        String heroMediaUrl = null;
-        if (entity.heroMediaId != null) {
-            MediaAssetPanacheEntity media = MediaAssetPanacheEntity.findById(entity.heroMediaId);
-            if (media != null) {
-                heroMediaUrl = media.storagePath;
-            }
-        }
+        String heroMediaUrl = resolveMediaUrl(entity.heroMediaId);
+        String storyMediaUrl = resolveMediaUrl(entity.storyMediaId);
+        String momentsMediaUrl = resolveMediaUrl(entity.momentsMediaId);
+        return entity.toDomain(heroMediaUrl, storyMediaUrl, momentsMediaUrl);
+    }
 
-        String storyMediaUrl = null;
-        if (entity.storyMediaId != null) {
-            MediaAssetPanacheEntity media = MediaAssetPanacheEntity.findById(entity.storyMediaId);
-            if (media != null) {
-                storyMediaUrl = media.storagePath;
-            }
+    private String resolveMediaUrl(Long mediaId) {
+        if (mediaId == null) {
+            return null;
         }
-
-        return entity.toDomain(heroMediaUrl, storyMediaUrl);
+        MediaAssetPanacheEntity media = MediaAssetPanacheEntity.findById(mediaId);
+        return media != null ? media.storagePath : null;
     }
 }

@@ -5,11 +5,11 @@ import java.util.Optional;
 
 public interface PromotionRepository {
 
-    List<Promotion> findFeatured();
-
-    List<Promotion> findAllActive();
+    List<Promotion> findTopActiveByRecency(int limit);
 
     List<Promotion> findAllPromotions();
+
+    long countActive();
 
     Optional<Promotion> findPromotionById(Long id);
 
@@ -20,8 +20,4 @@ public interface PromotionRepository {
     Promotion save(Promotion promotion);
 
     void delete(Long id);
-
-    List<Long> findGalleryMediaIds(Long promotionId);
-
-    void replaceGalleryMedia(Long promotionId, List<Long> mediaAssetIds);
 }

@@ -8,7 +8,6 @@ import com.viajescarolina.api.common.audit.Audited;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.BadRequestException;
 
 import java.time.Instant;
 
@@ -21,13 +20,6 @@ public class CreateBlogCategoryUseCase {
     @Audited(action = "CREATE_BLOG_CATEGORY", entityType = "BLOG_CATEGORY")
     @Transactional
     public BlogCategoryDTO execute(CreateOrUpdateBlogCategoryRequest req) {
-        if (req.name() == null || req.name().isBlank()) {
-            throw new BadRequestException("El nombre de la categoría es obligatorio");
-        }
-        if (req.slug() == null || req.slug().isBlank()) {
-            throw new BadRequestException("El slug de la categoría es obligatorio");
-        }
-
         BlogCategory category = new BlogCategory();
         category.setName(req.name().trim());
         category.setSlug(req.slug().trim().toLowerCase());

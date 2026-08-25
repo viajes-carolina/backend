@@ -21,15 +21,7 @@ public class PanacheContactPageRepository implements PanacheRepositoryBase<Conta
             entity = ContactPagePanacheEntity.fromDomain(contactPage);
             persist(entity);
         } else {
-            entity.heroBadge = contactPage.getHeroBadge();
-            entity.heroTitle = contactPage.getHeroTitle();
-            entity.heroSubtitle = contactPage.getHeroSubtitle();
-            entity.whatsappBoxTitle = contactPage.getWhatsappBoxTitle();
-            entity.whatsappBoxSubtitle = contactPage.getWhatsappBoxSubtitle();
-            entity.formTitle = contactPage.getFormTitle();
-            entity.formSubtitle = contactPage.getFormSubtitle();
-            entity.revision = contactPage.getRevision();
-            entity.updatedAt = contactPage.getUpdatedAt();
+            entity.copyFrom(contactPage);
         }
         return entity.toDomain();
     }

@@ -1,12 +1,14 @@
 package com.viajescarolina.api.home.application.usecase;
 
 import com.viajescarolina.api.blog.application.dto.BlogPostDTO;
+import com.viajescarolina.api.blog.application.usecase.ListPublicBlogPostsUseCase;
 import com.viajescarolina.api.blog.domain.BlogPost;
 import com.viajescarolina.api.blog.domain.BlogPostRepository;
 import com.viajescarolina.api.home.application.dto.HomeBlogInspirationDTO;
 import com.viajescarolina.api.home.application.dto.PublicHomeBlogInspirationResponse;
 import com.viajescarolina.api.home.domain.HomeBlogInspiration;
 import com.viajescarolina.api.home.domain.HomeBlogInspirationRepository;
+import com.viajescarolina.api.media.domain.MediaRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -20,6 +22,9 @@ public class GetPublicHomeBlogInspirationUseCase {
 
     @Inject
     BlogPostRepository blogPostRepository;
+
+    @Inject
+    MediaRepository mediaRepository;
 
     public PublicHomeBlogInspirationResponse execute() {
         HomeBlogInspiration config = inspirationRepository.get().orElseGet(() -> new HomeBlogInspiration(
@@ -37,33 +42,10 @@ public class GetPublicHomeBlogInspirationUseCase {
         int limit = config.getPostsLimit() != null && config.getPostsLimit() > 0 ? config.getPostsLimit() : 3;
 
         List<BlogPost> latestPosts = blogPostRepository.findPublicPosts(null, null, null, 0, limit);
-        List<BlogPostDTO> postDTOs = latestPosts.stream().map(this::toDTO).toList();
+        List<BlogPostDTO> postDTOs = latestPosts.stream()
+                .map(p -> ListPublicBlogPostsUseCase.mapToDTO(p, mediaRepository))
+                .toList();
 
         return new PublicHomeBlogInspirationResponse(HomeBlogInspirationDTO.fromDomain(config), postDTOs);
-    }
-
-    private BlogPostDTO toDTO(BlogPost p) {
-        return new BlogPostDTO(
-                p.getId(),
-                p.getSlug(),
-                p.getTitle(),
-                p.getSummary(),
-                p.getContentMarkdown(),
-                p.getCategoryId(),
-                p.getCategoryName(),
-                p.getCategorySlug(),
-                p.getCoverMediaId(),
-                p.getCoverMediaUrl(),
-                p.getAuthorName(),
-                p.getReadingTimeMinutes(),
-                p.getTags(),
-                p.getStatus(),
-                p.getPublishedAt(),
-                p.getViewCount(),
-                p.getIsFeatured(),
-                p.getActive(),
-                p.getCreatedAt(),
-                p.getUpdatedAt()
-        );
     }
 }

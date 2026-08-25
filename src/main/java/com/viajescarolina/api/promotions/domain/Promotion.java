@@ -21,11 +21,9 @@ public class Promotion {
     private LocalDate validFrom;
     private LocalDate validUntil;
     private Long featuredMediaId;
-    private boolean featured;
     private List<String> inclusions;
     private List<String> exclusions;
     private String whatsappMessageTemplate;
-    private Integer displayOrder;
     private boolean active;
     private Instant createdAt;
     private Instant updatedAt;
@@ -47,11 +45,9 @@ public class Promotion {
             LocalDate validFrom,
             LocalDate validUntil,
             Long featuredMediaId,
-            boolean featured,
             List<String> inclusions,
             List<String> exclusions,
             String whatsappMessageTemplate,
-            Integer displayOrder,
             boolean active,
             Instant createdAt,
             Instant updatedAt,
@@ -71,11 +67,9 @@ public class Promotion {
         this.validFrom = validFrom != null ? validFrom : LocalDate.now();
         this.validUntil = validUntil != null ? validUntil : LocalDate.now().plusMonths(6);
         this.featuredMediaId = featuredMediaId;
-        this.featured = featured;
         this.inclusions = inclusions != null ? inclusions : new ArrayList<>();
         this.exclusions = exclusions != null ? exclusions : new ArrayList<>();
         this.whatsappMessageTemplate = whatsappMessageTemplate;
-        this.displayOrder = displayOrder != null ? displayOrder : 0;
         this.active = active;
         this.createdAt = createdAt != null ? createdAt : Instant.now();
         this.updatedAt = updatedAt != null ? updatedAt : Instant.now();
@@ -84,6 +78,12 @@ public class Promotion {
         this.facebookPermalinkUrl = facebookPermalinkUrl;
     }
 
+    /**
+     * Crea una promoción nueva, autorada por el admin desde el formulario estructurado
+     * (título, precio, fechas, foto, inclusiones). Siempre nace activa y de origen MANUAL;
+     * el resultado de la publicación en Facebook (si tiene éxito) se adjunta después vía
+     * {@link #setFacebookPublishResult(String, String)}.
+     */
     public static Promotion create(
             String slug,
             String title,
@@ -97,11 +97,10 @@ public class Promotion {
             LocalDate validFrom,
             LocalDate validUntil,
             Long featuredMediaId,
-            boolean featured,
             List<String> inclusions,
             List<String> exclusions,
-            String whatsappMessageTemplate,
-            Integer displayOrder) {
+            String whatsappMessageTemplate) {
+        Instant now = Instant.now();
         return new Promotion(
                 null,
                 slug,
@@ -116,62 +115,31 @@ public class Promotion {
                 validFrom,
                 validUntil,
                 featuredMediaId,
-                featured,
                 inclusions,
                 exclusions,
                 whatsappMessageTemplate,
-                displayOrder,
                 true,
-                Instant.now(),
-                Instant.now(),
+                now,
+                now,
                 "MANUAL",
                 null,
-                null
-        );
+                null);
     }
 
-    public void update(
-            String slug,
-            String title,
-            String destination,
-            String summary,
-            BigDecimal priceUsd,
-            BigDecimal pricePen,
-            Integer durationDays,
-            Integer durationNights,
-            String departureCity,
-            LocalDate validFrom,
-            LocalDate validUntil,
-            Long featuredMediaId,
-            boolean featured,
-            List<String> inclusions,
-            List<String> exclusions,
-            String whatsappMessageTemplate,
-            Integer displayOrder,
-            boolean active) {
-        this.slug = slug;
-        this.title = title;
-        this.destination = destination;
-        this.summary = summary;
-        this.priceUsd = priceUsd;
-        this.pricePen = pricePen;
-        this.durationDays = durationDays;
-        this.durationNights = durationNights;
-        this.departureCity = departureCity;
-        this.validFrom = validFrom;
-        this.validUntil = validUntil;
-        this.featuredMediaId = featuredMediaId;
-        this.featured = featured;
-        this.inclusions = inclusions;
-        this.exclusions = exclusions;
-        this.whatsappMessageTemplate = whatsappMessageTemplate;
-        this.displayOrder = displayOrder;
+    public void setActive(boolean active) {
         this.active = active;
         this.updatedAt = Instant.now();
     }
 
-    public void deactivate() {
-        this.active = false;
+    /**
+     * Adjunta el resultado de publicar esta promoción como post con foto en la Página de
+     * Facebook (ver {@code FacebookGraphClient.publishPhoto}). Se llama después de guardar
+     * la promoción, solo si el intento de publicación tuvo éxito — el publish es best-effort
+     * y nunca condiciona la creación de la promoción en sí.
+     */
+    public void setFacebookPublishResult(String facebookPostId, String facebookPermalinkUrl) {
+        this.facebookPostId = facebookPostId;
+        this.facebookPermalinkUrl = facebookPermalinkUrl;
         this.updatedAt = Instant.now();
     }
 
@@ -188,11 +156,9 @@ public class Promotion {
     public LocalDate getValidFrom() { return validFrom; }
     public LocalDate getValidUntil() { return validUntil; }
     public Long getFeaturedMediaId() { return featuredMediaId; }
-    public boolean isFeatured() { return featured; }
     public List<String> getInclusions() { return inclusions; }
     public List<String> getExclusions() { return exclusions; }
     public String getWhatsappMessageTemplate() { return whatsappMessageTemplate; }
-    public Integer getDisplayOrder() { return displayOrder; }
     public boolean isActive() { return active; }
     public Instant getCreatedAt() { return createdAt; }
     public Instant getUpdatedAt() { return updatedAt; }

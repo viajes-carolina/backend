@@ -4,8 +4,6 @@ import com.viajescarolina.api.promotions.domain.Promotion;
 import com.viajescarolina.api.promotions.domain.PromotionRepository;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.transaction.Transactional;
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,24 +11,25 @@ import java.util.Optional;
 public class PanachePromotionRepository implements PromotionRepository, PanacheRepositoryBase<PromotionPanacheEntity, Long> {
 
     @Override
-    public List<Promotion> findFeatured() {
-        return find("isFeatured = true AND active = true ORDER BY displayOrder ASC").stream()
-                .map(PromotionPanacheEntity::toDomain)
-                .toList();
-    }
-
-    @Override
-    public List<Promotion> findAllActive() {
-        return find("active = true ORDER BY displayOrder ASC").stream()
+    public List<Promotion> findTopActiveByRecency(int limit) {
+        return find("active = true ORDER BY createdAt DESC, id DESC")
+                .page(0, Math.max(1, limit))
+                .list()
+                .stream()
                 .map(PromotionPanacheEntity::toDomain)
                 .toList();
     }
 
     @Override
     public List<Promotion> findAllPromotions() {
-        return list("ORDER BY displayOrder ASC").stream()
+        return find("ORDER BY createdAt DESC, id DESC").stream()
                 .map(PromotionPanacheEntity::toDomain)
                 .toList();
+    }
+
+    @Override
+    public long countActive() {
+        return count("active = true");
     }
 
     @Override
@@ -63,33 +62,5 @@ public class PanachePromotionRepository implements PromotionRepository, PanacheR
     @Override
     public void delete(Long id) {
         deleteById(id);
-    }
-
-    @Override
-    public List<Long> findGalleryMediaIds(Long promotionId) {
-        return PromotionMediaPanacheEntity
-                .find("promotionId = ?1 ORDER BY displayOrder ASC", promotionId)
-                .<PromotionMediaPanacheEntity>stream()
-                .map(entity -> entity.mediaAssetId)
-                .toList();
-    }
-
-    @Override
-    @Transactional
-    public void replaceGalleryMedia(Long promotionId, List<Long> mediaAssetIds) {
-        PromotionMediaPanacheEntity.delete("promotionId", promotionId);
-
-        if (mediaAssetIds == null || mediaAssetIds.isEmpty()) {
-            return;
-        }
-
-        for (int i = 0; i < mediaAssetIds.size(); i++) {
-            PromotionMediaPanacheEntity entity = new PromotionMediaPanacheEntity();
-            entity.promotionId = promotionId;
-            entity.mediaAssetId = mediaAssetIds.get(i);
-            entity.displayOrder = i;
-            entity.createdAt = Instant.now();
-            entity.persist();
-        }
     }
 }

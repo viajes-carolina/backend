@@ -3,6 +3,7 @@ package com.viajescarolina.api.home.application.usecase;
 import com.viajescarolina.api.home.application.dto.HomePromotionsSectionDTO;
 import com.viajescarolina.api.home.domain.HomePromotionsSection;
 import com.viajescarolina.api.home.domain.HomePromotionsSectionRepository;
+import com.viajescarolina.api.media.domain.MediaRepository;
 import com.viajescarolina.api.common.audit.Audited;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -13,6 +14,9 @@ public class UpdateHomePromotionsSectionUseCase {
 
     @Inject
     HomePromotionsSectionRepository promotionsSectionRepository;
+
+    @Inject
+    MediaRepository mediaRepository;
 
     @Audited(action = "UPDATE_HOME_PROMOTIONS_SECTION", entityType = "HOME_PROMOTIONS_SECTION")
     @Transactional
@@ -34,7 +38,18 @@ public class UpdateHomePromotionsSectionUseCase {
         if (dto.bottomCtaWhatsappText() != null) entity.setBottomCtaWhatsappText(dto.bottomCtaWhatsappText());
         if (dto.bottomCtaWhatsappMessage() != null) entity.setBottomCtaWhatsappMessage(dto.bottomCtaWhatsappMessage());
 
+        if (dto.mediaId() != null) {
+            Long validMediaId = null;
+            if (dto.mediaId() > 0 && mediaRepository.findMediaById(dto.mediaId()).isPresent()) {
+                validMediaId = dto.mediaId();
+            }
+            entity.setMediaId(validMediaId);
+        }
+        if (dto.mediaUrl() != null && !dto.mediaUrl().isBlank()) entity.setMediaUrl(dto.mediaUrl());
+        if (dto.mediaFocalX() != null) entity.setMediaFocalX(dto.mediaFocalX());
+        if (dto.mediaFocalY() != null) entity.setMediaFocalY(dto.mediaFocalY());
+
         HomePromotionsSection saved = promotionsSectionRepository.save(entity);
-        return HomePromotionsSectionDTO.fromDomain(saved);
+        return GetPublicHomePromotionsSectionUseCase.mapToDTO(saved, mediaRepository);
     }
 }

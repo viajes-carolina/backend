@@ -9,7 +9,11 @@ public record HomePromotionsSectionDTO(
         String subtitle,
         String bottomCtaQuestion,
         String bottomCtaWhatsappText,
-        String bottomCtaWhatsappMessage
+        String bottomCtaWhatsappMessage,
+        Long mediaId,
+        String mediaUrl,
+        Double mediaFocalX,
+        Double mediaFocalY
 ) {
     public static HomePromotionsSectionDTO fromDomain(HomePromotionsSection domain) {
         if (domain == null) return null;
@@ -20,7 +24,11 @@ public record HomePromotionsSectionDTO(
                 domain.getSubtitle(),
                 domain.getBottomCtaQuestion(),
                 domain.getBottomCtaWhatsappText(),
-                domain.getBottomCtaWhatsappMessage()
+                domain.getBottomCtaWhatsappMessage(),
+                domain.getMediaId(),
+                domain.getMediaUrl(),
+                domain.getMediaFocalX(),
+                domain.getMediaFocalY()
         );
     }
 }

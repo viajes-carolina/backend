@@ -59,9 +59,6 @@ public class PromotionPanacheEntity extends PanacheEntityBase {
     @Column(name = "featured_media_id")
     public Long featuredMediaId;
 
-    @Column(name = "is_featured", nullable = false)
-    public boolean isFeatured = true;
-
     @Column(name = "inclusions", columnDefinition = "JSONB", nullable = false)
     @JdbcTypeCode(SqlTypes.JSON)
     public String inclusions;
@@ -72,9 +69,6 @@ public class PromotionPanacheEntity extends PanacheEntityBase {
 
     @Column(name = "whatsapp_message_template", length = 500)
     public String whatsappMessageTemplate;
-
-    @Column(name = "display_order", nullable = false)
-    public Integer displayOrder = 0;
 
     @Column(name = "active", nullable = false)
     public boolean active = true;
@@ -125,11 +119,9 @@ public class PromotionPanacheEntity extends PanacheEntityBase {
                 validFrom,
                 validUntil,
                 featuredMediaId,
-                isFeatured,
                 incList,
                 excList,
                 whatsappMessageTemplate,
-                displayOrder,
                 active,
                 createdAt,
                 updatedAt,
@@ -154,7 +146,6 @@ public class PromotionPanacheEntity extends PanacheEntityBase {
         entity.validFrom = domain.getValidFrom();
         entity.validUntil = domain.getValidUntil();
         entity.featuredMediaId = domain.getFeaturedMediaId();
-        entity.isFeatured = domain.isFeatured();
         try {
             entity.inclusions = OBJECT_MAPPER.writeValueAsString(domain.getInclusions());
         } catch (Exception e) {
@@ -166,7 +157,6 @@ public class PromotionPanacheEntity extends PanacheEntityBase {
             entity.exclusions = "[]";
         }
         entity.whatsappMessageTemplate = domain.getWhatsappMessageTemplate();
-        entity.displayOrder = domain.getDisplayOrder();
         entity.active = domain.isActive();
         entity.createdAt = domain.getCreatedAt();
         entity.updatedAt = domain.getUpdatedAt();

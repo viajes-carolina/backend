@@ -8,6 +8,7 @@ public record TravelAdvisorDTO(
     String roleTitle,
     String specialty,
     String bio,
+    String quote,
     Long photoMediaId,
     String photoMediaUrl,
     String whatsappPhone,
