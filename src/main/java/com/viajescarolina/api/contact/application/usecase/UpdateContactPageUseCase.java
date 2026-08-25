@@ -1,7 +1,6 @@
 package com.viajescarolina.api.contact.application.usecase;
 
 import com.viajescarolina.api.contact.application.dto.ContactPageDTO;
-import com.viajescarolina.api.contact.application.dto.StarterPhraseDTO;
 import com.viajescarolina.api.contact.application.dto.UpdateContactPageRequest;
 import com.viajescarolina.api.contact.domain.ContactPage;
 import com.viajescarolina.api.contact.domain.ContactPageRepository;
@@ -9,7 +8,6 @@ import com.viajescarolina.api.common.audit.Audited;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import java.time.Instant;
-import java.util.List;
 
 @ApplicationScoped
 public class UpdateContactPageUseCase {
@@ -40,41 +38,27 @@ public class UpdateContactPageUseCase {
         page.setHeroCtaText(req.heroCtaText());
         page.setHeroNoteText(req.heroNoteText());
         page.setHeroCtaMessage(req.heroCtaMessage());
-        page.setHeroChatLabel(req.heroChatLabel());
-        page.setHeroChatBubble1(req.heroChatBubble1());
-        page.setHeroChatBubble2(req.heroChatBubble2());
-        page.setHeroChatBubble3(req.heroChatBubble3());
-
-        page.setStartersBadge(req.startersBadge());
-        page.setStartersTitle(req.startersTitle());
-        page.setStartersSubtitle(req.startersSubtitle());
-        page.setStartersClosing(req.startersClosing());
-        page.setStarterPhrases(toStarterPhrases(req.starterPhrases()));
+        page.setHeroInfoTitle(req.heroInfoTitle());
+        page.setHeroInfoWhatsappLabel(req.heroInfoWhatsappLabel());
+        page.setHeroInfoWhatsappValue(req.heroInfoWhatsappValue());
+        page.setHeroInfoEmailLabel(req.heroInfoEmailLabel());
+        page.setHeroInfoScheduleLabel(req.heroInfoScheduleLabel());
+        page.setHeroInfoOfficeLabel(req.heroInfoOfficeLabel());
 
         page.setOfficeSectionBadge(req.officeSectionBadge());
         page.setOfficeSectionTitle(req.officeSectionTitle());
-        page.setOfficeSectionSubtitle(req.officeSectionSubtitle());
         page.setOfficeMapTitle(req.officeMapTitle());
-        page.setOfficeMapSubtitle(req.officeMapSubtitle());
         page.setOfficeVisitNote(req.officeVisitNote());
         page.setOfficeMapEyebrow(req.officeMapEyebrow());
         page.setOfficeMapPinTitle(req.officeMapPinTitle());
         page.setOfficeMapPinSubtitle(req.officeMapPinSubtitle());
         page.setOfficeMapsLinkText(req.officeMapsLinkText());
-        page.setOfficeLocationLabel(req.officeLocationLabel());
         page.setOfficeVisitLabel(req.officeVisitLabel());
-        page.setOfficeVisitCtaText(req.officeVisitCtaText());
-        page.setOfficeVisitCtaMessage(req.officeVisitCtaMessage());
 
         page.setRevision(page.getRevision() + 1);
         page.setUpdatedAt(Instant.now());
 
         ContactPage saved = contactPageRepository.save(page);
         return getPublicContactUseCase.toPageDTO(saved);
-    }
-
-    private static List<ContactPage.StarterPhrase> toStarterPhrases(List<StarterPhraseDTO> phrases) {
-        if (phrases == null) return List.of();
-        return phrases.stream().map(s -> new ContactPage.StarterPhrase(s.quote(), s.support())).toList();
     }
 }

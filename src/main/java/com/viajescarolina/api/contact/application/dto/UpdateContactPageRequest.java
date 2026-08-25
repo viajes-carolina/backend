@@ -1,9 +1,6 @@
 package com.viajescarolina.api.contact.application.dto;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import java.util.List;
 
 public record UpdateContactPageRequest(
     // Hero
@@ -25,34 +22,23 @@ public record UpdateContactPageRequest(
     @NotBlank(message = "El mensaje de WhatsApp del hero es obligatorio")
     String heroCtaMessage,
 
-    @NotBlank(message = "La etiqueta del chat del hero es obligatoria")
-    String heroChatLabel,
+    @NotBlank(message = "El título de la tarjeta de información es obligatorio")
+    String heroInfoTitle,
 
-    @NotBlank(message = "La burbuja 1 del chat del hero es obligatoria")
-    String heroChatBubble1,
+    @NotBlank(message = "La etiqueta de WhatsApp es obligatoria")
+    String heroInfoWhatsappLabel,
 
-    @NotBlank(message = "La burbuja 2 del chat del hero es obligatoria")
-    String heroChatBubble2,
+    @NotBlank(message = "El valor de WhatsApp es obligatorio")
+    String heroInfoWhatsappValue,
 
-    @NotBlank(message = "La burbuja 3 del chat del hero es obligatoria")
-    String heroChatBubble3,
+    @NotBlank(message = "La etiqueta de correo es obligatoria")
+    String heroInfoEmailLabel,
 
-    // Cómo empezar
-    @NotBlank(message = "El badge de 'Cómo empezar' es obligatorio")
-    String startersBadge,
+    @NotBlank(message = "La etiqueta de horario es obligatoria")
+    String heroInfoScheduleLabel,
 
-    @NotBlank(message = "El título de 'Cómo empezar' es obligatorio")
-    String startersTitle,
-
-    @NotBlank(message = "El subtítulo de 'Cómo empezar' es obligatorio")
-    String startersSubtitle,
-
-    @NotBlank(message = "El cierre de 'Cómo empezar' es obligatorio")
-    String startersClosing,
-
-    @NotNull(message = "Las frases de ejemplo son obligatorias")
-    @Valid
-    List<StarterPhraseDTO> starterPhrases,
+    @NotBlank(message = "La etiqueta de oficina es obligatoria")
+    String heroInfoOfficeLabel,
 
     // Oficina y Google Maps
     @NotBlank(message = "El badge de la sección de oficina es obligatorio")
@@ -61,14 +47,8 @@ public record UpdateContactPageRequest(
     @NotBlank(message = "El título de la sección de oficina es obligatorio")
     String officeSectionTitle,
 
-    @NotBlank(message = "El subtítulo de la sección de oficina es obligatorio")
-    String officeSectionSubtitle,
-
     @NotBlank(message = "El título del mapa es obligatorio")
     String officeMapTitle,
-
-    @NotBlank(message = "El subtítulo del mapa es obligatorio")
-    String officeMapSubtitle,
 
     @NotBlank(message = "La nota de visita es obligatoria")
     String officeVisitNote,
@@ -85,15 +65,6 @@ public record UpdateContactPageRequest(
     @NotBlank(message = "El texto del link de Google Maps es obligatorio")
     String officeMapsLinkText,
 
-    @NotBlank(message = "La etiqueta de ubicación es obligatoria")
-    String officeLocationLabel,
-
     @NotBlank(message = "La etiqueta de 'antes de venir' es obligatoria")
-    String officeVisitLabel,
-
-    @NotBlank(message = "El texto del CTA de visita es obligatorio")
-    String officeVisitCtaText,
-
-    @NotBlank(message = "El mensaje de WhatsApp de visita es obligatorio")
-    String officeVisitCtaMessage
+    String officeVisitLabel
 ) {}

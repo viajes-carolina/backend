@@ -9,6 +9,7 @@ public record PublicContactResponse(
     String contactEmail,
     String officeAddress,
     String officeHours,
+    String officeScheduleSaturdays,
     String officeGoogleMapsUrl,
     BigDecimal officeLatitude,
     BigDecimal officeLongitude
