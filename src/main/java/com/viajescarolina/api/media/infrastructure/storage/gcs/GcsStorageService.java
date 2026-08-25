@@ -28,6 +28,16 @@ import java.util.UUID;
  * bucket (uniform bucket-level access + IAM allUsers:objectViewer) — esta clase no gestiona
  * permisos, solo sube/lee/borra objetos. Las credenciales se resuelven automáticamente vía
  * Application Default Credentials (Workload Identity en Cloud Run, o GOOGLE_APPLICATION_CREDENTIALS).
+ *
+ * ADVERTENCIA (aplica también a {@link #storeRaw}, usado por los adjuntos del Libro de
+ * Reclamaciones — BC claims): al ser acceso público a NIVEL DE BUCKET, cualquier objeto
+ * subido aquí (incluidos los adjuntos con datos personales bajo el prefijo "claims/") es
+ * accesible sin autenticación por cualquiera que conozca la URL exacta del objeto. El nombre
+ * de objeto incluye un UUID aleatorio (no enumerable), pero esto NO es un control de acceso
+ * real. La descarga administrativa (AdminClaimsResource) siempre pasa por {@link #retrieve}
+ * server-side con auth, nunca expone esta URL pública al cliente — pero si se requiere
+ * confidencialidad estricta en producción, este bucket debería reemplazarse por uno privado
+ * con URLs firmadas (V4 signed URLs) para el prefijo "claims/".
  */
 @ApplicationScoped
 @IfBuildProfile("prod")
@@ -88,6 +98,53 @@ public class GcsStorageService implements MediaStorageService {
         String variantsJson = String.format("{\"original\": \"%s\"}", storagePath);
 
         return new StoredFileInfo(objectName, storagePath, optimized.bytes().length, optimized.width(), optimized.height(), variantsJson);
+    }
+
+    @Override
+    public StoredFileInfo storeRaw(String originalFilename, String mimeType, InputStream inputStream, long sizeBytes) {
+        byte[] rawBytes;
+        try {
+            rawBytes = inputStream.readAllBytes();
+        } catch (IOException e) {
+            throw new RuntimeException("Error al leer el archivo subido: " + e.getMessage(), e);
+        }
+
+        String safeBaseName = (originalFilename != null ? originalFilename : "file")
+                .replaceAll("\\.[^.]+$", "")
+                .replaceAll("[^a-zA-Z0-9.-]", "_");
+        String extension = rawExtensionFor(originalFilename, mimeType);
+        // Prefijo "claims/" separado de "media/": el nombre de objeto incluye un UUID aleatorio,
+        // pero NO hay control de acceso por objeto en este bucket (uniform bucket-level access +
+        // allUsers:objectViewer aplica a todo el bucket) — ver advertencia en la clase.
+        String objectName = "claims/" + UUID.randomUUID().toString().substring(0, 8) + "-" + safeBaseName + "." + extension;
+
+        BlobId blobId = BlobId.of(bucketName, objectName);
+        BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
+                .setContentType(mimeType != null ? mimeType : "application/octet-stream")
+                .build();
+
+        storageClient().create(blobInfo, rawBytes);
+
+        String storagePath = publicBaseUrl.map(base -> base.replaceAll("/$", "") + "/" + objectName)
+                .orElse("https://storage.googleapis.com/" + bucketName + "/" + objectName);
+
+        return new StoredFileInfo(objectName, storagePath, rawBytes.length, 0, 0, "{}");
+    }
+
+    private String rawExtensionFor(String originalFilename, String mimeType) {
+        if (originalFilename != null && originalFilename.contains(".")) {
+            String ext = originalFilename.substring(originalFilename.lastIndexOf('.') + 1).toLowerCase();
+            if (!ext.isBlank() && ext.length() <= 5) {
+                return ext;
+            }
+        }
+        if (mimeType == null) return "bin";
+        return switch (mimeType.toLowerCase()) {
+            case "application/pdf" -> "pdf";
+            case "image/png" -> "png";
+            case "image/jpeg" -> "jpg";
+            default -> "bin";
+        };
     }
 
     @Override

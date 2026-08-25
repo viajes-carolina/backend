@@ -1,6 +1,7 @@
 package com.viajescarolina.api.claims.domain;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
 public class ClaimRecord {
@@ -18,6 +19,10 @@ public class ClaimRecord {
     private String contractedType;
     private BigDecimal claimedAmount;
     private String currency;
+    private String relatedService;
+    private String reservationCode;
+    private LocalDate serviceDate;
+    private String responseChannel;
     private String description;
     private String claimType;
     private String consumerDetail;
@@ -35,6 +40,7 @@ public class ClaimRecord {
     public ClaimRecord(Long id, String claimCode, String fullName, String documentType, String documentNumber,
                        String email, String phone, String address, boolean isMinor, String parentName,
                        String parentDocument, String contractedType, BigDecimal claimedAmount, String currency,
+                       String relatedService, String reservationCode, LocalDate serviceDate, String responseChannel,
                        String description, String claimType, String consumerDetail, String consumerRequest,
                        String status, String responseNotes, OffsetDateTime responseAt, String turnstileToken,
                        String clientIpHash, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
@@ -52,6 +58,10 @@ public class ClaimRecord {
         this.contractedType = contractedType;
         this.claimedAmount = claimedAmount;
         this.currency = currency;
+        this.relatedService = relatedService;
+        this.reservationCode = reservationCode;
+        this.serviceDate = serviceDate;
+        this.responseChannel = responseChannel;
         this.description = description;
         this.claimType = claimType;
         this.consumerDetail = consumerDetail;
@@ -106,6 +116,18 @@ public class ClaimRecord {
 
     public String getCurrency() { return currency; }
     public void setCurrency(String currency) { this.currency = currency; }
+
+    public String getRelatedService() { return relatedService; }
+    public void setRelatedService(String relatedService) { this.relatedService = relatedService; }
+
+    public String getReservationCode() { return reservationCode; }
+    public void setReservationCode(String reservationCode) { this.reservationCode = reservationCode; }
+
+    public LocalDate getServiceDate() { return serviceDate; }
+    public void setServiceDate(LocalDate serviceDate) { this.serviceDate = serviceDate; }
+
+    public String getResponseChannel() { return responseChannel; }
+    public void setResponseChannel(String responseChannel) { this.responseChannel = responseChannel; }
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }

@@ -2,7 +2,9 @@ package com.viajescarolina.api.claims.application.dto;
 
 import com.viajescarolina.api.claims.domain.ClaimRecord;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.util.List;
 
 public record ClaimRecordDTO(
     Long id,
@@ -19,6 +21,10 @@ public record ClaimRecordDTO(
     String contractedType,
     BigDecimal claimedAmount,
     String currency,
+    String relatedService,
+    String reservationCode,
+    LocalDate serviceDate,
+    String responseChannel,
     String description,
     String claimType,
     String consumerDetail,
@@ -27,9 +33,14 @@ public record ClaimRecordDTO(
     String responseNotes,
     OffsetDateTime responseAt,
     OffsetDateTime createdAt,
-    OffsetDateTime updatedAt
+    OffsetDateTime updatedAt,
+    List<ClaimAttachmentDTO> attachments
 ) {
     public static ClaimRecordDTO fromDomain(ClaimRecord entity) {
+        return fromDomain(entity, List.of());
+    }
+
+    public static ClaimRecordDTO fromDomain(ClaimRecord entity, List<ClaimAttachmentDTO> attachments) {
         return new ClaimRecordDTO(
             entity.getId(),
             entity.getClaimCode(),
@@ -45,6 +56,10 @@ public record ClaimRecordDTO(
             entity.getContractedType(),
             entity.getClaimedAmount(),
             entity.getCurrency(),
+            entity.getRelatedService(),
+            entity.getReservationCode(),
+            entity.getServiceDate(),
+            entity.getResponseChannel(),
             entity.getDescription(),
             entity.getClaimType(),
             entity.getConsumerDetail(),
@@ -53,7 +68,8 @@ public record ClaimRecordDTO(
             entity.getResponseNotes(),
             entity.getResponseAt(),
             entity.getCreatedAt(),
-            entity.getUpdatedAt()
+            entity.getUpdatedAt(),
+            attachments != null ? attachments : List.of()
         );
     }
 }

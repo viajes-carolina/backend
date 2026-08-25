@@ -1,7 +1,9 @@
 package com.viajescarolina.api.claims.application.usecase;
 
+import com.viajescarolina.api.claims.application.dto.ClaimAttachmentDTO;
 import com.viajescarolina.api.claims.application.dto.ClaimRecordDTO;
 import com.viajescarolina.api.claims.application.dto.UpdateClaimStatusRequest;
+import com.viajescarolina.api.claims.domain.ClaimAttachmentRepository;
 import com.viajescarolina.api.claims.domain.ClaimRecord;
 import com.viajescarolina.api.claims.domain.ClaimRepository;
 import com.viajescarolina.api.common.audit.Audited;
@@ -9,16 +11,19 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @ApplicationScoped
 public class UpdateClaimStatusUseCase {
 
     private final ClaimRepository claimRepository;
+    private final ClaimAttachmentRepository attachmentRepository;
 
     @Inject
-    public UpdateClaimStatusUseCase(ClaimRepository claimRepository) {
+    public UpdateClaimStatusUseCase(ClaimRepository claimRepository, ClaimAttachmentRepository attachmentRepository) {
         this.claimRepository = claimRepository;
+        this.attachmentRepository = attachmentRepository;
     }
 
     @Audited(action = "UPDATE_CLAIM_STATUS", entityType = "CLAIM")
@@ -38,6 +43,9 @@ public class UpdateClaimStatusUseCase {
         claim.setUpdatedAt(OffsetDateTime.now());
 
         ClaimRecord saved = claimRepository.save(claim);
-        return Optional.of(ClaimRecordDTO.fromDomain(saved));
+        List<ClaimAttachmentDTO> attachments = attachmentRepository.findByClaimId(saved.getId()).stream()
+                .map(ClaimAttachmentDTO::fromDomain)
+                .toList();
+        return Optional.of(ClaimRecordDTO.fromDomain(saved, attachments));
     }
 }

@@ -80,6 +80,50 @@ public class LocalFileSystemStorageService implements MediaStorageService {
     }
 
     @Override
+    public StoredFileInfo storeRaw(String originalFilename, String mimeType, InputStream inputStream, long sizeBytes) {
+        byte[] rawBytes;
+        try {
+            rawBytes = inputStream.readAllBytes();
+        } catch (IOException e) {
+            throw new RuntimeException("Error al leer el archivo subido: " + e.getMessage(), e);
+        }
+
+        Path baseDir = getStoragePath();
+        String safeBaseName = (originalFilename != null ? originalFilename : "file")
+                .replaceAll("\\.[^.]+$", "")
+                .replaceAll("[^a-zA-Z0-9.-]", "_");
+        String extension = rawExtensionFor(originalFilename, mimeType);
+        String uniqueFilename = UUID.randomUUID().toString().substring(0, 8) + "-" + safeBaseName + "." + extension;
+        Path targetFile = baseDir.resolve(uniqueFilename);
+
+        try (FileOutputStream fos = new FileOutputStream(targetFile.toFile())) {
+            fos.write(rawBytes);
+        } catch (IOException e) {
+            LOG.error("Error al guardar archivo en disco: " + targetFile, e);
+            throw new RuntimeException("Error al almacenar archivo: " + e.getMessage(), e);
+        }
+
+        String storagePath = "/media/" + uniqueFilename;
+        return new StoredFileInfo(uniqueFilename, storagePath, rawBytes.length, 0, 0, "{}");
+    }
+
+    private String rawExtensionFor(String originalFilename, String mimeType) {
+        if (originalFilename != null && originalFilename.contains(".")) {
+            String ext = originalFilename.substring(originalFilename.lastIndexOf('.') + 1).toLowerCase();
+            if (!ext.isBlank() && ext.length() <= 5) {
+                return ext;
+            }
+        }
+        if (mimeType == null) return "bin";
+        return switch (mimeType.toLowerCase()) {
+            case "application/pdf" -> "pdf";
+            case "image/png" -> "png";
+            case "image/jpeg" -> "jpg";
+            default -> "bin";
+        };
+    }
+
+    @Override
     public InputStream retrieve(String filename) {
         Path filePath = getStoragePath().resolve(filename);
         File file = filePath.toFile();

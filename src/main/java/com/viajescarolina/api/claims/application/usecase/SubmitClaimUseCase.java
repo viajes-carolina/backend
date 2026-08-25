@@ -49,9 +49,18 @@ public class SubmitClaimUseCase {
             request.isMinor(),
             request.parentName() != null ? request.parentName().trim() : null,
             request.parentDocument() != null ? request.parentDocument().trim() : null,
-            request.contractedType() != null ? request.contractedType().toUpperCase().trim() : "SERVICIO",
+            request.contractedType() != null && !request.contractedType().isBlank()
+                    ? request.contractedType().toUpperCase().trim() : "SERVICIO",
             request.claimedAmount(),
-            request.currency() != null ? request.currency().toUpperCase().trim() : "PEN",
+            request.currency() != null && !request.currency().isBlank()
+                    ? request.currency().toUpperCase().trim() : "PEN",
+            request.relatedService() != null && !request.relatedService().isBlank()
+                    ? request.relatedService().toLowerCase().trim() : null,
+            request.reservationCode() != null && !request.reservationCode().isBlank()
+                    ? request.reservationCode().trim() : null,
+            request.serviceDate(),
+            request.responseChannel() != null && !request.responseChannel().isBlank()
+                    ? request.responseChannel().toUpperCase().trim() : "EMAIL",
             request.description().trim(),
             request.claimType() != null ? request.claimType().toUpperCase().trim() : "RECLAMO",
             request.consumerDetail().trim(),

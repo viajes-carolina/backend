@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public record SubmitClaimRequest(
     @NotBlank(message = "El nombre completo es obligatorio")
@@ -33,11 +34,22 @@ public record SubmitClaimRequest(
     String parentName,
     String parentDocument,
 
-    @NotBlank(message = "El tipo de bien contratado es obligatorio")
+    // Ya no es obligatorio: el asistente público de 4 pasos no lo solicita.
+    // SubmitClaimUseCase aplica "SERVICIO" como valor de dominio por defecto si llega null/blank.
     String contractedType, // PRODUCTO, SERVICIO
 
     BigDecimal claimedAmount,
     String currency,
+
+    @Size(max = 30)
+    String relatedService, // paquete, pasaje, alojamiento, asesoria, otro
+
+    @Size(max = 60)
+    String reservationCode,
+
+    LocalDate serviceDate,
+
+    String responseChannel, // EMAIL, CARTA — por defecto EMAIL
 
     @NotBlank(message = "La descripción del bien contratado es obligatoria")
     @Size(max = 2000)

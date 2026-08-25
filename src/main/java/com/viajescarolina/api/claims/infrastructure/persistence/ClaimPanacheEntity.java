@@ -4,6 +4,7 @@ import com.viajescarolina.api.claims.domain.ClaimRecord;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
 @Entity
@@ -53,6 +54,18 @@ public class ClaimPanacheEntity extends PanacheEntityBase {
     @Column(nullable = false, length = 10)
     public String currency;
 
+    @Column(name = "related_service", length = 30)
+    public String relatedService;
+
+    @Column(name = "reservation_code", length = 60)
+    public String reservationCode;
+
+    @Column(name = "service_date")
+    public LocalDate serviceDate;
+
+    @Column(name = "response_channel", nullable = false, length = 20)
+    public String responseChannel;
+
     @Column(nullable = false, length = 2000)
     public String description;
 
@@ -91,6 +104,7 @@ public class ClaimPanacheEntity extends PanacheEntityBase {
             id, claimCode, fullName, documentType, documentNumber,
             email, phone, address, isMinor, parentName,
             parentDocument, contractedType, claimedAmount, currency,
+            relatedService, reservationCode, serviceDate, responseChannel,
             description, claimType, consumerDetail, consumerRequest,
             status, responseNotes, responseAt, turnstileToken,
             clientIpHash, createdAt, updatedAt
@@ -113,6 +127,10 @@ public class ClaimPanacheEntity extends PanacheEntityBase {
         entity.contractedType = domain.getContractedType();
         entity.claimedAmount = domain.getClaimedAmount();
         entity.currency = domain.getCurrency();
+        entity.relatedService = domain.getRelatedService();
+        entity.reservationCode = domain.getReservationCode();
+        entity.serviceDate = domain.getServiceDate();
+        entity.responseChannel = domain.getResponseChannel();
         entity.description = domain.getDescription();
         entity.claimType = domain.getClaimType();
         entity.consumerDetail = domain.getConsumerDetail();
