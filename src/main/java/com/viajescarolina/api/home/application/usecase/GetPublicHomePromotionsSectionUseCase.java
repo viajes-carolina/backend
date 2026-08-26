@@ -19,15 +19,20 @@ public class GetPublicHomePromotionsSectionUseCase {
     MediaRepository mediaRepository;
 
     public HomePromotionsSectionDTO execute() {
-        HomePromotionsSection config = promotionsSectionRepository.get().orElseGet(() -> new HomePromotionsSection(
-                1L,
-                "02 · Viajes para empezar a imaginar",
-                "Algunas formas de vivir tu próximo viaje",
-                "Experiencias que podemos ajustar a tus tiempos, compañía y presupuesto.",
-                "¿Cuál de estos viajes te gustaría vivir?",
-                "Cuéntanos cuál te gustó",
-                "Hola Viajes Carolina, me gustaría conversar sobre una de sus promociones."
-        ));
+        HomePromotionsSection config = promotionsSectionRepository.get().orElseGet(() -> {
+            HomePromotionsSection fallback = new HomePromotionsSection(
+                    1L,
+                    "02 · Viajes para empezar a imaginar",
+                    "Algunas formas de vivir tu próximo viaje",
+                    "Experiencias que podemos ajustar a tus tiempos, compañía y presupuesto.",
+                    "¿Cuál de estos viajes te gustaría vivir?",
+                    "Cuéntanos cuál te gustó",
+                    "Hola Viajes Carolina, me gustaría conversar sobre una de sus promociones."
+            );
+            fallback.setBottomCtaEyebrow("SI NINGUNO ENCAJA EXACTAMENTE");
+            fallback.setBottomCtaCopy("Fechas, presupuesto y tipo de viaje: una asesora prepara opciones reales para ti.");
+            return fallback;
+        });
 
         return mapToDTO(config, mediaRepository);
     }
@@ -58,6 +63,8 @@ public class GetPublicHomePromotionsSectionUseCase {
                 config.getTitle(),
                 config.getSubtitle(),
                 config.getBottomCtaQuestion(),
+                config.getBottomCtaEyebrow(),
+                config.getBottomCtaCopy(),
                 config.getBottomCtaWhatsappText(),
                 config.getBottomCtaWhatsappMessage(),
                 config.getMediaId(),

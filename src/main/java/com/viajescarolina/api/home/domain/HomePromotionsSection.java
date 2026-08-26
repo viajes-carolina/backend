@@ -6,6 +6,8 @@ public class HomePromotionsSection {
     private String title;
     private String subtitle;
     private String bottomCtaQuestion;
+    private String bottomCtaEyebrow;
+    private String bottomCtaCopy;
     private String bottomCtaWhatsappText;
     private String bottomCtaWhatsappMessage;
     private Long mediaId;
@@ -98,6 +100,22 @@ public class HomePromotionsSection {
 
     public void setBottomCtaQuestion(String bottomCtaQuestion) {
         this.bottomCtaQuestion = bottomCtaQuestion;
+    }
+
+    public String getBottomCtaEyebrow() {
+        return bottomCtaEyebrow;
+    }
+
+    public void setBottomCtaEyebrow(String bottomCtaEyebrow) {
+        this.bottomCtaEyebrow = bottomCtaEyebrow;
+    }
+
+    public String getBottomCtaCopy() {
+        return bottomCtaCopy;
+    }
+
+    public void setBottomCtaCopy(String bottomCtaCopy) {
+        this.bottomCtaCopy = bottomCtaCopy;
     }
 
     public String getBottomCtaWhatsappText() {

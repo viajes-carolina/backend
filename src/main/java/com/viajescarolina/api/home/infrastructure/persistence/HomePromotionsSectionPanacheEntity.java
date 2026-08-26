@@ -27,6 +27,12 @@ public class HomePromotionsSectionPanacheEntity {
     @Column(name = "bottom_cta_question", nullable = false)
     public String bottomCtaQuestion;
 
+    @Column(name = "bottom_cta_eyebrow", nullable = false)
+    public String bottomCtaEyebrow;
+
+    @Column(name = "bottom_cta_copy", nullable = false, columnDefinition = "TEXT")
+    public String bottomCtaCopy;
+
     @Column(name = "bottom_cta_whatsapp_text", nullable = false)
     public String bottomCtaWhatsappText;
 
@@ -58,6 +64,8 @@ public class HomePromotionsSectionPanacheEntity {
         entity.title = domain.getTitle();
         entity.subtitle = domain.getSubtitle();
         entity.bottomCtaQuestion = domain.getBottomCtaQuestion();
+        entity.bottomCtaEyebrow = domain.getBottomCtaEyebrow();
+        entity.bottomCtaCopy = domain.getBottomCtaCopy();
         entity.bottomCtaWhatsappText = domain.getBottomCtaWhatsappText();
         entity.bottomCtaWhatsappMessage = domain.getBottomCtaWhatsappMessage();
         entity.mediaId = domain.getMediaId();
@@ -70,7 +78,7 @@ public class HomePromotionsSectionPanacheEntity {
     }
 
     public HomePromotionsSection toDomain() {
-        return new HomePromotionsSection(
+        HomePromotionsSection domain = new HomePromotionsSection(
                 id,
                 badgeText,
                 title,
@@ -83,5 +91,8 @@ public class HomePromotionsSectionPanacheEntity {
                 mediaFocalX,
                 mediaFocalY
         );
+        domain.setBottomCtaEyebrow(bottomCtaEyebrow);
+        domain.setBottomCtaCopy(bottomCtaCopy);
+        return domain;
     }
 }
