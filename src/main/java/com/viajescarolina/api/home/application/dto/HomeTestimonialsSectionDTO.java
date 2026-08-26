@@ -10,11 +10,7 @@ public record HomeTestimonialsSectionDTO(
         Long blobMediaId,
         String blobMediaUrl,
         Double blobFocalX,
-        Double blobFocalY,
-        Long polaroidMediaId,
-        String polaroidMediaUrl,
-        Double polaroidFocalX,
-        Double polaroidFocalY
+        Double blobFocalY
 ) {
     // NOTA: no resuelve mediaId -> URL aquí (este método no tiene acceso a
     // MediaRepository) — esa resolución ocurre en el caso de uso, igual que
@@ -30,11 +26,7 @@ public record HomeTestimonialsSectionDTO(
                 domain.getBlobMediaId(),
                 domain.getBlobMediaUrl(),
                 domain.getBlobFocalX(),
-                domain.getBlobFocalY(),
-                domain.getPolaroidMediaId(),
-                domain.getPolaroidMediaUrl(),
-                domain.getPolaroidFocalX(),
-                domain.getPolaroidFocalY()
+                domain.getBlobFocalY()
         );
     }
 }

@@ -36,18 +36,6 @@ public class HomeTestimonialsSectionPanacheEntity {
     @Column(name = "blob_focal_y")
     public Double blobFocalY;
 
-    @Column(name = "polaroid_media_id")
-    public Long polaroidMediaId;
-
-    @Column(name = "polaroid_media_url", length = 500)
-    public String polaroidMediaUrl;
-
-    @Column(name = "polaroid_focal_x")
-    public Double polaroidFocalX;
-
-    @Column(name = "polaroid_focal_y")
-    public Double polaroidFocalY;
-
     @Column(name = "created_at", nullable = false)
     public Instant createdAt;
 
@@ -64,10 +52,6 @@ public class HomeTestimonialsSectionPanacheEntity {
         entity.blobMediaUrl = domain.getBlobMediaUrl();
         entity.blobFocalX = domain.getBlobFocalX();
         entity.blobFocalY = domain.getBlobFocalY();
-        entity.polaroidMediaId = domain.getPolaroidMediaId();
-        entity.polaroidMediaUrl = domain.getPolaroidMediaUrl();
-        entity.polaroidFocalX = domain.getPolaroidFocalX();
-        entity.polaroidFocalY = domain.getPolaroidFocalY();
         entity.createdAt = Instant.now();
         entity.updatedAt = Instant.now();
         return entity;
@@ -84,10 +68,6 @@ public class HomeTestimonialsSectionPanacheEntity {
         domain.setBlobMediaUrl(blobMediaUrl);
         domain.setBlobFocalX(blobFocalX);
         domain.setBlobFocalY(blobFocalY);
-        domain.setPolaroidMediaId(polaroidMediaId);
-        domain.setPolaroidMediaUrl(polaroidMediaUrl);
-        domain.setPolaroidFocalX(polaroidFocalX);
-        domain.setPolaroidFocalY(polaroidFocalY);
         return domain;
     }
 }

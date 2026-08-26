@@ -10,10 +10,6 @@ public class HomePromotionsSection {
     private String bottomCtaCopy;
     private String bottomCtaWhatsappText;
     private String bottomCtaWhatsappMessage;
-    private Long mediaId;
-    private String mediaUrl;
-    private Double mediaFocalX;
-    private Double mediaFocalY;
 
     public HomePromotionsSection() {
     }
@@ -34,32 +30,6 @@ public class HomePromotionsSection {
         this.bottomCtaQuestion = bottomCtaQuestion;
         this.bottomCtaWhatsappText = bottomCtaWhatsappText;
         this.bottomCtaWhatsappMessage = bottomCtaWhatsappMessage;
-    }
-
-    public HomePromotionsSection(
-            Long id,
-            String badgeText,
-            String title,
-            String subtitle,
-            String bottomCtaQuestion,
-            String bottomCtaWhatsappText,
-            String bottomCtaWhatsappMessage,
-            Long mediaId,
-            String mediaUrl,
-            Double mediaFocalX,
-            Double mediaFocalY
-    ) {
-        this.id = id;
-        this.badgeText = badgeText;
-        this.title = title;
-        this.subtitle = subtitle;
-        this.bottomCtaQuestion = bottomCtaQuestion;
-        this.bottomCtaWhatsappText = bottomCtaWhatsappText;
-        this.bottomCtaWhatsappMessage = bottomCtaWhatsappMessage;
-        this.mediaId = mediaId;
-        this.mediaUrl = mediaUrl;
-        this.mediaFocalX = mediaFocalX;
-        this.mediaFocalY = mediaFocalY;
     }
 
     public Long getId() {
@@ -132,37 +102,5 @@ public class HomePromotionsSection {
 
     public void setBottomCtaWhatsappMessage(String bottomCtaWhatsappMessage) {
         this.bottomCtaWhatsappMessage = bottomCtaWhatsappMessage;
-    }
-
-    public Long getMediaId() {
-        return mediaId;
-    }
-
-    public void setMediaId(Long mediaId) {
-        this.mediaId = mediaId;
-    }
-
-    public String getMediaUrl() {
-        return mediaUrl;
-    }
-
-    public void setMediaUrl(String mediaUrl) {
-        this.mediaUrl = mediaUrl;
-    }
-
-    public Double getMediaFocalX() {
-        return mediaFocalX;
-    }
-
-    public void setMediaFocalX(Double mediaFocalX) {
-        this.mediaFocalX = mediaFocalX;
-    }
-
-    public Double getMediaFocalY() {
-        return mediaFocalY;
-    }
-
-    public void setMediaFocalY(Double mediaFocalY) {
-        this.mediaFocalY = mediaFocalY;
     }
 }

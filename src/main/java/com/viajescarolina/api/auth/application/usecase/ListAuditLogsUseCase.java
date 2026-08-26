@@ -1,7 +1,6 @@
 package com.viajescarolina.api.auth.application.usecase;
 
 import com.viajescarolina.api.auth.application.dto.AuditLogDTO;
-import com.viajescarolina.api.auth.application.dto.CreateAuditLogRequest;
 import com.viajescarolina.api.auth.domain.AuditLog;
 import com.viajescarolina.api.auth.domain.AuditLogRepository;
 import jakarta.enterprise.context.ApplicationScoped;

@@ -39,18 +39,6 @@ public class HomePromotionsSectionPanacheEntity {
     @Column(name = "bottom_cta_whatsapp_message", nullable = false)
     public String bottomCtaWhatsappMessage;
 
-    @Column(name = "media_id")
-    public Long mediaId;
-
-    @Column(name = "media_url", length = 500)
-    public String mediaUrl;
-
-    @Column(name = "media_focal_x")
-    public Double mediaFocalX = 50.0;
-
-    @Column(name = "media_focal_y")
-    public Double mediaFocalY = 50.0;
-
     @Column(name = "created_at", nullable = false)
     public Instant createdAt;
 
@@ -68,10 +56,6 @@ public class HomePromotionsSectionPanacheEntity {
         entity.bottomCtaCopy = domain.getBottomCtaCopy();
         entity.bottomCtaWhatsappText = domain.getBottomCtaWhatsappText();
         entity.bottomCtaWhatsappMessage = domain.getBottomCtaWhatsappMessage();
-        entity.mediaId = domain.getMediaId();
-        entity.mediaUrl = domain.getMediaUrl();
-        entity.mediaFocalX = domain.getMediaFocalX() != null ? domain.getMediaFocalX() : 50.0;
-        entity.mediaFocalY = domain.getMediaFocalY() != null ? domain.getMediaFocalY() : 50.0;
         entity.createdAt = Instant.now();
         entity.updatedAt = Instant.now();
         return entity;
@@ -85,11 +69,7 @@ public class HomePromotionsSectionPanacheEntity {
                 subtitle,
                 bottomCtaQuestion,
                 bottomCtaWhatsappText,
-                bottomCtaWhatsappMessage,
-                mediaId,
-                mediaUrl,
-                mediaFocalX,
-                mediaFocalY
+                bottomCtaWhatsappMessage
         );
         domain.setBottomCtaEyebrow(bottomCtaEyebrow);
         domain.setBottomCtaCopy(bottomCtaCopy);

@@ -41,15 +41,6 @@ public class UpdateHomeTestimonialsSectionUseCase {
         if (dto.blobFocalX() != null) entity.setBlobFocalX(dto.blobFocalX());
         if (dto.blobFocalY() != null) entity.setBlobFocalY(dto.blobFocalY());
 
-        if (dto.polaroidMediaId() != null) {
-            Long validId = dto.polaroidMediaId() > 0 && mediaRepository.findMediaById(dto.polaroidMediaId()).isPresent()
-                    ? dto.polaroidMediaId() : null;
-            entity.setPolaroidMediaId(validId);
-        }
-        if (dto.polaroidMediaUrl() != null && !dto.polaroidMediaUrl().isBlank()) entity.setPolaroidMediaUrl(dto.polaroidMediaUrl());
-        if (dto.polaroidFocalX() != null) entity.setPolaroidFocalX(dto.polaroidFocalX());
-        if (dto.polaroidFocalY() != null) entity.setPolaroidFocalY(dto.polaroidFocalY());
-
         HomeTestimonialsSection saved = testimonialsSectionRepository.save(entity);
         return GetPublicHomeTestimonialsSectionUseCase.mapToDTO(saved, mediaRepository);
     }

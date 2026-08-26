@@ -11,11 +11,7 @@ public record HomePromotionsSectionDTO(
         String bottomCtaEyebrow,
         String bottomCtaCopy,
         String bottomCtaWhatsappText,
-        String bottomCtaWhatsappMessage,
-        Long mediaId,
-        String mediaUrl,
-        Double mediaFocalX,
-        Double mediaFocalY
+        String bottomCtaWhatsappMessage
 ) {
     public static HomePromotionsSectionDTO fromDomain(HomePromotionsSection domain) {
         if (domain == null) return null;
@@ -28,11 +24,7 @@ public record HomePromotionsSectionDTO(
                 domain.getBottomCtaEyebrow(),
                 domain.getBottomCtaCopy(),
                 domain.getBottomCtaWhatsappText(),
-                domain.getBottomCtaWhatsappMessage(),
-                domain.getMediaId(),
-                domain.getMediaUrl(),
-                domain.getMediaFocalX(),
-                domain.getMediaFocalY()
+                domain.getBottomCtaWhatsappMessage()
         );
     }
 }

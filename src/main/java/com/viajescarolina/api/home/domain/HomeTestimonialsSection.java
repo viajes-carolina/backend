@@ -12,11 +12,6 @@ public class HomeTestimonialsSection {
     private String blobMediaUrl;
     private Double blobFocalX;
     private Double blobFocalY;
-    // Foto pequeña superpuesta en forma de Polaroid.
-    private Long polaroidMediaId;
-    private String polaroidMediaUrl;
-    private Double polaroidFocalX;
-    private Double polaroidFocalY;
 
     public HomeTestimonialsSection() {
     }
@@ -95,37 +90,5 @@ public class HomeTestimonialsSection {
 
     public void setBlobFocalY(Double blobFocalY) {
         this.blobFocalY = blobFocalY;
-    }
-
-    public Long getPolaroidMediaId() {
-        return polaroidMediaId;
-    }
-
-    public void setPolaroidMediaId(Long polaroidMediaId) {
-        this.polaroidMediaId = polaroidMediaId;
-    }
-
-    public String getPolaroidMediaUrl() {
-        return polaroidMediaUrl;
-    }
-
-    public void setPolaroidMediaUrl(String polaroidMediaUrl) {
-        this.polaroidMediaUrl = polaroidMediaUrl;
-    }
-
-    public Double getPolaroidFocalX() {
-        return polaroidFocalX;
-    }
-
-    public void setPolaroidFocalX(Double polaroidFocalX) {
-        this.polaroidFocalX = polaroidFocalX;
-    }
-
-    public Double getPolaroidFocalY() {
-        return polaroidFocalY;
-    }
-
-    public void setPolaroidFocalY(Double polaroidFocalY) {
-        this.polaroidFocalY = polaroidFocalY;
     }
 }
