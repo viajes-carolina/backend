@@ -34,12 +34,8 @@ public class BlogPostPanacheEntity extends PanacheEntityBase {
     @Column(name = "cover_focal_x") public Double coverFocalX = 50.0;
     @Column(name = "cover_focal_y") public Double coverFocalY = 50.0;
 
-    @Column(name = "author_name", nullable = false, length = 120)
-    public String authorName = "Equipo Viajes Carolina";
-
-    @Column(name = "author_avatar_media_id") public Long authorAvatarMediaId;
-    @Column(name = "author_avatar_focal_x") public Double authorAvatarFocalX = 50.0;
-    @Column(name = "author_avatar_focal_y") public Double authorAvatarFocalY = 50.0;
+    @Column(name = "author_advisor_id", nullable = false)
+    public Long authorAdvisorId;
 
     @Column(name = "reading_time_minutes", nullable = false)
     public Integer readingTimeMinutes = 5;

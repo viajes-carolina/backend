@@ -3,6 +3,7 @@ package com.viajescarolina.api.blog.application.usecase;
 import com.viajescarolina.api.blog.application.dto.BlogPostDTO;
 import com.viajescarolina.api.blog.domain.BlogPost;
 import com.viajescarolina.api.blog.domain.BlogPostRepository;
+import com.viajescarolina.api.about.domain.TravelAdvisorRepository;
 import com.viajescarolina.api.media.domain.MediaRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -18,8 +19,11 @@ public class ListAdminBlogPostsUseCase {
     @Inject
     MediaRepository mediaRepository;
 
+    @Inject
+    TravelAdvisorRepository travelAdvisorRepository;
+
     public List<BlogPostDTO> execute(String status, String search, int page, int size) {
         List<BlogPost> posts = postRepository.findAllAdmin(status, search, page, size);
-        return posts.stream().map(p -> ListPublicBlogPostsUseCase.mapToDTO(p, mediaRepository)).toList();
+        return posts.stream().map(p -> ListPublicBlogPostsUseCase.mapToDTO(p, mediaRepository, travelAdvisorRepository)).toList();
     }
 }

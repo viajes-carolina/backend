@@ -4,6 +4,7 @@ import com.viajescarolina.api.blog.application.dto.BlogPostDTO;
 import com.viajescarolina.api.blog.application.dto.BlogPostDetailResponse;
 import com.viajescarolina.api.blog.domain.BlogPost;
 import com.viajescarolina.api.blog.domain.BlogPostRepository;
+import com.viajescarolina.api.about.domain.TravelAdvisorRepository;
 import com.viajescarolina.api.media.domain.MediaRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -20,6 +21,9 @@ public class GetBlogPostBySlugUseCase {
     @Inject
     MediaRepository mediaRepository;
 
+    @Inject
+    TravelAdvisorRepository travelAdvisorRepository;
+
     public BlogPostDetailResponse execute(String slug) {
         BlogPost post = postRepository.findPublicBySlug(slug)
                 .orElseThrow(() -> new NotFoundException("Artículo de blog no encontrado: " + slug));
@@ -30,8 +34,8 @@ public class GetBlogPostBySlugUseCase {
 
         // Related posts in the same category
         List<BlogPost> related = postRepository.findRelatedPosts(post.getCategoryId(), post.getId(), 3);
-        List<BlogPostDTO> relatedDTOs = related.stream().map(p -> ListPublicBlogPostsUseCase.mapToDTO(p, mediaRepository)).toList();
+        List<BlogPostDTO> relatedDTOs = related.stream().map(p -> ListPublicBlogPostsUseCase.mapToDTO(p, mediaRepository, travelAdvisorRepository)).toList();
 
-        return new BlogPostDetailResponse(ListPublicBlogPostsUseCase.mapToDTO(post, mediaRepository), relatedDTOs);
+        return new BlogPostDetailResponse(ListPublicBlogPostsUseCase.mapToDTO(post, mediaRepository, travelAdvisorRepository), relatedDTOs);
     }
 }

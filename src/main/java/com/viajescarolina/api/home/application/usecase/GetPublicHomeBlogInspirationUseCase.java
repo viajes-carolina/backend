@@ -4,6 +4,7 @@ import com.viajescarolina.api.blog.application.dto.BlogPostDTO;
 import com.viajescarolina.api.blog.application.usecase.ListPublicBlogPostsUseCase;
 import com.viajescarolina.api.blog.domain.BlogPost;
 import com.viajescarolina.api.blog.domain.BlogPostRepository;
+import com.viajescarolina.api.about.domain.TravelAdvisorRepository;
 import com.viajescarolina.api.home.application.dto.HomeBlogInspirationDTO;
 import com.viajescarolina.api.home.application.dto.PublicHomeBlogInspirationResponse;
 import com.viajescarolina.api.home.domain.HomeBlogInspiration;
@@ -26,6 +27,9 @@ public class GetPublicHomeBlogInspirationUseCase {
     @Inject
     MediaRepository mediaRepository;
 
+    @Inject
+    TravelAdvisorRepository travelAdvisorRepository;
+
     public PublicHomeBlogInspirationResponse execute() {
         HomeBlogInspiration config = inspirationRepository.get().orElseGet(() -> new HomeBlogInspiration(
                 1L,
@@ -43,7 +47,7 @@ public class GetPublicHomeBlogInspirationUseCase {
 
         List<BlogPost> latestPosts = blogPostRepository.findPublicPosts(null, null, null, 0, limit);
         List<BlogPostDTO> postDTOs = latestPosts.stream()
-                .map(p -> ListPublicBlogPostsUseCase.mapToDTO(p, mediaRepository))
+                .map(p -> ListPublicBlogPostsUseCase.mapToDTO(p, mediaRepository, travelAdvisorRepository))
                 .toList();
 
         return new PublicHomeBlogInspirationResponse(HomeBlogInspirationDTO.fromDomain(config), postDTOs);

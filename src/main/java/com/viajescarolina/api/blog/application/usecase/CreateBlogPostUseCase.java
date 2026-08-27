@@ -7,6 +7,7 @@ import com.viajescarolina.api.blog.domain.BlogCategoryRepository;
 import com.viajescarolina.api.blog.domain.BlogPost;
 import com.viajescarolina.api.blog.domain.BlogPostRepository;
 import com.viajescarolina.api.common.audit.Audited;
+import com.viajescarolina.api.about.domain.TravelAdvisorRepository;
 import com.viajescarolina.api.media.domain.MediaRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -27,6 +28,9 @@ public class CreateBlogPostUseCase {
 
     @Inject
     MediaRepository mediaRepository;
+
+    @Inject
+    TravelAdvisorRepository travelAdvisorRepository;
 
     @Audited(action = "CREATE_BLOG_POST", entityType = "BLOG_POST")
     @Transactional
@@ -49,13 +53,9 @@ public class CreateBlogPostUseCase {
         post.setCoverFocalX(req.coverFocalX() != null ? req.coverFocalX() : 50.0);
         post.setCoverFocalY(req.coverFocalY() != null ? req.coverFocalY() : 50.0);
 
-        post.setAuthorName(req.authorName() != null ? req.authorName().trim() : "Equipo Viajes Carolina");
-
-        Long authorAvatarMediaId = req.authorAvatarMediaId() != null && mediaRepository.findMediaById(req.authorAvatarMediaId()).isPresent()
-                ? req.authorAvatarMediaId() : null;
-        post.setAuthorAvatarMediaId(authorAvatarMediaId);
-        post.setAuthorAvatarFocalX(req.authorAvatarFocalX() != null ? req.authorAvatarFocalX() : 50.0);
-        post.setAuthorAvatarFocalY(req.authorAvatarFocalY() != null ? req.authorAvatarFocalY() : 50.0);
+        travelAdvisorRepository.findAdvisorById(req.authorAdvisorId())
+                .orElseThrow(() -> new NotFoundException("Asesora no encontrada con ID: " + req.authorAdvisorId()));
+        post.setAuthorAdvisorId(req.authorAdvisorId());
 
         post.setReadingTimeMinutes(req.readingTimeMinutes() != null ? req.readingTimeMinutes() : 5);
         post.setTags(req.tags() != null ? req.tags() : new ArrayList<>());
@@ -68,6 +68,6 @@ public class CreateBlogPostUseCase {
         post.setUpdatedAt(Instant.now());
 
         BlogPost saved = postRepository.save(post);
-        return ListPublicBlogPostsUseCase.mapToDTO(saved, mediaRepository);
+        return ListPublicBlogPostsUseCase.mapToDTO(saved, mediaRepository, travelAdvisorRepository);
     }
 }

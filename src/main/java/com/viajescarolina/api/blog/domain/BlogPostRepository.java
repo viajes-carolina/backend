@@ -14,4 +14,5 @@ public interface BlogPostRepository {
     BlogPost save(BlogPost post);
     void incrementViewCount(Long id);
     void delete(Long id);
+    long countByAuthorAdvisorId(Long advisorId);
 }

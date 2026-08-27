@@ -33,17 +33,8 @@ public record CreateOrUpdateBlogPostRequest(
         @DecimalMax(value = "100", message = "El foco vertical de la portada debe ser menor o igual a 100")
         Double coverFocalY,
 
-        String authorName,
-
-        Long authorAvatarMediaId,
-
-        @DecimalMin(value = "0", message = "El foco horizontal del avatar debe ser mayor o igual a 0")
-        @DecimalMax(value = "100", message = "El foco horizontal del avatar debe ser menor o igual a 100")
-        Double authorAvatarFocalX,
-
-        @DecimalMin(value = "0", message = "El foco vertical del avatar debe ser mayor o igual a 0")
-        @DecimalMax(value = "100", message = "El foco vertical del avatar debe ser menor o igual a 100")
-        Double authorAvatarFocalY,
+        @NotNull(message = "La asesora autora del artículo es obligatoria")
+        Long authorAdvisorId,
 
         Integer readingTimeMinutes,
         List<String> tags,

@@ -15,10 +15,7 @@ public class BlogPost {
     private Long coverMediaId;
     private Double coverFocalX;
     private Double coverFocalY;
-    private String authorName;
-    private Long authorAvatarMediaId;
-    private Double authorAvatarFocalX;
-    private Double authorAvatarFocalY;
+    private Long authorAdvisorId;
     private Integer readingTimeMinutes;
     private List<String> tags;
     private String status; // DRAFT, PUBLISHED, ARCHIVED
@@ -44,10 +41,7 @@ public class BlogPost {
             Long coverMediaId,
             Double coverFocalX,
             Double coverFocalY,
-            String authorName,
-            Long authorAvatarMediaId,
-            Double authorAvatarFocalX,
-            Double authorAvatarFocalY,
+            Long authorAdvisorId,
             Integer readingTimeMinutes,
             List<String> tags,
             String status,
@@ -68,10 +62,7 @@ public class BlogPost {
         this.coverMediaId = coverMediaId;
         this.coverFocalX = coverFocalX;
         this.coverFocalY = coverFocalY;
-        this.authorName = authorName;
-        this.authorAvatarMediaId = authorAvatarMediaId;
-        this.authorAvatarFocalX = authorAvatarFocalX;
-        this.authorAvatarFocalY = authorAvatarFocalY;
+        this.authorAdvisorId = authorAdvisorId;
         this.readingTimeMinutes = readingTimeMinutes;
         this.tags = tags;
         this.status = status;
@@ -171,36 +162,12 @@ public class BlogPost {
         this.coverFocalY = coverFocalY;
     }
 
-    public String getAuthorName() {
-        return authorName;
+    public Long getAuthorAdvisorId() {
+        return authorAdvisorId;
     }
 
-    public void setAuthorName(String authorName) {
-        this.authorName = authorName;
-    }
-
-    public Long getAuthorAvatarMediaId() {
-        return authorAvatarMediaId;
-    }
-
-    public void setAuthorAvatarMediaId(Long authorAvatarMediaId) {
-        this.authorAvatarMediaId = authorAvatarMediaId;
-    }
-
-    public Double getAuthorAvatarFocalX() {
-        return authorAvatarFocalX;
-    }
-
-    public void setAuthorAvatarFocalX(Double authorAvatarFocalX) {
-        this.authorAvatarFocalX = authorAvatarFocalX;
-    }
-
-    public Double getAuthorAvatarFocalY() {
-        return authorAvatarFocalY;
-    }
-
-    public void setAuthorAvatarFocalY(Double authorAvatarFocalY) {
-        this.authorAvatarFocalY = authorAvatarFocalY;
+    public void setAuthorAdvisorId(Long authorAdvisorId) {
+        this.authorAdvisorId = authorAdvisorId;
     }
 
     public Integer getReadingTimeMinutes() {
