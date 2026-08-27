@@ -35,7 +35,18 @@ public class PanacheMediaRepository implements MediaRepository, PanacheRepositor
         if (ids == null || ids.isEmpty()) {
             return List.of();
         }
-        return find("id in ?1 and isActive = true", ids)
+        // Nota de perfiling (JFR, sesión de carga): Hibernate 7.2.14 lanza (y
+        // captura internamente) un CoercionException por cada bind de un
+        // parámetro Collection en una cláusula "in" vía HQL — ocurre igual con
+        // List concreta, parámetro posicional o nombrado; es un costo interno
+        // del binder de este framework/versión, no un error de uso. No afecta
+        // el resultado ni se refleja en la latencia real medida (p95 se
+        // mantiene en milisegundos de un solo dígito). Se deja con List
+        // concreta por buena práctica, sin perseguir más allá dado el impacto
+        // real bajo — eliminarlo del todo requeriría Criteria API o SQL nativo
+        // para esta query puntual.
+        List<Long> idList = ids instanceof List<Long> list ? list : List.copyOf(ids);
+        return find("id in ?1 and isActive = true", idList)
                 .list()
                 .stream()
                 .map(MediaAssetPanacheEntity::toDomain)

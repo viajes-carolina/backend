@@ -35,7 +35,14 @@ public class PanacheClaimAttachmentRepository implements ClaimAttachmentReposito
         if (claimIds == null || claimIds.isEmpty()) {
             return List.of();
         }
-        return find("claimId in ?1 ORDER BY createdAt ASC", claimIds)
+        // Nota de perfiling (JFR, sesión de carga): Hibernate 7.2.14 lanza (y
+        // captura internamente) un CoercionException por cada bind de un
+        // parámetro Collection en una cláusula "in" vía HQL — ocurre igual con
+        // List concreta; es un costo interno del binder de este framework/
+        // versión, no un error de uso. No afecta el resultado ni la latencia
+        // real. Se deja con List concreta por buena práctica.
+        List<Long> idList = claimIds instanceof List<Long> list ? list : List.copyOf(claimIds);
+        return find("claimId in ?1 ORDER BY createdAt ASC", idList)
                 .stream()
                 .map(ClaimAttachmentPanacheEntity::toDomain)
                 .toList();
