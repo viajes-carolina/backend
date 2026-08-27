@@ -5,6 +5,7 @@ import com.viajescarolina.api.home.domain.HomeConversationalPause;
 import com.viajescarolina.api.home.domain.HomeConversationalPauseRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import java.util.List;
 
 @ApplicationScoped
 public class GetPublicHomeConversationalPauseUseCase {
@@ -19,7 +20,11 @@ public class GetPublicHomeConversationalPauseUseCase {
                 "¿Ya imaginas cómo podría sentirse tu próximo viaje?",
                 "No necesitas tener todo decidido. Cuéntanos qué te ilusiona y una asesora te ayuda a darle forma.",
                 "Conversarlo por WhatsApp",
-                "Hola Viajes Carolina, quiero contarles qué tengo en mente para mi próximo viaje."
+                "Hola Viajes Carolina, quiero contarles qué tengo en mente para mi próximo viaje.",
+                "Viaja ahora, paga a tu ritmo",
+                12,
+                "Válido con tarjetas participantes. Sujeto a condiciones de cada entidad financiera.",
+                List.of("BCP", "Interbank", "BBVA", "BanBif", "Scotiabank")
         ));
 
         return HomeConversationalPauseDTO.fromDomain(config);
