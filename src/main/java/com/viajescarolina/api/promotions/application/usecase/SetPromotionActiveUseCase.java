@@ -1,6 +1,7 @@
 package com.viajescarolina.api.promotions.application.usecase;
 
 import com.viajescarolina.api.common.audit.Audited;
+import com.viajescarolina.api.media.domain.MediaAsset;
 import com.viajescarolina.api.media.domain.MediaRepository;
 import com.viajescarolina.api.promotions.application.dto.PromotionDTO;
 import com.viajescarolina.api.promotions.domain.Promotion;
@@ -11,6 +12,8 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
+import java.util.List;
+import java.util.Map;
 
 @ApplicationScoped
 public class SetPromotionActiveUseCase {
@@ -40,6 +43,10 @@ public class SetPromotionActiveUseCase {
 
         promotion.setActive(active);
         Promotion saved = promotionRepository.save(promotion);
-        return ListFeaturedPromotionsUseCase.mapToDTO(saved, mediaRepository);
+
+        // Promoción única (no un listado): mismo contrato batch con una lista de un elemento.
+        List<Promotion> savedAsList = List.of(saved);
+        Map<Long, MediaAsset> mediaById = ListFeaturedPromotionsUseCase.resolveMediaMap(savedAsList, mediaRepository);
+        return ListFeaturedPromotionsUseCase.mapToDTO(saved, mediaById);
     }
 }

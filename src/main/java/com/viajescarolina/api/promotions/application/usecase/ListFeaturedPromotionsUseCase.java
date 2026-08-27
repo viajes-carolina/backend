@@ -8,7 +8,11 @@ import com.viajescarolina.api.promotions.domain.PromotionRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class ListFeaturedPromotionsUseCase {
@@ -27,25 +31,53 @@ public class ListFeaturedPromotionsUseCase {
     }
 
     public List<PromotionDTO> execute() {
-        return promotionRepository.findTopActiveByRecency(HOME_PROMOTIONS_LIMIT).stream()
-                .map(p -> mapToDTO(p, mediaRepository))
+        List<Promotion> promotions = promotionRepository.findTopActiveByRecency(HOME_PROMOTIONS_LIMIT);
+
+        // Batch-resolve las fotos destacadas UNA sola vez para todo el listado, en vez de
+        // una query por promoción dentro del .map() (evita el N+1).
+        Map<Long, MediaAsset> mediaById = resolveMediaMap(promotions, mediaRepository);
+
+        return promotions.stream()
+                .map(p -> mapToDTO(p, mediaById))
                 .toList();
     }
 
-    public static PromotionDTO mapToDTO(Promotion promotion, MediaRepository mediaRepository) {
+    /**
+     * Recolecta los {@code featuredMediaId} (no nulos) de una lista de promociones y los
+     * resuelve en una sola consulta batch. Pensado para llamarse una vez antes de mapear
+     * una lista completa de promociones a DTO, nunca dentro de un loop por promoción.
+     */
+    public static Map<Long, MediaAsset> resolveMediaMap(List<Promotion> promotions, MediaRepository mediaRepository) {
+        Set<Long> mediaIds = promotions.stream()
+                .map(Promotion::getFeaturedMediaId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+        if (mediaIds.isEmpty()) {
+            return Map.of();
+        }
+        return mediaRepository.findMediaByIds(mediaIds).stream()
+                .collect(Collectors.toMap(MediaAsset::getId, Function.identity()));
+    }
+
+    /**
+     * Mapea una {@link Promotion} de dominio a su DTO usando el mapa de medios YA resuelto
+     * en batch (ver {@link #resolveMediaMap}). Este método permanece estático y puro: solo
+     * hace lookups en memoria, sin acceso a BD.
+     */
+    public static PromotionDTO mapToDTO(Promotion promotion, Map<Long, MediaAsset> mediaById) {
         String mediaUrl = null;
         Double focalX = 50.0;
         Double focalY = 50.0;
 
         if (promotion.getFeaturedMediaId() != null) {
-            Optional<MediaAsset> asset = mediaRepository.findMediaById(promotion.getFeaturedMediaId());
-            if (asset.isPresent()) {
-                mediaUrl = asset.get().getStoragePath();
-                if (asset.get().getFocalX() != null) {
-                    focalX = asset.get().getFocalX().doubleValue();
+            MediaAsset asset = mediaById.get(promotion.getFeaturedMediaId());
+            if (asset != null) {
+                mediaUrl = asset.getStoragePath();
+                if (asset.getFocalX() != null) {
+                    focalX = asset.getFocalX().doubleValue();
                 }
-                if (asset.get().getFocalY() != null) {
-                    focalY = asset.get().getFocalY().doubleValue();
+                if (asset.getFocalY() != null) {
+                    focalY = asset.getFocalY().doubleValue();
                 }
             }
         }

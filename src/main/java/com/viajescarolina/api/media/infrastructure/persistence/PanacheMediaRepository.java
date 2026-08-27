@@ -6,6 +6,7 @@ import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import io.quarkus.panache.common.Page;
 import io.quarkus.panache.common.Sort;
 import jakarta.enterprise.context.ApplicationScoped;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +28,18 @@ public class PanacheMediaRepository implements MediaRepository, PanacheRepositor
     public Optional<MediaAsset> findMediaById(Long id) {
         MediaAssetPanacheEntity entity = find("id = ?1 and isActive = true", id).firstResult();
         return Optional.ofNullable(entity).map(MediaAssetPanacheEntity::toDomain);
+    }
+
+    @Override
+    public List<MediaAsset> findMediaByIds(Collection<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return List.of();
+        }
+        return find("id in ?1 and isActive = true", ids)
+                .list()
+                .stream()
+                .map(MediaAssetPanacheEntity::toDomain)
+                .toList();
     }
 
     @Override

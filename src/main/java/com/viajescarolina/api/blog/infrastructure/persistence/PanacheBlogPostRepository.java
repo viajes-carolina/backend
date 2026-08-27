@@ -23,25 +23,35 @@ public class PanacheBlogPostRepository implements BlogPostRepository, PanacheRep
 
     @Override
     public List<BlogPost> findPublicPosts(String categorySlug, String search, Boolean isFeatured, int page, int size) {
-        StringBuilder hql = new StringBuilder("active = true and status = 'PUBLISHED'");
+        // "from ... left join fetch category where ..." en vez del atajo implícito
+        // "where ..." de Panache: necesitamos el JOIN FETCH explícito para traer la
+        // categoría en la misma query y evitar un lazy-load por cada categoría distinta.
+        // Alias "p" explícito: sin él, "active"/"id" quedan ambiguos entre
+        // BlogPostPanacheEntity y la categoría recién unida (ambas tienen esas columnas).
+        StringBuilder hql = new StringBuilder("from BlogPostPanacheEntity p left join fetch p.category where p.active = true and p.status = 'PUBLISHED'");
         Parameters params = new Parameters();
 
         if (categorySlug != null && !categorySlug.isBlank()) {
-            hql.append(" and category.slug = :categorySlug");
+            hql.append(" and p.category.slug = :categorySlug");
             params.and("categorySlug", categorySlug.trim());
         }
 
         if (isFeatured != null) {
-            hql.append(" and isFeatured = :isFeatured");
+            hql.append(" and p.isFeatured = :isFeatured");
             params.and("isFeatured", isFeatured);
         }
 
         if (search != null && !search.isBlank()) {
-            hql.append(" and (lower(title) like :search or lower(summary) like :search)");
-            params.and("search", "%" + search.trim().toLowerCase() + "%");
+            // ILIKE (no lower(...)+LIKE) para poder usar los índices GIN
+            // idx_blog_post_title_trgm / idx_blog_post_summary_trgm (gin_trgm_ops), que están
+            // sobre la columna cruda. lower(title) LIKE forzaba un Seq Scan (648ms vs 4.7ms
+            // con el índice) porque Postgres no puede usar un índice sobre `title` para
+            // resolver una expresión `lower(title)`.
+            hql.append(" and (p.title ILIKE :search or p.summary ILIKE :search)");
+            params.and("search", "%" + search.trim() + "%");
         }
 
-        hql.append(" order by publishedAt desc, id desc");
+        hql.append(" order by p.publishedAt desc, p.id desc");
 
         PanacheQuery<BlogPostPanacheEntity> query = find(hql.toString(), params);
         if (size > 0) {
@@ -66,8 +76,9 @@ public class PanacheBlogPostRepository implements BlogPostRepository, PanacheRep
         }
 
         if (search != null && !search.isBlank()) {
-            hql.append(" and (lower(title) like :search or lower(summary) like :search)");
-            params.and("search", "%" + search.trim().toLowerCase() + "%");
+            // Mismo motivo que en findPublicPosts: ILIKE sí usa el índice GIN trigram.
+            hql.append(" and (title ILIKE :search or summary ILIKE :search)");
+            params.and("search", "%" + search.trim() + "%");
         }
 
         return count(hql.toString(), params);
@@ -82,7 +93,7 @@ public class PanacheBlogPostRepository implements BlogPostRepository, PanacheRep
 
     @Override
     public List<BlogPost> findRelatedPosts(Long categoryId, Long excludePostId, int limit) {
-        return find("category.id = ?1 and id != ?2 and active = true and status = 'PUBLISHED' order by publishedAt desc",
+        return find("from BlogPostPanacheEntity p left join fetch p.category where p.category.id = ?1 and p.id != ?2 and p.active = true and p.status = 'PUBLISHED' order by p.publishedAt desc",
                 categoryId, excludePostId)
                 .page(0, limit)
                 .list()
@@ -93,20 +104,26 @@ public class PanacheBlogPostRepository implements BlogPostRepository, PanacheRep
 
     @Override
     public List<BlogPost> findAllAdmin(String status, String search, int page, int size) {
-        StringBuilder hql = new StringBuilder("1 = 1");
+        // Mismo motivo que findPublicPosts: JOIN FETCH explícito para traer la
+        // categoría en la misma query y evitar un lazy-load por categoría distinta.
+        // Alias "p" explícito: sin él, "id" queda ambiguo entre BlogPostPanacheEntity
+        // y la categoría recién unida (ambas tienen columna "id").
+        StringBuilder hql = new StringBuilder("from BlogPostPanacheEntity p left join fetch p.category where 1 = 1");
         Parameters params = new Parameters();
 
         if (status != null && !status.isBlank() && !"ALL".equalsIgnoreCase(status)) {
-            hql.append(" and status = :status");
+            hql.append(" and p.status = :status");
             params.and("status", status.trim().toUpperCase());
         }
 
         if (search != null && !search.isBlank()) {
-            hql.append(" and (lower(title) like :search or lower(slug) like :search)");
+            // ILIKE sobre title para usar idx_blog_post_title_trgm; slug no tiene índice
+            // trigram (búsqueda admin por slug es de bajo volumen), se mantiene con LIKE.
+            hql.append(" and (p.title ILIKE :search or lower(p.slug) like :search)");
             params.and("search", "%" + search.trim().toLowerCase() + "%");
         }
 
-        hql.append(" order by id desc");
+        hql.append(" order by p.id desc");
 
         PanacheQuery<BlogPostPanacheEntity> query = find(hql.toString(), params);
         if (size > 0) {
@@ -126,7 +143,7 @@ public class PanacheBlogPostRepository implements BlogPostRepository, PanacheRep
         }
 
         if (search != null && !search.isBlank()) {
-            hql.append(" and (lower(title) like :search or lower(slug) like :search)");
+            hql.append(" and (title ILIKE :search or lower(slug) like :search)");
             params.and("search", "%" + search.trim().toLowerCase() + "%");
         }
 

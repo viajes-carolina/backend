@@ -7,7 +7,9 @@ import com.viajescarolina.api.blog.domain.BlogCategoryRepository;
 import com.viajescarolina.api.blog.domain.BlogPost;
 import com.viajescarolina.api.blog.domain.BlogPostRepository;
 import com.viajescarolina.api.common.audit.Audited;
+import com.viajescarolina.api.about.domain.TravelAdvisor;
 import com.viajescarolina.api.about.domain.TravelAdvisorRepository;
+import com.viajescarolina.api.media.domain.MediaAsset;
 import com.viajescarolina.api.media.domain.MediaRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -16,6 +18,8 @@ import jakarta.ws.rs.NotFoundException;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @ApplicationScoped
 public class CreateBlogPostUseCase {
@@ -68,6 +72,13 @@ public class CreateBlogPostUseCase {
         post.setUpdatedAt(Instant.now());
 
         BlogPost saved = postRepository.save(post);
-        return ListPublicBlogPostsUseCase.mapToDTO(saved, mediaRepository, travelAdvisorRepository);
+
+        // Post único (respuesta de creación, no un listado): se resuelve con el mismo
+        // contrato batch usando una lista de un solo elemento y se devuelve con el
+        // markdown completo, ya que es la confirmación de lo que se acaba de guardar.
+        List<BlogPost> savedAsList = List.of(saved);
+        Map<Long, MediaAsset> mediaById = ListPublicBlogPostsUseCase.resolveMediaMap(savedAsList, mediaRepository);
+        Map<Long, TravelAdvisor> advisorById = ListPublicBlogPostsUseCase.resolveAdvisorMap(savedAsList, travelAdvisorRepository);
+        return ListPublicBlogPostsUseCase.mapToDTO(saved, mediaById, advisorById, true);
     }
 }

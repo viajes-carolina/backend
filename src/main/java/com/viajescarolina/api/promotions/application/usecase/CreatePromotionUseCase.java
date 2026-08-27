@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.text.Normalizer;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -77,7 +78,11 @@ public class CreatePromotionUseCase {
         Promotion saved = promotionRepository.save(promotion);
         saved = tryPublishToFacebook(saved);
 
-        return ListFeaturedPromotionsUseCase.mapToDTO(saved, mediaRepository);
+        // Promoción única (respuesta de creación, no un listado): se resuelve con el mismo
+        // contrato batch usando una lista de un solo elemento.
+        List<Promotion> savedAsList = List.of(saved);
+        Map<Long, MediaAsset> mediaById = ListFeaturedPromotionsUseCase.resolveMediaMap(savedAsList, mediaRepository);
+        return ListFeaturedPromotionsUseCase.mapToDTO(saved, mediaById);
     }
 
     /**

@@ -7,7 +7,9 @@ import com.viajescarolina.api.blog.domain.BlogCategoryRepository;
 import com.viajescarolina.api.blog.domain.BlogPost;
 import com.viajescarolina.api.blog.domain.BlogPostRepository;
 import com.viajescarolina.api.common.audit.Audited;
+import com.viajescarolina.api.about.domain.TravelAdvisor;
 import com.viajescarolina.api.about.domain.TravelAdvisorRepository;
+import com.viajescarolina.api.media.domain.MediaAsset;
 import com.viajescarolina.api.media.domain.MediaRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -15,6 +17,8 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 
 import java.time.Instant;
+import java.util.List;
+import java.util.Map;
 
 @ApplicationScoped
 public class UpdateBlogPostUseCase {
@@ -77,6 +81,12 @@ public class UpdateBlogPostUseCase {
         post.setUpdatedAt(Instant.now());
 
         BlogPost saved = postRepository.save(post);
-        return ListPublicBlogPostsUseCase.mapToDTO(saved, mediaRepository, travelAdvisorRepository);
+
+        // Post único (respuesta de actualización, no un listado): mismo contrato batch
+        // con una lista de un solo elemento, devuelto con el markdown completo.
+        List<BlogPost> savedAsList = List.of(saved);
+        Map<Long, MediaAsset> mediaById = ListPublicBlogPostsUseCase.resolveMediaMap(savedAsList, mediaRepository);
+        Map<Long, TravelAdvisor> advisorById = ListPublicBlogPostsUseCase.resolveAdvisorMap(savedAsList, travelAdvisorRepository);
+        return ListPublicBlogPostsUseCase.mapToDTO(saved, mediaById, advisorById, true);
     }
 }

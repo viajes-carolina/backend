@@ -1,5 +1,6 @@
 package com.viajescarolina.api.trust.application.usecase;
 
+import com.viajescarolina.api.media.domain.MediaAsset;
 import com.viajescarolina.api.media.domain.MediaRepository;
 import com.viajescarolina.api.trust.application.dto.CreateOrUpdateTestimonialRequest;
 import com.viajescarolina.api.trust.application.dto.TestimonialDTO;
@@ -9,6 +10,9 @@ import com.viajescarolina.api.common.audit.Audited;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+
+import java.util.List;
+import java.util.Map;
 
 @ApplicationScoped
 public class CreateTestimonialUseCase {
@@ -39,6 +43,10 @@ public class CreateTestimonialUseCase {
         );
 
         Testimonial saved = testimonialRepository.save(testimonial);
-        return GetPublicTrustUseCase.mapTestimonialToDTO(saved, mediaRepository);
+
+        // Testimonio único (respuesta de creación, no un listado): mismo contrato batch
+        // con una lista de un solo elemento.
+        Map<Long, MediaAsset> avatarMediaById = GetPublicTrustUseCase.resolveAvatarMediaMap(List.of(saved), mediaRepository);
+        return GetPublicTrustUseCase.mapTestimonialToDTO(saved, avatarMediaById);
     }
 }

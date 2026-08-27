@@ -4,6 +4,7 @@ import com.viajescarolina.api.claims.domain.ClaimAttachment;
 import com.viajescarolina.api.claims.domain.ClaimAttachmentRepository;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.enterprise.context.ApplicationScoped;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +25,17 @@ public class PanacheClaimAttachmentRepository implements ClaimAttachmentReposito
     @Override
     public List<ClaimAttachment> findByClaimId(Long claimId) {
         return find("claimId = ?1 ORDER BY createdAt ASC", claimId)
+                .stream()
+                .map(ClaimAttachmentPanacheEntity::toDomain)
+                .toList();
+    }
+
+    @Override
+    public List<ClaimAttachment> findByClaimIds(Collection<Long> claimIds) {
+        if (claimIds == null || claimIds.isEmpty()) {
+            return List.of();
+        }
+        return find("claimId in ?1 ORDER BY createdAt ASC", claimIds)
                 .stream()
                 .map(ClaimAttachmentPanacheEntity::toDomain)
                 .toList();

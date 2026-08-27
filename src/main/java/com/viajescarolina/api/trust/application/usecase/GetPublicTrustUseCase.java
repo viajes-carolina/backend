@@ -12,7 +12,12 @@ import com.viajescarolina.api.trust.domain.TestimonialRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class GetPublicTrustUseCase {
@@ -32,8 +37,14 @@ public class GetPublicTrustUseCase {
     }
 
     public PublicTrustResponse execute() {
-        List<TestimonialDTO> testimonials = testimonialRepository.findAllActive().stream()
-                .map(t -> mapTestimonialToDTO(t, mediaRepository))
+        List<Testimonial> activeTestimonials = testimonialRepository.findAllActive();
+
+        // Batch-resolve de avatares UNA sola vez para todos los testimonios, en vez de
+        // una query por testimonio dentro del .map() (evita el N+1).
+        Map<Long, MediaAsset> avatarMediaById = resolveAvatarMediaMap(activeTestimonials, mediaRepository);
+
+        List<TestimonialDTO> testimonials = activeTestimonials.stream()
+                .map(t -> mapTestimonialToDTO(t, avatarMediaById))
                 .toList();
 
         List<FaqItemDTO> faqs = faqRepository.findAllActive().stream()
@@ -43,14 +54,27 @@ public class GetPublicTrustUseCase {
         return new PublicTrustResponse(testimonials, faqs);
     }
 
-    public static TestimonialDTO mapTestimonialToDTO(Testimonial testimonial, MediaRepository mediaRepository) {
-        String avatarUrl = null;
-        if (testimonial.getAvatarMediaId() != null) {
-            Optional<MediaAsset> asset = mediaRepository.findMediaById(testimonial.getAvatarMediaId());
-            if (asset.isPresent()) {
-                avatarUrl = asset.get().getStoragePath();
-            }
+    /**
+     * Recolecta los {@code avatarMediaId} (no nulos) de una lista de testimonios y los
+     * resuelve en una sola consulta batch. Pensado para llamarse una vez antes de mapear
+     * una lista completa de testimonios a DTO, nunca dentro de un loop por testimonio.
+     */
+    public static Map<Long, MediaAsset> resolveAvatarMediaMap(List<Testimonial> testimonials, MediaRepository mediaRepository) {
+        Set<Long> avatarMediaIds = testimonials.stream()
+                .map(Testimonial::getAvatarMediaId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+        if (avatarMediaIds.isEmpty()) {
+            return Map.of();
         }
+        return mediaRepository.findMediaByIds(avatarMediaIds).stream()
+                .collect(Collectors.toMap(MediaAsset::getId, Function.identity()));
+    }
+
+    public static TestimonialDTO mapTestimonialToDTO(Testimonial testimonial, Map<Long, MediaAsset> avatarMediaById) {
+        String avatarUrl = testimonial.getAvatarMediaId() != null
+                ? Optional.ofNullable(avatarMediaById.get(testimonial.getAvatarMediaId())).map(MediaAsset::getStoragePath).orElse(null)
+                : null;
 
         return new TestimonialDTO(
                 testimonial.getId(),
