@@ -2,8 +2,6 @@ package com.viajescarolina.api.about.application.usecase;
 
 import com.viajescarolina.api.about.application.dto.AboutPageDTO;
 import com.viajescarolina.api.about.application.dto.AccompanyStepDTO;
-import com.viajescarolina.api.about.application.dto.JourneyStepDTO;
-import com.viajescarolina.api.about.application.dto.MomentDTO;
 import com.viajescarolina.api.about.application.dto.UpdateAboutPageRequest;
 import com.viajescarolina.api.about.domain.AboutPage;
 import com.viajescarolina.api.about.domain.AboutPageRepository;
@@ -38,45 +36,20 @@ public class UpdateAboutPageUseCase {
         page.setHeroBadge(req.heroBadge());
         page.setHeroTitle(req.heroTitle());
         page.setHeroSubtitle(req.heroSubtitle());
-        page.setHeroMediaId(req.heroMediaId());
-        page.setHeroFocalX(req.heroFocalX());
-        page.setHeroFocalY(req.heroFocalY());
         page.setHeroCardBadge(req.heroCardBadge());
         page.setHeroCardTitle(req.heroCardTitle());
+        page.setHeroCardLocation(req.heroCardLocation());
+        page.setHeroCardDetail(req.heroCardDetail());
         page.setHeroNoteText(req.heroNoteText());
-
-        page.setStoryTitle(req.storyTitle());
-        page.setStoryBody(req.storyBody());
-        page.setStoryMediaId(req.storyMediaId());
-        page.setStoryFocalX(req.storyFocalX());
-        page.setStoryFocalY(req.storyFocalY());
-
-        page.setMissionTitle(req.missionTitle());
-        page.setMissionBody(req.missionBody());
-        page.setMissionQuote(req.missionQuote());
-        page.setJourneySteps(toJourneySteps(req.journeySteps()));
-
-        page.setValues(req.values());
 
         page.setAccompanyBadge(req.accompanyBadge());
         page.setAccompanyTitle(req.accompanyTitle());
         page.setAccompanySubtitle(req.accompanySubtitle());
         page.setAccompanySteps(toAccompanySteps(req.accompanySteps()));
         page.setAccompanyQuote(req.accompanyQuote());
-        page.setAccompanyQuoteAttribution(req.accompanyQuoteAttribution());
 
-        page.setMomentsBadge(req.momentsBadge());
-        page.setMomentsTitle(req.momentsTitle());
-        page.setMomentsSubtitle(req.momentsSubtitle());
-        page.setMomentsMediaId(req.momentsMediaId());
-        page.setMomentsFocalX(req.momentsFocalX());
-        page.setMomentsFocalY(req.momentsFocalY());
-        page.setMoments(toMoments(req.moments()));
-
-        page.setHumanBadge(req.humanBadge());
-        page.setHumanTitle(req.humanTitle());
-        page.setHumanSubtitle(req.humanSubtitle());
-        page.setHumanTagline(req.humanTagline());
+        page.setAdvisorsBadge(req.advisorsBadge());
+        page.setAdvisorsHighlights(toAccompanySteps(req.advisorsHighlights()));
 
         page.setRevision(page.getRevision() + 1);
         page.setUpdatedAt(Instant.now());
@@ -85,18 +58,8 @@ public class UpdateAboutPageUseCase {
         return getPublicAboutUseCase.toPageDTO(saved);
     }
 
-    private static List<AboutPage.JourneyStep> toJourneySteps(List<JourneyStepDTO> steps) {
-        if (steps == null) return List.of();
-        return steps.stream().map(s -> new AboutPage.JourneyStep(s.label())).toList();
-    }
-
     private static List<AboutPage.AccompanyStep> toAccompanySteps(List<AccompanyStepDTO> steps) {
         if (steps == null) return List.of();
         return steps.stream().map(s -> new AboutPage.AccompanyStep(s.title(), s.body())).toList();
-    }
-
-    private static List<AboutPage.Moment> toMoments(List<MomentDTO> moments) {
-        if (moments == null) return List.of();
-        return moments.stream().map(m -> new AboutPage.Moment(m.title(), m.body())).toList();
     }
 }

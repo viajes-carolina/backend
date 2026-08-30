@@ -27,7 +27,7 @@ public class UpdateSiteSettingsUseCase {
     @Transactional
     public SiteSettingsDTO execute(UpdateSiteSettingsRequest request) {
         SiteSettings settings = settingsRepository.findSiteSettings()
-                .orElseGet(() -> new SiteSettings(1, request.siteName(), request.brandTagline(), request.contactEmail(), request.logoMediaId(), request.faviconMediaId(), request.facebookUrl(), request.instagramUrl(), request.tiktokUrl(), request.legalCompanyName(), request.taxId(), request.minceturCertificateUrl(), 0, null, null));
+                .orElseGet(() -> new SiteSettings(1, request.siteName(), request.brandTagline(), request.contactEmail(), request.logoMediaId(), request.faviconMediaId(), request.facebookUrl(), request.instagramUrl(), request.tiktokUrl(), request.legalCompanyName(), request.taxId(), request.minceturCertificateUrl(), request.minceturRegistrationNumber(), request.minceturLocation(), 0, null, null));
 
         settings.update(
                 request.siteName(),
@@ -40,7 +40,9 @@ public class UpdateSiteSettingsUseCase {
                 request.tiktokUrl(),
                 request.legalCompanyName(),
                 request.taxId(),
-                request.minceturCertificateUrl()
+                request.minceturCertificateUrl(),
+                request.minceturRegistrationNumber(),
+                request.minceturLocation()
         );
         SiteSettings saved = settingsRepository.save(settings);
 
@@ -63,6 +65,8 @@ public class UpdateSiteSettingsUseCase {
                 saved.getLegalCompanyName(),
                 saved.getTaxId(),
                 saved.getMinceturCertificateUrl(),
+                saved.getMinceturRegistrationNumber(),
+                saved.getMinceturLocation(),
                 savedChannel.getDisplayNumber(),
                 savedChannel.getE164Number(),
                 savedChannel.getDisplayNumber(),

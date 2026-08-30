@@ -21,7 +21,7 @@ public class PublicAboutResource {
     }
 
     @GET
-    @Operation(summary = "Obtener contenido público de la página Nosotros (Historia, Misión, Visión, Stats y Asesoras)")
+    @Operation(summary = "Obtener contenido público de la página Nosotros (Hero, Nuestra forma de trabajar, Quién está detrás y Asesoras)")
     public PublicAboutResponse getPublicAbout() {
         return getPublicAboutUseCase.execute();
     }

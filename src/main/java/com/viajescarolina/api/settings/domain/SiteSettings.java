@@ -15,6 +15,8 @@ public class SiteSettings {
     private String legalCompanyName;
     private String taxId;
     private String minceturCertificateUrl;
+    private String minceturRegistrationNumber;
+    private String minceturLocation;
     private int revision;
     private final Instant createdAt;
     private Instant updatedAt;
@@ -32,6 +34,8 @@ public class SiteSettings {
             String legalCompanyName,
             String taxId,
             String minceturCertificateUrl,
+            String minceturRegistrationNumber,
+            String minceturLocation,
             int revision,
             Instant createdAt,
             Instant updatedAt) {
@@ -47,6 +51,8 @@ public class SiteSettings {
         this.legalCompanyName = legalCompanyName;
         this.taxId = taxId;
         this.minceturCertificateUrl = minceturCertificateUrl;
+        this.minceturRegistrationNumber = minceturRegistrationNumber;
+        this.minceturLocation = minceturLocation;
         this.revision = revision;
         this.createdAt = createdAt != null ? createdAt : Instant.now();
         this.updatedAt = updatedAt != null ? updatedAt : Instant.now();
@@ -63,7 +69,9 @@ public class SiteSettings {
             String tiktokUrl,
             String legalCompanyName,
             String taxId,
-            String minceturCertificateUrl) {
+            String minceturCertificateUrl,
+            String minceturRegistrationNumber,
+            String minceturLocation) {
         this.siteName = siteName;
         this.brandTagline = brandTagline;
         this.contactEmail = contactEmail;
@@ -75,6 +83,8 @@ public class SiteSettings {
         this.legalCompanyName = legalCompanyName;
         this.taxId = taxId;
         this.minceturCertificateUrl = minceturCertificateUrl;
+        this.minceturRegistrationNumber = minceturRegistrationNumber;
+        this.minceturLocation = minceturLocation;
         this.revision++;
         this.updatedAt = Instant.now();
     }
@@ -91,6 +101,8 @@ public class SiteSettings {
     public String getLegalCompanyName() { return legalCompanyName; }
     public String getTaxId() { return taxId; }
     public String getMinceturCertificateUrl() { return minceturCertificateUrl; }
+    public String getMinceturRegistrationNumber() { return minceturRegistrationNumber; }
+    public String getMinceturLocation() { return minceturLocation; }
     public int getRevision() { return revision; }
     public Instant getCreatedAt() { return createdAt; }
     public Instant getUpdatedAt() { return updatedAt; }

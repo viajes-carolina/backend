@@ -13,5 +13,8 @@ public record PublicSiteResponse(
     Integer logoMediaId,
     Integer faviconMediaId,
     String legalCompanyName,
-    String taxId
+    String taxId,
+    String minceturCertificateUrl,
+    String minceturRegistrationNumber,
+    String minceturLocation
 ) {}

@@ -47,6 +47,12 @@ public class SiteSettingsPanacheEntity extends PanacheEntityBase {
     @Column(name = "mincetur_certificate_url", length = 500)
     public String minceturCertificateUrl;
 
+    @Column(name = "mincetur_registration_number", length = 100)
+    public String minceturRegistrationNumber;
+
+    @Column(name = "mincetur_location", length = 150)
+    public String minceturLocation;
+
     @Column(name = "revision", nullable = false)
     public int revision = 1;
 

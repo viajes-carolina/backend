@@ -2,7 +2,6 @@ package com.viajescarolina.api.about.infrastructure.persistence;
 
 import com.viajescarolina.api.about.domain.AboutPage;
 import com.viajescarolina.api.about.domain.AboutPageRepository;
-import com.viajescarolina.api.media.infrastructure.persistence.MediaAssetPanacheEntity;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.util.Optional;
@@ -12,7 +11,7 @@ public class PanacheAboutPageRepository implements PanacheRepositoryBase<AboutPa
 
     @Override
     public Optional<AboutPage> findSingleton() {
-        return findByIdOptional(1).map(this::enrichWithMediaUrls);
+        return findByIdOptional(1).map(AboutPagePanacheEntity::toDomain);
     }
 
     @Override
@@ -24,21 +23,6 @@ public class PanacheAboutPageRepository implements PanacheRepositoryBase<AboutPa
         } else {
             entity.copyFrom(aboutPage);
         }
-        return enrichWithMediaUrls(entity);
-    }
-
-    private AboutPage enrichWithMediaUrls(AboutPagePanacheEntity entity) {
-        String heroMediaUrl = resolveMediaUrl(entity.heroMediaId);
-        String storyMediaUrl = resolveMediaUrl(entity.storyMediaId);
-        String momentsMediaUrl = resolveMediaUrl(entity.momentsMediaId);
-        return entity.toDomain(heroMediaUrl, storyMediaUrl, momentsMediaUrl);
-    }
-
-    private String resolveMediaUrl(Long mediaId) {
-        if (mediaId == null) {
-            return null;
-        }
-        MediaAssetPanacheEntity media = MediaAssetPanacheEntity.findById(mediaId);
-        return media != null ? media.storagePath : null;
+        return entity.toDomain();
     }
 }

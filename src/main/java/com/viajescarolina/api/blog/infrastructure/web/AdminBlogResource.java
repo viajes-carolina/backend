@@ -44,6 +44,18 @@ public class AdminBlogResource {
     @Inject
     DeleteBlogCategoryUseCase deleteBlogCategoryUseCase;
 
+    @Inject
+    GetPublicBlogHeroUseCase getPublicBlogHeroUseCase;
+
+    @Inject
+    UpdateBlogHeroUseCase updateBlogHeroUseCase;
+
+    @Inject
+    GetPublicBlogLibraryUseCase getPublicBlogLibraryUseCase;
+
+    @Inject
+    UpdateBlogLibraryUseCase updateBlogLibraryUseCase;
+
     // --- Artículos (Posts) ---
 
     @GET
@@ -114,5 +126,39 @@ public class AdminBlogResource {
     public Response deleteCategory(@PathParam("id") Long id) {
         deleteBlogCategoryUseCase.execute(id);
         return Response.noContent().build();
+    }
+
+    // --- Copy editable de la página pública /blog ---
+
+    @GET
+    @Path("/hero")
+    @Operation(summary = "Obtener configuración del hero de la página /blog", description = "Retorna la configuración editorial actual del hero")
+    public Response getHero() {
+        BlogHeroDTO dto = getPublicBlogHeroUseCase.execute();
+        return Response.ok(dto).build();
+    }
+
+    @PUT
+    @Path("/hero")
+    @Operation(summary = "Actualizar configuración del hero de la página /blog", description = "Actualiza los textos del hero")
+    public Response updateHero(BlogHeroDTO dto) {
+        BlogHeroDTO updated = updateBlogHeroUseCase.execute(dto);
+        return Response.ok(updated).build();
+    }
+
+    @GET
+    @Path("/library")
+    @Operation(summary = "Obtener configuración de la biblioteca de la página /blog", description = "Retorna la configuración editorial actual de la biblioteca")
+    public Response getLibrary() {
+        BlogLibraryDTO dto = getPublicBlogLibraryUseCase.execute();
+        return Response.ok(dto).build();
+    }
+
+    @PUT
+    @Path("/library")
+    @Operation(summary = "Actualizar configuración de la biblioteca de la página /blog", description = "Actualiza los textos de la biblioteca")
+    public Response updateLibrary(BlogLibraryDTO dto) {
+        BlogLibraryDTO updated = updateBlogLibraryUseCase.execute(dto);
+        return Response.ok(updated).build();
     }
 }

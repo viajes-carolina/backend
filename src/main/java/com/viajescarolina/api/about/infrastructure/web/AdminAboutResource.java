@@ -40,7 +40,7 @@ public class AdminAboutResource {
     }
 
     @PUT
-    @Operation(summary = "Actualizar configuración de Nosotros (Historia, Misión, Visión, Stats y Valores)")
+    @Operation(summary = "Actualizar configuración de Nosotros (Hero, Nuestra forma de trabajar, Quién está detrás)")
     public AboutPageDTO updateAdminAbout(@Valid UpdateAboutPageRequest request) {
         return updateAboutPageUseCase.execute(request);
     }

@@ -2,7 +2,7 @@ package com.viajescarolina.api.about.application.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
-/** Un paso de la ruta vertical de la sección "Cómo te acompañamos". */
+/** Item {title, body} reutilizado por "Nuestra forma de trabajar" (accompanySteps) y "Quién está detrás" (advisorsHighlights). */
 public record AccompanyStepDTO(
     @NotBlank(message = "El título del paso es obligatorio")
     String title,

@@ -34,6 +34,12 @@ public record UpdateSiteSettingsRequest(
     @Size(max = 500, message = "El enlace no puede exceder 500 caracteres")
     String minceturCertificateUrl,
 
+    @Size(max = 100, message = "El número de registro MINCETUR no puede exceder 100 caracteres")
+    String minceturRegistrationNumber,
+
+    @Size(max = 150, message = "La ubicación no puede exceder 150 caracteres")
+    String minceturLocation,
+
     // El único número de contacto del sitio (llamadas + WhatsApp), guardado en
     // whatsapp_channel — se edita desde este mismo formulario/endpoint por
     // conveniencia, pero vive en su propia tabla (ver DB-normalización: antes

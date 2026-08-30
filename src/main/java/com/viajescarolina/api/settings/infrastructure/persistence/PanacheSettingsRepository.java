@@ -36,6 +36,8 @@ public class PanacheSettingsRepository implements SettingsRepository {
         entity.legalCompanyName = settings.getLegalCompanyName();
         entity.taxId = settings.getTaxId();
         entity.minceturCertificateUrl = settings.getMinceturCertificateUrl();
+        entity.minceturRegistrationNumber = settings.getMinceturRegistrationNumber();
+        entity.minceturLocation = settings.getMinceturLocation();
         entity.revision = settings.getRevision();
         entity.updatedAt = settings.getUpdatedAt();
 
@@ -57,6 +59,8 @@ public class PanacheSettingsRepository implements SettingsRepository {
                 entity.legalCompanyName,
                 entity.taxId,
                 entity.minceturCertificateUrl,
+                entity.minceturRegistrationNumber,
+                entity.minceturLocation,
                 entity.revision,
                 entity.createdAt,
                 entity.updatedAt

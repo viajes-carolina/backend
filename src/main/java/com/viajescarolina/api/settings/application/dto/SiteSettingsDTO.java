@@ -15,6 +15,8 @@ public record SiteSettingsDTO(
     String legalCompanyName,
     String taxId,
     String minceturCertificateUrl,
+    String minceturRegistrationNumber,
+    String minceturLocation,
     // El teléfono real (llamadas y WhatsApp) vive únicamente en whatsapp_channel;
     // se compone aquí de solo lectura para que el panel admin edite todo desde un
     // solo formulario. Para editarlo, usar el use case de WhatsApp channel.
