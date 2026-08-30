@@ -50,7 +50,7 @@ public class AdminAuthResource {
     @POST
     @Path("/login")
     @PermitAll
-    @Operation(summary = "Inicio de sesión administrativo", description = "Valida credenciales con Argon2id, genera JWT y cookie HttpOnly")
+    @Operation(summary = "Inicio de sesión administrativo", description = "Valida credenciales con Argon2id, genera JWT y cookie HttpOnly. Con rememberMe la sesión dura 30 días en vez de 1 hora")
     public Response login(@Valid LoginRequest req, @HeaderParam("X-Forwarded-For") String forwardedFor) {
         String clientIp = forwardedFor != null ? forwardedFor.split(",")[0].trim() : "127.0.0.1";
         LoginResponse result = loginAdminUseCase.execute(req, clientIp);

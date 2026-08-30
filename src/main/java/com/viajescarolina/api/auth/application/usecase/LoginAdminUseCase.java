@@ -23,6 +23,12 @@ import java.util.Set;
 @ApplicationScoped
 public class LoginAdminUseCase {
 
+    /** Duración de una sesión administrativa estándar: 1 hora. */
+    private static final long SESSION_TTL_SECONDS = 3600L;
+
+    /** Duración cuando el usuario marca "Mantener mi sesión": 30 días. */
+    private static final long EXTENDED_SESSION_TTL_SECONDS = 2592000L;
+
     private final AdminUserRepository userRepository;
     private final PasswordHasher passwordHasher;
     private final AuditLogRepository auditLogRepository;
@@ -65,7 +71,12 @@ public class LoginAdminUseCase {
 
         recordAudit(user.getId(), user.getUsername(), "LOGIN_SUCCESS", "SUCCESS", ipAddress);
 
-        long expiresInSeconds = 3600; // 1 hora
+        // Este valor viaja en LoginResponse.expiresInSeconds y AdminAuthResource lo reutiliza
+        // como maxAge de la cookie vc_admin_jwt, por lo que la cookie y el JWT siempre expiran juntos.
+        // rememberMe es opcional: null (clientes antiguos) equivale a sesión estándar.
+        long expiresInSeconds = Boolean.TRUE.equals(req.rememberMe())
+                ? EXTENDED_SESSION_TTL_SECONDS
+                : SESSION_TTL_SECONDS;
 
         String token;
         try {

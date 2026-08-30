@@ -7,5 +7,9 @@ public record LoginRequest(
     String usernameOrEmail,
 
     @NotBlank(message = "La contraseña es obligatoria")
-    String password
+    String password,
+
+    // Opcional ("Mantener mi sesión"). Los clientes que no lo envíen reciben null,
+    // que se trata como sesión estándar. Ver LoginAdminUseCase.
+    Boolean rememberMe
 ) {}
