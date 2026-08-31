@@ -26,6 +26,9 @@ dependencies {
     implementation 'com.google.cloud:google-cloud-storage'
     // Renderizado de la constancia PDF del Libro de Reclamaciones (BC claims)
     implementation 'com.openhtmltopdf:openhtmltopdf-pdfbox:1.0.10'
+    // quarkus-junit (@QuarkusTest) y rest-assured bastan: los tests de los recursos protegidos
+    // se autentican con un login real contra /auth/login y su cookie, en lugar de simular la
+    // identidad con @TestSecurity, para recorrer la misma cadena de seguridad que el panel.
     testImplementation 'io.quarkus:quarkus-junit'
     testImplementation 'io.rest-assured:rest-assured'
 }
@@ -45,4 +48,25 @@ compileJava {
 
 compileTestJava {
     options.encoding = 'UTF-8'
+    options.compilerArgs << '-parameters'
+}
+
+test {
+    useJUnitPlatform()
+    // Quarkus exige su LogManager antes de que arranque cualquier logging del test.
+    systemProperty 'java.util.logging.manager', 'org.jboss.logmanager.LogManager'
+    // Los mensajes y datos de prueba están en español: sin esto, en Windows el JVM lee
+    // los .java en UTF-8 pero escribe/compara en cp1252 y las tildes se rompen.
+    systemProperty 'file.encoding', 'UTF-8'
+    // Orden aleatorio de clases y métodos: obliga a que cada test prepare su propio escenario.
+    // Un test que solo pase "porque el anterior dejó datos" falla aquí y no en producción.
+    // JUnit registra la semilla usada; para reproducir un fallo concreto, fíjala con
+    // -Djunit.jupiter.execution.order.random.seed=<semilla del log>.
+    systemProperty 'junit.jupiter.testmethod.order.default', 'org.junit.jupiter.api.MethodOrderer$Random'
+    systemProperty 'junit.jupiter.testclass.order.default', 'org.junit.jupiter.api.ClassOrderer$Random'
+    testLogging {
+        events 'passed', 'skipped', 'failed'
+        exceptionFormat 'full'
+        showStandardStreams = false
+    }
 }

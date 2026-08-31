@@ -31,12 +31,12 @@ public class LoginAdminUseCase {
 
     private final AdminUserRepository userRepository;
     private final PasswordHasher passwordHasher;
-    private final AuditLogRepository auditLogRepository;
+    private final AuthAuditRecorder auditRecorder;
 
-    public LoginAdminUseCase(AdminUserRepository userRepository, PasswordHasher passwordHasher, AuditLogRepository auditLogRepository) {
+    public LoginAdminUseCase(AdminUserRepository userRepository, PasswordHasher passwordHasher, AuthAuditRecorder auditRecorder) {
         this.userRepository = userRepository;
         this.passwordHasher = passwordHasher;
-        this.auditLogRepository = auditLogRepository;
+        this.auditRecorder = auditRecorder;
     }
 
     @Transactional
@@ -108,20 +108,8 @@ public class LoginAdminUseCase {
         return new LoginResponse(token, "Bearer", expiresInSeconds, dto);
     }
 
+    /** Delega en {@link AuthAuditRecorder}, que audita en transacción propia. */
     private void recordAudit(Long userId, String username, String action, String result, String ipAddress) {
-        try {
-            AuditLog log = new AuditLog(
-                    null,
-                    userId,
-                    username,
-                    action,
-                    "AUTH",
-                    userId != null ? String.valueOf(userId) : "0",
-                    ipAddress,
-                    String.format("{\"result\": \"%s\"}", result),
-                    Instant.now()
-            );
-            auditLogRepository.save(log);
-        } catch (Exception ignored) {}
+        auditRecorder.record(userId, username, action, result, ipAddress);
     }
 }

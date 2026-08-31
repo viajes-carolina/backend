@@ -33,6 +33,40 @@ public class TriggerPublishUseCase {
         this.auditLogRepository = auditLogRepository;
     }
 
+    /**
+     * Todas las páginas del sitio público, tal como están montadas en {@code apps/web}.
+     *
+     * <p>El objetivo ALL revalidaba solo cinco y se dejaba fuera las cinco páginas legales,
+     * así que cambiar el aviso de privacidad o la constancia MINCETUR no se veía nunca.</p>
+     */
+    private static final List<String> TODAS_LAS_PAGINAS = List.of(
+            "/", "/blog", "/nosotros", "/contacto", "/reclamaciones", "/buscar",
+            "/terminos", "/privacidad", "/cookies", "/compromiso-esnna", "/constancia-mincetur");
+
+    /**
+     * Rutas públicas que hay que revalidar para un objetivo.
+     *
+     * <p><b>Solo rutas reales.</b> Antes cada objetivo enviaba además una etiqueta suelta
+     * ({@code "home"}, {@code "promotions"}, {@code "all"}…) que el webhook traducía a
+     * {@code /home}, {@code /promotions} y {@code /all}: rutas que no existen. Ninguna
+     * revalidaba nada y el panel las contaba como publicadas igualmente.</p>
+     *
+     * <p>Los objetivos son generosos a propósito. Un artículo del blog también alimenta el
+     * bloque de inspiración de la portada, y una asesora aparece en «Nosotros», en la firma
+     * de sus artículos y en los testimonios: afinar más la lista es justo lo que hace que a
+     * alguien se le olvide una página.</p>
+     */
+    private static List<String> pathsFor(String target) {
+        return switch (target) {
+            // Las promociones se publican en la PORTADA: no hay ninguna ruta /promociones.
+            case "HOME", "PROMOTIONS" -> List.of("/");
+            case "BLOG" -> List.of("/blog", "/");
+            case "ABOUT" -> List.of("/nosotros", "/blog", "/");
+            case "CONTACT" -> List.of("/contacto", "/");
+            default -> TODAS_LAS_PAGINAS;
+        };
+    }
+
     @Transactional
     public PublishResponse execute(PublishRequest req, String adminUsername) {
         String target = req != null && req.target() != null ? req.target().toUpperCase() : "ALL";
@@ -41,37 +75,7 @@ public class TriggerPublishUseCase {
         if (req != null && req.customTags() != null && !req.customTags().isEmpty()) {
             tagsToRevalidate.addAll(req.customTags());
         } else {
-            switch (target) {
-                case "HOME" -> {
-                    tagsToRevalidate.add("home");
-                    tagsToRevalidate.add("/");
-                }
-                case "PROMOTIONS" -> {
-                    tagsToRevalidate.add("promotions");
-                    tagsToRevalidate.add("/promociones");
-                }
-                case "BLOG" -> {
-                    tagsToRevalidate.add("blog");
-                    tagsToRevalidate.add("/blog");
-                }
-                case "ABOUT" -> {
-                    tagsToRevalidate.add("about");
-                    tagsToRevalidate.add("/nosotros");
-                }
-                case "CONTACT" -> {
-                    tagsToRevalidate.add("contact");
-                    tagsToRevalidate.add("/contacto");
-                }
-                default -> {
-                    tagsToRevalidate.add("all");
-                    tagsToRevalidate.add("/");
-                    tagsToRevalidate.add("/promociones");
-                    tagsToRevalidate.add("/blog");
-                    tagsToRevalidate.add("/nosotros");
-                    tagsToRevalidate.add("/contacto");
-                    tagsToRevalidate.add("/reclamaciones");
-                }
-            }
+            tagsToRevalidate.addAll(pathsFor(target));
         }
 
         // Emitir webhook HTTP al Frontend Next.js para Revalidación On-Demand ISR.

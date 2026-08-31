@@ -69,6 +69,13 @@ public class AdminAuthResource {
 
     @POST
     @Path("/logout")
+    // El recurso declara `@Consumes(application/json)` a nivel de clase, pero este
+    // endpoint NO lee cuerpo alguno. Con esa restricción, un logout enviado con
+    // cualquier otro `Content-Type` (p. ej. `text/plain`, que es lo que pone un
+    // `fetch` con un body de texto) se rechazaba con 415 SIN llegar al método:
+    // no se emitía la cookie caducada y el mismo token seguía autenticando. Es
+    // decir, el panel decía "sesión cerrada" y la sesión seguía viva.
+    @Consumes(MediaType.WILDCARD)
     @RolesAllowed({"SUPER_ADMIN", "CONTENT_EDITOR", "ADVISOR"})
     @Operation(summary = "Cierre de sesión", description = "Invalida la cookie de sesión administrativa")
     public Response logout() {

@@ -126,6 +126,66 @@ public class Promotion {
                 null);
     }
 
+    /**
+     * Aplica sobre una promoción ya existente los campos que el admin puede corregir desde el
+     * formulario (los mismos que envía al crearla). Deliberadamente NO toca:
+     * <ul>
+     *   <li>{@code slug}: es la URL pública de la promoción y es UNIQUE. Regenerarlo al cambiar
+     *       el título rompería los enlaces ya compartidos (WhatsApp, el post de Facebook que
+     *       apunta a esa URL, buscadores). El slug se fija al crear y es inmutable.</li>
+     *   <li>{@code active}: la visibilidad se gobierna solo por
+     *       {@code PATCH /{id}/active} (que además protege el mínimo de 3 activas). Editar el
+     *       contenido nunca debe publicar ni ocultar una promoción.</li>
+     *   <li>{@code source}, {@code facebookPostId}, {@code facebookPermalinkUrl}: describen el
+     *       origen y el post ya publicado. Editar el texto no republica nada en Facebook, así
+     *       que estos campos siguen apuntando al post original.</li>
+     *   <li>{@code createdAt}: la fecha de alta no cambia (la columna es {@code updatable=false}).</li>
+     * </ul>
+     * Reglas de valores nulos, con semántica PUT (reemplazo total):
+     * {@code pricePen}, {@code featuredMediaId} y {@code whatsappMessageTemplate} son nullables
+     * en BD, así que un null los limpia; {@code inclusions}/{@code exclusions} nulos pasan a
+     * lista vacía. En cambio {@code departureCity}, {@code validFrom} y {@code validUntil} son
+     * NOT NULL: si llegan vacíos se conserva el valor actual en vez de reintroducir el default
+     * de alta ("Lima" / hoy+6 meses), que borraría silenciosamente un dato correcto.
+     */
+    public void updateEditableDetails(
+            String title,
+            String destination,
+            String summary,
+            BigDecimal priceUsd,
+            BigDecimal pricePen,
+            Integer durationDays,
+            Integer durationNights,
+            String departureCity,
+            LocalDate validFrom,
+            LocalDate validUntil,
+            Long featuredMediaId,
+            List<String> inclusions,
+            List<String> exclusions,
+            String whatsappMessageTemplate) {
+        this.title = title;
+        this.destination = destination;
+        this.summary = summary;
+        this.priceUsd = priceUsd;
+        this.pricePen = pricePen;
+        this.durationDays = durationDays;
+        this.durationNights = durationNights;
+        if (departureCity != null && !departureCity.isBlank()) {
+            this.departureCity = departureCity;
+        }
+        if (validFrom != null) {
+            this.validFrom = validFrom;
+        }
+        if (validUntil != null) {
+            this.validUntil = validUntil;
+        }
+        this.featuredMediaId = featuredMediaId;
+        this.inclusions = inclusions != null ? inclusions : new ArrayList<>();
+        this.exclusions = exclusions != null ? exclusions : new ArrayList<>();
+        this.whatsappMessageTemplate = whatsappMessageTemplate;
+        this.updatedAt = Instant.now();
+    }
+
     public void setActive(boolean active) {
         this.active = active;
         this.updatedAt = Instant.now();
